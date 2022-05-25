@@ -12,6 +12,7 @@
         android:layout_height="331dp"
         android:layout_marginStart="77dp"
         android:layout_marginTop="111dp"
+        android:clickable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/googleg_standard_color_18" />
