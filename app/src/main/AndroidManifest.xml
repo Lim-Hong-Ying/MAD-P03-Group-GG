@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sg.edu.np.mad_p03_group_gg">
-
+    <!--Permission for internet-->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,13 +11,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
-            android:name=".individual_listing"
+            android:name=".forget_password_activitiy"
             android:exported="false" />
         <activity
-            android:name=".listings"
+            android:name=".signupactivity"
+            android:exported="false" />
+        <activity
+            android:name=".Homepage"
+            android:exported="false" />
+        <activity
+            android:name=".loginpage"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SplashPage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
