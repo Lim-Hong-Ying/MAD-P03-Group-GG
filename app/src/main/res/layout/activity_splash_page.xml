@@ -11,21 +11,11 @@
     >
 
 
-    <ImageView
-        android:id="@+id/splash_screen_img"
-        android:layout_width="415dp"
-        android:layout_height="334dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/picture1" />
-
     <TextView
         android:id="@+id/appname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:fontFamily="casual"
         android:text="Cashshope"
         android:textAlignment="center"
@@ -47,4 +37,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appname" />
+
+    <ImageView
+        android:id="@+id/splash_screen_img"
+        android:layout_width="355dp"
+        android:layout_height="423dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/woman_shopping_cart" />
 </androidx.constraintlayout.widget.ConstraintLayout>

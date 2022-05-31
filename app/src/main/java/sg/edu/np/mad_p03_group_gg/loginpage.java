@@ -6,14 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -62,7 +59,7 @@ public class loginpage extends AppCompatActivity {
         //Authenticate users
     }
     public void Log_in(View v){
-        EditText Email = (EditText) findViewById(R.id.email);
+        EditText Email = (EditText) findViewById(R.id.fgtemail);
         EditText password = (EditText) findViewById(R.id.password_toggle);
         String email = Email.getText().toString();
         String Password = password.getText().toString();
@@ -84,11 +81,12 @@ public class loginpage extends AppCompatActivity {
 
 
 
+
             auth.signInWithEmailAndPassword(email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        //When user's sign in is sucessfull, it will automatically go to the next page
+                        //When user's sign in is sucessful, it will automatically go to the next page
                         Intent login = new Intent(loginpage.this, Homepage.class);
                         startActivity(login);//Starts sign up activity
                     } else {
