@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".EventEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WeekViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MonthViewActivity"
+            android:exported="true" />
+        <activity
             android:name=".newlisting"
             android:exported="false" />
         <activity
