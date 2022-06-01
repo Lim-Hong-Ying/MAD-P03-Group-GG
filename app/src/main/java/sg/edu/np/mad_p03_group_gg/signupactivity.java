@@ -104,6 +104,11 @@ public class signupactivity extends AppCompatActivity {
                     Toast.makeText(signupactivity.this,"User created",Toast.LENGTH_SHORT).show();
 
                 }
+                else{
+                    Toast.makeText(signupactivity.this,"Unsuccessful",Toast.LENGTH_SHORT).show();
+
+
+                }
 
 
 

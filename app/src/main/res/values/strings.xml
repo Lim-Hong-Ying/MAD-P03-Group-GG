@@ -1,5 +1,3 @@
 <resources>
-    <string name="app_name">MAD-P03-Group-GG</string>
-    <string name="back"><![CDATA[<-]]></string>
-    <string name="forward"><![CDATA[->]]></string>
+    <string name="app_name">Cashopee</string>
 </resources>
