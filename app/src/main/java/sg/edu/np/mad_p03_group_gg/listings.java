@@ -17,11 +17,11 @@ public class listings extends AppCompatActivity {
         setContentView(R.layout.activity_listings);
 
         ArrayList<listingObject> test = new ArrayList<>();
-        listingObject test1 = new listingObject("test title 1", "test thumbnail url 1", "test seller id 1", "test seller pp url 1");
-        listingObject test2 = new listingObject("test title 2", "test thumbnail url 2", "test seller id 2", "test seller pp url 2");
-        listingObject test3 = new listingObject("test title 3", "test thumbnail url 3", "test seller id 3", "test seller pp url 3");
-        listingObject test4 = new listingObject("test title 4", "test thumbnail url 4", "test seller id 4", "test seller pp url 4");
-        listingObject test5 = new listingObject("test title 5", "test thumbnail url 5", "test seller id 5", "test seller pp url 5");
+        listingObject test1 = new listingObject("test title 1", "test thumbnail url 1", "test seller id 1", "test seller pp url 1", "New", 10, false);
+        listingObject test2 = new listingObject("test title 2", "test thumbnail url 2", "test seller id 2", "test seller pp url 2", "Used", 100, true);
+        listingObject test3 = new listingObject("test title 3", "test thumbnail url 3", "test seller id 3", "test seller pp url 3", "New", 200, false);
+        listingObject test4 = new listingObject("test title 4", "test thumbnail url 4", "test seller id 4", "test seller pp url 4", "Used", 300, false);
+        listingObject test5 = new listingObject("test title 5", "test thumbnail url 5", "test seller id 5", "test seller pp url 5", "New", 500, true);
 
         test.add(test1);
         test.add(test2);
