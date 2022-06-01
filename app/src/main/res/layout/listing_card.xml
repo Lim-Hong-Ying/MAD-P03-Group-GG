@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/listing_image"
@@ -21,7 +21,7 @@
         android:layout_height="38dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:text="TextView"
+        android:text="Title"
         app:layout_constraintStart_toEndOf="@+id/listing_image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +41,27 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="48dp"
-        android:text="TextView"
+        android:text="Username"
         app:layout_constraintStart_toEndOf="@+id/seller_picture"
+        app:layout_constraintTop_toBottomOf="@+id/listing_title" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="Price"
+        app:layout_constraintStart_toEndOf="@+id/listing_image"
+        app:layout_constraintTop_toBottomOf="@+id/listing_title" />
+
+    <TextView
+        android:id="@+id/itemcondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="Condition"
+        app:layout_constraintStart_toEndOf="@+id/price"
         app:layout_constraintTop_toBottomOf="@+id/listing_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>
