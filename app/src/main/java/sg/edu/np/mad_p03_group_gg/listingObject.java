@@ -1,8 +1,7 @@
 package sg.edu.np.mad_p03_group_gg;
 
-import java.util.ArrayList;
-
 public class listingObject {
+    private int lID; //listing ID in DB
     private String title; //listing title
     private String tURL; //thumbnail URL
     private String sID; //seller ID
@@ -15,7 +14,8 @@ public class listingObject {
 
     }
 
-    public listingObject(String t, String turl, String sid, String sppu, String ic, int p, Boolean r) {
+    public listingObject(int lID, String t, String turl, String sid, String sppu, String ic, int p, Boolean r) {
+        setlID(lID);
         setTitle(t);
         settURL(turl);
         setSID(sid);
@@ -23,6 +23,14 @@ public class listingObject {
         setiC(ic);
         setPrice(p);
         setReserved(r);
+    }
+
+    public void setlID(int id) {
+        lID = id;
+    }
+
+    public int getlID() {
+        return lID;
     }
 
     public void setTitle(String s) {
