@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.storage.StorageReference;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -37,14 +35,13 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
 
     @Override
     public void onBindViewHolder(@NonNull listing_viewholder holder, int position) {
-        new ImageDownloader(holder.listing_image).execute("https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/listing-images%2Fi-am-not-a-degenerate-this-is-just-test.jpeg?alt=media&token=d3d97f7a-39ec-4014-ad29-cc9f2bf16368");
-        new ImageDownloader(holder.seller_image).execute("https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/user-images%2Fdegeneracy.jpeg?alt=media&token=949a52bf-9c6c-4e27-abfc-3145524e81cd");
         listingObject listing = data.get(position);
+        new ImageDownloader(holder.listing_image).execute(listing.gettURL());
+        new ImageDownloader(holder.seller_image).execute(listing.getSPPU());
         holder.listing_title.setText(listing.getTitle());
         holder.seller_username.setText(listing.getSID());
         holder.price.setText("$" + listing.getPrice());
         holder.itemcondition.setText(listing.getiC());
-        // yet to implement image replacement for thumbnail & seller pfp
     }
 
     @Override

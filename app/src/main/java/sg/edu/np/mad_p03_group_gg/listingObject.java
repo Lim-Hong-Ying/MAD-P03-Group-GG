@@ -45,7 +45,7 @@ public class listingObject {
         tURL = s;
     }
 
-    public String getttURL() {
+    public String gettURL() {
         return tURL;
     }
 
