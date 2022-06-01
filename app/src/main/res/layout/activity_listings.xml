@@ -4,16 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Homepage">
+    tools:context=".listings">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="236dp"
-        android:layout_height="331dp"
-        android:layout_marginStart="77dp"
-        android:layout_marginTop="111dp"
-        android:clickable="true"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listing_recycler"
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/googleg_standard_color_18" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
