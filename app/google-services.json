@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "346425581112",
+    "firebase_url": "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "cashoppe-179d4",
+    "storage_bucket": "cashoppe-179d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346425581112:android:8bb229633c1f8f59b750cd",
+        "android_client_info": {
+          "package_name": "sg.edu.np.mad_p03_group_gg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "346425581112-dgfdlsv9l51102o4opsc86mqni8stiur.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sg.edu.np.mad_p03_group_gg",
+            "certificate_hash": "9572cb0b06587688189e88089f1dddb6923d8375"
+          }
+        },
+        {
+          "client_id": "346425581112-0hqetububq1nfbeq6o6p8eg02dhjnuue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuA_L2labAabv__vN0DfhvO4uWHRUyPxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "346425581112-0hqetububq1nfbeq6o6p8eg02dhjnuue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
