@@ -17,6 +17,20 @@ public class listings extends AppCompatActivity {
         setContentView(R.layout.activity_listings);
 
         ArrayList<listingObject> test = new ArrayList<>();
+
+        test = testlistings(test);
+
+        RecyclerView listingRecycler = findViewById(R.id.listing_recycler);
+        listing_adapter adapter = new listing_adapter(test);
+
+        LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(this);
+        listingRecycler.setLayoutManager(listingLayoutMgr);
+        listingRecycler.setItemAnimator(new DefaultItemAnimator());
+        listingRecycler.setAdapter(adapter);
+
+    }
+
+    private ArrayList<listingObject> testlistings(ArrayList<listingObject> test) {
         listingObject test1 = new listingObject(1, "test title 1", "test thumbnail url 1", "test seller id 1", "test seller pp url 1", "New", 10, false);
         listingObject test2 = new listingObject(2, "test title 2", "test thumbnail url 2", "test seller id 2", "test seller pp url 2", "Used", 100, true);
         listingObject test3 = new listingObject(3, "test title 3", "test thumbnail url 3", "test seller id 3", "test seller pp url 3", "New", 200, false);
@@ -29,13 +43,6 @@ public class listings extends AppCompatActivity {
         test.add(test4);
         test.add(test5);
 
-        RecyclerView listingRecycler = findViewById(R.id.listing_recycler);
-        listing_adapter adapter = new listing_adapter(test);
-
-        LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(this);
-        listingRecycler.setLayoutManager(listingLayoutMgr);
-        listingRecycler.setItemAnimator(new DefaultItemAnimator());
-        listingRecycler.setAdapter(adapter);
-
+        return test;
     }
 }
