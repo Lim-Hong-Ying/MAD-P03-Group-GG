@@ -49,7 +49,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
             @Override
             public void onClick(View view) {
                 Bundle listinginfo = new Bundle();
-                listinginfo.putInt("lID", listing.getlID());
+                listinginfo.putString("lID", listing.getlID());
                 Intent individuallisting = new Intent(view.getContext(), individual_listing.class);
                 individuallisting.putExtras(listinginfo);
                 view.getContext().startActivity(individuallisting);

@@ -1,7 +1,7 @@
 package sg.edu.np.mad_p03_group_gg;
 
 public class listingObject {
-    private int lID; //listing ID in DB
+    private String lID; //listing ID in DB
     private String title; //listing title
     private String tURL; //thumbnail URL
     private String sID; //seller ID
@@ -14,7 +14,7 @@ public class listingObject {
 
     }
 
-    public listingObject(int lID, String t, String turl, String sid, String sppu, String ic, int p, Boolean r) {
+    public listingObject(String lID, String t, String turl, String sid, String sppu, String ic, int p, Boolean r) {
         setlID(lID);
         setTitle(t);
         settURL(turl);
@@ -25,11 +25,11 @@ public class listingObject {
         setReserved(r);
     }
 
-    public void setlID(int id) {
+    public void setlID(String id) {
         lID = id;
     }
 
-    public int getlID() {
+    public String getlID() {
         return lID;
     }
 

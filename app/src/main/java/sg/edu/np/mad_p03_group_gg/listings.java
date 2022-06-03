@@ -24,9 +24,12 @@ public class listings extends AppCompatActivity {
         setContentView(R.layout.activity_listings);
 
         ArrayList<listingObject> data = new ArrayList<>();
+        //writeToFirebase();
 
         //int lID, String t, String turl, String sid, String sppu, String ic, int p, Boolean r
         data = retrieveFromFirebase(data);
+        data = testlistings(data); //THIS NEEDS TO BE HERE FOR FB TO WORK?? WTF??
+
 
         RecyclerView listingRecycler = findViewById(R.id.listing_recycler);
         listing_adapter adapter = new listing_adapter(data);
@@ -40,11 +43,11 @@ public class listings extends AppCompatActivity {
     private ArrayList<listingObject> testlistings(ArrayList<listingObject> data) {
         String testthumbnail = "https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/listing-images%2Fi-am-not-a-degenerate-this-is-just-test.jpeg?alt=media&token=d3d97f7a-39ec-4014-ad29-cc9f2bf16368";
         String testpfp = "https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/user-images%2Fdegeneracy.jpeg?alt=media&token=949a52bf-9c6c-4e27-abfc-3145524e81cd";
-        listingObject test1 = new listingObject(1, "test title 1", testthumbnail, "test seller id 1", testpfp, "New", 10, false);
-        listingObject test2 = new listingObject(2, "test title 2", testthumbnail, "test seller id 2", testpfp, "Used", 100, true);
-        listingObject test3 = new listingObject(3, "test title 3", testthumbnail, "test seller id 3", testpfp, "New", 200, false);
-        listingObject test4 = new listingObject(4, "test title 4", testthumbnail, "test seller id 4", testpfp, "Used", 300, false);
-        listingObject test5 = new listingObject(5, "test title 5", testthumbnail, "test seller id 5", testpfp, "New", 500, true);
+        listingObject test1 = new listingObject("1", "test title 1", testthumbnail, "test seller id 1", testpfp, "New", 10, false);
+        listingObject test2 = new listingObject("2", "test title 2", testthumbnail, "test seller id 2", testpfp, "Used", 100, true);
+        listingObject test3 = new listingObject("3", "test title 3", testthumbnail, "test seller id 3", testpfp, "New", 200, false);
+        listingObject test4 = new listingObject("4", "test title 4", testthumbnail, "test seller id 4", testpfp, "Used", 300, false);
+        listingObject test5 = new listingObject("5", "test title 5", testthumbnail, "test seller id 5", testpfp, "New", 500, true);
 
         data.add(test1);
         data.add(test2);
@@ -62,13 +65,13 @@ public class listings extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot datasnap : snapshot.getChildren()) {
-                    int listingid = Integer.parseInt(datasnap.getKey());
+                    String listingid = datasnap.getKey();
                     String titles = datasnap.child("title").getValue(String.class);
-                    String thumbnailurl = datasnap.child("thumbnail-url").getValue(String.class);
-                    String sellerid = datasnap.child("seller-id").getValue(String.class);
+                    String thumbnailurl = datasnap.child("tURL").getValue(String.class);
+                    String sellerid = datasnap.child("sid").getValue(String.class);
                     String sellerprofilepicurl = datasnap.child("seller-picture").getValue(String.class);
-                    String itemcondition = datasnap.child("condition").getValue(String.class);
-                    int price = datasnap.child("price").getValue(Integer.class);
+                    String itemcondition = datasnap.child("iC").getValue(String.class);
+                    int price = datasnap.child("price").getValue(int.class);
                     Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
 
                     listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
@@ -82,5 +85,15 @@ public class listings extends AppCompatActivity {
             }
         });
         return data;
+    }
+
+    private void writeToFirebase() {
+        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
+
+        String testthumbnail = "https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/listing-images%2Fi-am-not-a-degenerate-this-is-just-test.jpeg?alt=media&token=d3d97f7a-39ec-4014-ad29-cc9f2bf16368";
+        String testpfp = "https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/user-images%2Fdegeneracy.jpeg?alt=media&token=949a52bf-9c6c-4e27-abfc-3145524e81cd";
+        listingObject test1 = new listingObject("1", "FB test title 1", testthumbnail, "test seller id 1", testpfp, "New", 10, false);
+        db.push().setValue(test1);
     }
 }

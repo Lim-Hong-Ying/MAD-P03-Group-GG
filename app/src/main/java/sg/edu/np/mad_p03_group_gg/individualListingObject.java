@@ -1,7 +1,7 @@
 package sg.edu.np.mad_p03_group_gg;
 
 public class individualListingObject {
-    private int pID; //listing ID
+    private String pID; //listing ID
     private String title;
     private String sID; //seller ID
     private String iC; //item condition
@@ -18,7 +18,7 @@ public class individualListingObject {
 
     }
 
-    public individualListingObject(int pid, String t, String sid, String cond, int p, String desc, String l, Boolean d, String dt, int dp, int dtime, Boolean r) {
+    public individualListingObject(String pid, String t, String sid, String cond, int p, String desc, String l, Boolean d, String dt, int dp, int dtime, Boolean r) {
         pID = pid;
         title = t;
         sID = sid;
@@ -33,11 +33,11 @@ public class individualListingObject {
         reserved = r;
     }
 
-    public void setpID(int id) {
+    public void setpID(String id) {
         pID = id;
     }
 
-    public int getpID() {
+    public String getpID() {
         return pID;
     }
 
