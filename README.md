@@ -1,4 +1,9 @@
 # MAD-P03-Group-GG
+<p align="center">
+  <img src="https://img.shields.io/github/release-date/DancinComrade/electron-python-example?style=for-the-badge">
+</p>
+
+
 Download the Cashoppe app now to interact with the huge Cashoppe community, discover and buy all
 the things  you need at competitive prices!
 
