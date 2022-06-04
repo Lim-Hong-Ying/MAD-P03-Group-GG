@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -96,6 +98,9 @@ public class newlisting extends AppCompatActivity {
     private void createListingObject(String url) {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
+        RadioGroup condition_input = findViewById(R.id.input_condition);
+        RadioButton condition_input_new = findViewById(R.id.input_condition_new);
+        RadioButton condition_input_used = findViewById(R.id.input_condition_used);
         EditText desc_input = findViewById(R.id.input_description);
         EditText address_input = findViewById(R.id.input_address);
         EditText deltype_input = findViewById(R.id.input_deliverytype);
@@ -104,6 +109,18 @@ public class newlisting extends AppCompatActivity {
 
         String title = title_input.getText().toString();
         String price = price_input.getText().toString();
+        String condition;
+        if (condition_input_new.isChecked()) {
+            condition = "New";
+        }
+
+        else if (condition_input_used.isChecked()){
+            condition = "Used";
+        }
+
+        else {
+            condition = null;
+        }
         String desc = desc_input.getText().toString();
         String address = address_input.getText().toString();
         String deltype = deltype_input.getText().toString();
@@ -111,7 +128,7 @@ public class newlisting extends AppCompatActivity {
         String deltime = deltime_input.getText().toString();
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(null, title, url, "1", url, "New", price, false, desc, address, false, deltype, delprice, deltime);
+        individualListingObject listing = new individualListingObject(null, title, url, "1", url, condition, price, false, desc, address, false, deltype, delprice, deltime);
         writeToFirebase(listing);
     }
 

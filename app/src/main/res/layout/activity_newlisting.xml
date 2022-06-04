@@ -53,6 +53,7 @@
             android:inputType="numberDecimal" />
 
         <RadioGroup
+            android:id="@+id/input_condition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -65,13 +66,13 @@
                 android:text="Item condition:" />
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/input_condition_new"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New" />
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/input_condition_used"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Used" />
