@@ -87,7 +87,7 @@ public class loginpage extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         //When user's sign in is sucessful, it will automatically go to the next page
-                        Intent login = new Intent(loginpage.this, Homepage.class);
+                        Intent login = new Intent(loginpage.this, MainActivity.class);
                         startActivity(login);//Starts sign up activity
                     } else {
                         TextView error = findViewById(R.id.siginerror);

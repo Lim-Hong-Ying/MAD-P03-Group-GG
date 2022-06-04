@@ -52,7 +52,7 @@ public class signupactivity extends AppCompatActivity {
                 if (u != null) {
                     myRef.child("users").child(u.getPhonenumber()).setValue(u);
                     Intent Homepage = new Intent(signupactivity.this,
-                            Homepage.class);
+                            MainActivity.class);
                     startActivity(Homepage);
 
                 }
