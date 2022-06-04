@@ -3,6 +3,7 @@
     package="sg.edu.np.mad_p03_group_gg">
     <!-- Permission for internet -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +23,7 @@
             android:exported="true" />
         <activity
             android:name=".newlisting"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".forget_password_activitiy"
             android:exported="false" />
@@ -52,5 +53,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 </manifest>
