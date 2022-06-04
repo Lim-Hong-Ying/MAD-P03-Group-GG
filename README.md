@@ -1,23 +1,28 @@
 # MAD-P03-Group-GG
-Repository for MAD P03 Group GG Assignment
-	Team members’ names, student IDs
-	Description of app
-	Roles and contributions of each member
-	All relevant appendices (diagrams, screenshots, user guides)
+Download the Cashoppe app now to interact with the huge Cashoppe community, discover and buy all
+the things  you need at competitive prices!
 
-## Team Members
+With Cashoppe at your side, you may shop in peace as Cashoppe is your very own shopping companion!
+Join the Cashoppe family now to enjoy great deals and benefits:
+1) Meeting Calendar: Ensure that you don't miss your neighbourhood meetups
+2) Posts and Communities: Interact with like-minded individuals or simply post your new purchases
+3) Safe and Secure: We comply strictly with Singapore's PDPA act, so you can be rest assured that
+your confidential data are in good hands.
+
+Tagline: Cashoppe, your friendly next-generation shopping companion.
+### Team Members
 Tan Kai Zhe | S10219390
 Lim Hong Ying | S10223298
 Ooi Jun Heng Ryan | S10223647
 William Francis Siah | S10222938
 Koh Han Jie Isaac | S10222275
 
-## Description
+### Description
 
-## Roles and Contributions
+### Roles and Contributions
 
-## Features
+### Features
 
-## User Guide
+### User Guide
 
-## Screenshots
+### Screenshots
