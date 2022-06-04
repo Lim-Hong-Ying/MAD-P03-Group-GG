@@ -16,11 +16,11 @@ your confidential data are in good hands.
 
 Tagline: Cashoppe, your friendly next-generation shopping companion.
 ### Team Members
-Tan Kai Zhe | S10219390
-Lim Hong Ying | S10223298
-Ooi Jun Heng Ryan | S10223647
-William Francis Siah | S10222938
-Koh Han Jie Isaac | S10222275
+Tan Kai Zhe | S10219390 </br>
+Lim Hong Ying | S10223298 </br>
+Ooi Jun Heng Ryan | S10223647 </br>
+William Francis Siah | S10222938 </br>
+Koh Han Jie Isaac | S10222275 </br>
 
 ### Description
 
