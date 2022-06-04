@@ -1,6 +1,7 @@
 package sg.edu.np.mad_p03_group_gg;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,14 +25,12 @@ public class listings extends AppCompatActivity {
         setContentView(R.layout.activity_listings);
 
         ArrayList<listingObject> data = new ArrayList<>();
-        //writeToFirebase();
 
-        //int lID, String t, String turl, String sid, String sppu, String ic, int p, Boolean r
-        data = retrieveFromFirebase(data); //needs a placeholder for it to work??
-        data.add(new listingObject());
+        retrieveFromFirebase(data);
         //data = testlistings(data);
+    }
 
-
+    private void recyclerViewStarter(ArrayList<listingObject> data) {
         RecyclerView listingRecycler = findViewById(R.id.listing_recycler);
         listing_adapter adapter = new listing_adapter(data);
 
@@ -59,7 +58,7 @@ public class listings extends AppCompatActivity {
         return data;
     }
 
-    private ArrayList<listingObject> retrieveFromFirebase(ArrayList<listingObject> data) {
+    private void retrieveFromFirebase(ArrayList<listingObject> data) {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -77,6 +76,8 @@ public class listings extends AppCompatActivity {
 
                     listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
                     data.add(listing);
+                    Log.e("listing", String.valueOf(data.size()));
+                    recyclerViewStarter(data);
                 }
             }
 
@@ -85,16 +86,5 @@ public class listings extends AppCompatActivity {
 
             }
         });
-        return data;
-    }
-
-    private void writeToFirebase() {
-        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
-        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
-
-        String testthumbnail = "https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/listing-images%2Fi-am-not-a-degenerate-this-is-just-test.jpeg?alt=media&token=d3d97f7a-39ec-4014-ad29-cc9f2bf16368";
-        String testpfp = "https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/user-images%2Fdegeneracy.jpeg?alt=media&token=949a52bf-9c6c-4e27-abfc-3145524e81cd";
-        individualListingObject test1 = new individualListingObject("1", "FB test title 1", testthumbnail, "test seller id 1", testpfp, "New", "10", false, "test description", "ngee ann poly", false, "null", "0", "0");
-        db.push().setValue(test1);
     }
 }
