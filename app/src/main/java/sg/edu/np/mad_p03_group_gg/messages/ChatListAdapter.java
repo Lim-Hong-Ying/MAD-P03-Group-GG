@@ -24,7 +24,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
-import sg.edu.np.mad_p03_group_gg.classes.User;
+import sg.edu.np.mad_p03_group_gg.User;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder> {
 
@@ -50,9 +50,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
     public void onBindViewHolder(@NonNull ChatListAdapter.MyViewHolder holder, int position) {
         MessageList user = messageList.get(position);
 
-        if(!user.getProfilePic().isEmpty()){
+        if(user.getProfilePic() != null && !user.getProfilePic().isEmpty()){
             Picasso.get().load(user.getProfilePic()).into(holder.profilePic);
         }
+
 
         holder.name.setText(user.getName());
         holder.lastMessage.setText(user.getLastMessage());

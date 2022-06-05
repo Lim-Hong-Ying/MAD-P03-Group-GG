@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import sg.edu.np.mad_p03_group_gg.R;
-import sg.edu.np.mad_p03_group_gg.classes.User;
+import sg.edu.np.mad_p03_group_gg.User;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> {
 
@@ -26,7 +26,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     public ChatAdapter(List<ChatInfo> chatInfoList, Context context, User mainUser) {
         this.chatInfoList = chatInfoList;
         this.context = context;
-        this.mainUserid = mainUser.getid();
+        this.mainUserid = mainUser.getPhonenumber();
     }
 
     @NonNull

@@ -28,7 +28,7 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.R;
-import sg.edu.np.mad_p03_group_gg.classes.User;
+import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.others.MemoryData;
 
 public class Chat extends AppCompatActivity {
@@ -75,7 +75,7 @@ public class Chat extends AppCompatActivity {
         String getid = getIntent().getStringExtra("id");
 
         // Set main user ID
-        mainUserid = mainUser.getid();
+        mainUserid = mainUser.getPhonenumber();
 
         // Set Name
         name.setText(getName);

@@ -1,10 +1,48 @@
 package sg.edu.np.mad_p03_group_gg;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class User {
+public class User implements Parcelable{
     private String name;
     private String email;
     private String phonenumber;
     private int id;
+
+    // Parcelable (To pass objects from activity to activity)
+    protected User(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        phonenumber = in.readString();
+        id = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(email);
+        parcel.writeString(phonenumber);
+        parcel.writeInt(id);
+    }
+
+    // End
+
 
     public String getName() {
         return name;
@@ -44,4 +82,5 @@ public class User {
         setName(n);
         setPhonenumber(p);
     }
+
 }
