@@ -48,6 +48,9 @@ public class signupactivity extends AppCompatActivity {
             public void onClick(View v) {
                 User u = new User();
                 u = Register(v);
+                String key = database.getReference("quiz").push().getKey();
+
+                u.setId(key);
 
                 if (u != null) {
                     myRef.child("users").child(u.getPhonenumber()).setValue(u);
@@ -84,7 +87,9 @@ public class signupactivity extends AppCompatActivity {
         String password = Password.getText().toString().trim();
         String ph = PhoneNumber.getText().toString().trim();
         String userName = name.getText().toString().trim();
-        User u = new User(email,email,ph);
+        String img ="";
+
+        User u = new User(email,email,ph,img);
         if (TextUtils.isEmpty(email)) {
             Email.setError("Email Required");
             return null;

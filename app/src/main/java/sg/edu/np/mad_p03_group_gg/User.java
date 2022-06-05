@@ -4,7 +4,8 @@ public class User {
     private String name;
     private String email;
     private String phonenumber;
-    private int id;
+    private String id;
+    private String image;
 
     public String getName() {
         return name;
@@ -26,22 +27,33 @@ public class User {
         return phonenumber;
     }
 
+
     public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(String id) {
+       this.id = id;
     }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public User(){}
 
-    public User(String n, String e, String p){
+    public User(String n, String e, String p,String I){
         setEmail(e);
         setName(n);
         setPhonenumber(p);
+        setImage(I);
     }
 }
