@@ -28,6 +28,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_view);
+        CalendarUtils.selectedDate = LocalDate.now();
         initWidgets();
         setWeekView();
         setOnClickListener();

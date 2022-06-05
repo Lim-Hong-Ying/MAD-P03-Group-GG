@@ -28,7 +28,6 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
 
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
-    private String name, location, time, date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,10 +37,6 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         initWidgets();
         CalendarUtils.selectedDate = LocalDate.now();
         setMonthView();
-        if (Event.eventsList.size() == 0){
-            String userId = "123456789"; // temporary only
-            readFromFireBase(userId);
-        }
     }
 
     private void initWidgets()
@@ -88,29 +83,4 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         startActivity(new Intent(this, WeekViewActivity.class));
     }
 
-    public void readFromFireBase(String userId){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("Planner");
-        myRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    int eventId = Integer.parseInt(snapshot.getKey());
-                    name = snapshot.child("name").getValue(String.class);
-                    location = snapshot.child("location").getValue(String.class);
-                    time = snapshot.child("time").getValue(String.class);
-                    date = snapshot.child("date").getValue(String.class);
-                    LocalDate dt = LocalDate.parse(date, dtf);
-                    Event event = new Event(eventId, name, location, dt, time);
-                    Event.eventsList.add(event);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("TAG", "Failed to read value.", error.toException());
-            }
-        });
-    }
 }
