@@ -84,7 +84,7 @@ public class signupactivity extends AppCompatActivity {
         String userName = name.getText().toString().trim();
         String img ="";
 
-        User u = new User(userName,email,ph);
+        User u = new User(userName,email,ph,img);
         if (TextUtils.isEmpty(email)) {
             Email.setError("Email Required");
             return null;
