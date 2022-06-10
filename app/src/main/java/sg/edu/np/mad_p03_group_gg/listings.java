@@ -1,7 +1,10 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +29,15 @@ public class listings extends AppCompatActivity {
         setContentView(R.layout.activity_listings);
 
         ArrayList<listingObject> data = new ArrayList<>();
+
+        ImageButton newListing = findViewById(R.id.add_listing);
+        newListing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newList = new Intent(view.getContext(), newlisting.class);
+                view.getContext().startActivity(newList);
+            }
+        });
 
         retrieveFromFirebase(data);
         //data = testlistings(data);

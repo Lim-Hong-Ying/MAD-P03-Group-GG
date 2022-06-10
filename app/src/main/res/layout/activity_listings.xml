@@ -21,28 +21,31 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="48dp"
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
+                android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 app:srcCompat="@android:drawable/ic_menu_revert" />
 
             <SearchView
+                android:id="@+id/search_bar"
                 android:layout_width="338dp"
                 android:layout_height="48dp"
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/imageButton3"
-                android:layout_width="48dp"
+                android:id="@+id/liked_listings"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 app:srcCompat="@android:drawable/btn_star" />
 
             <ImageButton
-                android:id="@+id/imageButton4"
-                android:layout_width="48dp"
+                android:id="@+id/chat_button"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 app:srcCompat="@android:drawable/sym_action_chat" />
         </LinearLayout>
@@ -50,7 +53,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listing_recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,7 +63,7 @@
             android:visibility="visible">
 
             <ImageButton
-                android:id="@+id/imageButton5"
+                android:id="@+id/add_listing"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_weight="1"
