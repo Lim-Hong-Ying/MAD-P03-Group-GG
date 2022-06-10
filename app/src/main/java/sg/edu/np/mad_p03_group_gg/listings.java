@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +36,16 @@ public class listings extends AppCompatActivity {
         listing_adapter adapter = new listing_adapter(data);
 
         LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(this);
+        listingRecycler.setLayoutManager(listingLayoutMgr);
+        listingRecycler.setItemAnimator(new DefaultItemAnimator());
+        listingRecycler.setAdapter(adapter);
+    }
+
+    private void recyclerViewStarter2(ArrayList<listingObject> data) {
+        RecyclerView listingRecycler = findViewById(R.id.listing_recycler);
+        listing_adapter adapter = new listing_adapter(data);
+
+        GridLayoutManager listingLayoutMgr = new GridLayoutManager(this, 2);
         listingRecycler.setLayoutManager(listingLayoutMgr);
         listingRecycler.setItemAnimator(new DefaultItemAnimator());
         listingRecycler.setAdapter(adapter);
