@@ -84,7 +84,7 @@ public class signupactivity extends AppCompatActivity {
         String userName = name.getText().toString().trim();
         String img ="";
 
-        User u = new User(email,email,ph,img);
+        User u = new User(userName,email,ph);
         if (TextUtils.isEmpty(email)) {
             Email.setError("Email Required");
             return null;
@@ -104,7 +104,7 @@ public class signupactivity extends AppCompatActivity {
                     Toast.makeText(signupactivity.this,"User created",Toast.LENGTH_SHORT).show();
                     if (u != null) {
                         DatabaseReference myRef = database.getReference();
-                        myRef.child("users").child(u.getPhonenumber()).setValue(u);
+                        myRef.child("users").child(u.getId()).setValue(u);
                         Intent Homepage = new Intent(signupactivity.this,
                                 Homepage.class);
                         startActivity(Homepage);

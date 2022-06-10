@@ -7,14 +7,13 @@ public class User implements Parcelable{
     private String email;
     private String phonenumber;
     private String id;
-    private String image;
 
     // Parcelable (To pass objects from activity to activity)
     protected User(Parcel in) {
         name = in.readString();
         email = in.readString();
         phonenumber = in.readString();
-        id = in.readInt();
+        id = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -39,7 +38,7 @@ public class User implements Parcelable{
         parcel.writeString(name);
         parcel.writeString(email);
         parcel.writeString(phonenumber);
-        parcel.writeInt(id);
+        parcel.writeString(id);
     }
 
     // End
@@ -65,7 +64,6 @@ public class User implements Parcelable{
         return phonenumber;
     }
 
-
     public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
     }
@@ -75,24 +73,14 @@ public class User implements Parcelable{
     }
 
     public void setId(String id) {
-       this.id = id;
+        this.id = id;
     }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public User(){}
 
-    public User(String n, String e, String p,String I){
+    public User(String n, String e, String p){
         setEmail(e);
         setName(n);
         setPhonenumber(p);
-        setImage(I);
     }
 
 }
