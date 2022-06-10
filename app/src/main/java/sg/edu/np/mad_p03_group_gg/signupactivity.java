@@ -49,6 +49,9 @@ public class signupactivity extends AppCompatActivity {
             public void onClick(View v) {
                 User u = new User();
                 u = Register(v);
+                String key = database.getReference("quiz").push().getKey();
+
+                u.setId(key);
 
 
                 //do something if not exists
@@ -79,7 +82,9 @@ public class signupactivity extends AppCompatActivity {
         String password = Password.getText().toString().trim();
         String ph = PhoneNumber.getText().toString().trim();
         String userName = name.getText().toString().trim();
-        User u = new User(email,email,ph);
+        String img ="";
+
+        User u = new User(userName,email,ph,img);
         if (TextUtils.isEmpty(email)) {
             Email.setError("Email Required");
             return null;
@@ -99,7 +104,7 @@ public class signupactivity extends AppCompatActivity {
                     Toast.makeText(signupactivity.this,"User created",Toast.LENGTH_SHORT).show();
                     if (u != null) {
                         DatabaseReference myRef = database.getReference();
-                        myRef.child("users").child(u.getPhonenumber()).setValue(u);
+                        myRef.child("users").child(u.getId()).setValue(u);
                         Intent Homepage = new Intent(signupactivity.this,
                                 Homepage.class);
                         startActivity(Homepage);
