@@ -26,12 +26,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class signupactivity extends AppCompatActivity {
     FirebaseAuth auth;
+    FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signupactivity);
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference();
+        database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
 
         //Get textview
         TextView tologin= findViewById(R.id.Log_in_page);
@@ -52,13 +53,7 @@ public class signupactivity extends AppCompatActivity {
 
                 u.setId(key);
 
-                if (u != null) {
-                    myRef.child("users").child(u.getPhonenumber()).setValue(u);
-                    Intent Homepage = new Intent(signupactivity.this,
-                            Homepage.class);
-                    startActivity(Homepage);
 
-                }
                 //do something if not exists
 
 
@@ -107,7 +102,14 @@ public class signupactivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(signupactivity.this,"User created",Toast.LENGTH_SHORT).show();
+                    if (u != null) {
+                        DatabaseReference myRef = database.getReference();
+                        myRef.child("users").child(u.getPhonenumber()).setValue(u);
+                        Intent Homepage = new Intent(signupactivity.this,
+                                Homepage.class);
+                        startActivity(Homepage);
 
+                    }
                 }
                 else{
                     Toast.makeText(signupactivity.this,"Unsuccessful",Toast.LENGTH_SHORT).show();

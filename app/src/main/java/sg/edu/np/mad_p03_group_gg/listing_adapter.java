@@ -1,8 +1,10 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
-    ArrayList<listingObject> data; //replace with information from DB
+    ArrayList<listingObject> data = new ArrayList<>(); //replace with information from DB
 
     public listing_adapter(ArrayList<listingObject> input) {
         data = input;
@@ -36,9 +38,23 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
     @Override
     public void onBindViewHolder(@NonNull listing_viewholder holder, int position) {
         listingObject listing = data.get(position);
+        new ImageDownloader(holder.listing_image).execute(listing.gettURL());
+        new ImageDownloader(holder.seller_image).execute(listing.getSPPU());
         holder.listing_title.setText(listing.getTitle());
         holder.seller_username.setText(listing.getSID());
-        // yet to implement image replacement for thumbnail & seller pfp
+        holder.price.setText("$" + listing.getPrice());
+        holder.itemcondition.setText(listing.getiC());
+
+        holder.listing_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle listinginfo = new Bundle();
+                listinginfo.putString("lID", listing.getlID());
+                Intent individuallisting = new Intent(view.getContext(), individual_listing.class);
+                individuallisting.putExtras(listinginfo);
+                view.getContext().startActivity(individuallisting);
+            }
+        });
     }
 
     @Override

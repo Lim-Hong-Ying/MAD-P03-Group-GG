@@ -26,7 +26,7 @@ public class loginpage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginpage);
-        auth=FirebaseAuth.getInstance();
+        auth=FirebaseAuth.getInstance(); // singleton
         //find views and buttons
         Button button = (Button) findViewById(R.id.sign);
         TextView signup = findViewById(R.id.Sign_up);
@@ -88,6 +88,8 @@ public class loginpage extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         //When user's sign in is sucessful, it will automatically go to the next page
                         Intent login = new Intent(loginpage.this, Homepage.class);
+                        // test chat list
+                        //Intent login = new Intent(loginpage.this, ChatList.class);
                         startActivity(login);//Starts sign up activity
                     } else {
                         TextView error = findViewById(R.id.siginerror);
