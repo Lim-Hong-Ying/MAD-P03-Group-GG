@@ -1,10 +1,14 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +40,14 @@ public class listings extends AppCompatActivity {
             public void onClick(View view) {
                 Intent newList = new Intent(view.getContext(), newlisting.class);
                 view.getContext().startActivity(newList);
+            }
+        });
+
+        ToggleButton viewMode = findViewById(R.id.view_mode);
+        viewMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
             }
         });
 
