@@ -27,7 +27,7 @@ public class EventEditActivity extends AppCompatActivity
     private int hour, min;
     private String time;
     private sg.edu.np.mad_p03_group_gg.Event selectedEvent;
-    private String userId = "123456789";
+    private String userId = "123456789"; // change to current user
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,10 +45,6 @@ public class EventEditActivity extends AppCompatActivity
             locationNameET.setText(selectedEvent.getLocation());
             timeBtn = findViewById(R.id.timeBtn);
             timeBtn.setText(selectedEvent.getTime());
-            for (Event e : Event.eventsList){
-                Log.d("Name", e.getName());
-                Log.d("ID", String.valueOf(e.getID()));
-            }
         }
     }
 
@@ -69,8 +65,7 @@ public class EventEditActivity extends AppCompatActivity
                 timeBtn.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, min)); // format to 2 decimal place
             }
         };
-        int style = AlertDialog.THEME_HOLO_DARK;
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,  style, onTimeSetListener, hour, min, true);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, min, true);
         timePickerDialog.setTitle("Select Time");
         timePickerDialog.show();
     }
@@ -106,11 +101,11 @@ public class EventEditActivity extends AppCompatActivity
             addDataToFireBase(userId, eventId, eventName, location, time, CalendarUtils.selectedDate.toString());
         }
         else{
-            removeDataFromFireBase(userId, selectedEvent.getID() + 1);
+            removeDataFromFireBase(userId, selectedEvent.getID());
             selectedEvent.setName(eventName);
             selectedEvent.setLocation(location);
             selectedEvent.setTime(time);
-            addDataToFireBase(userId, selectedEvent.getID() + 1, eventName, location, time, CalendarUtils.selectedDate.toString());
+            addDataToFireBase(userId, selectedEvent.getID(), eventName, location, time, CalendarUtils.selectedDate.toString());
         }
         finish();
     }
