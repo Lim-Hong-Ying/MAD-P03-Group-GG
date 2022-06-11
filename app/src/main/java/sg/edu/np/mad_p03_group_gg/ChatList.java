@@ -102,10 +102,7 @@ public class ChatList extends AppCompatActivity {
                     if(foundEmail.equalsIgnoreCase(userEmail)){
                         String phoneNumber = dataSnapshot.child("phonenumber").getValue(String.class);
                         String displayName = dataSnapshot.child("name").getValue(String.class);
-                        //ADDED WILDCARD VALUE
-                        String img = "t";
-
-                        mainUser = new User(displayName, foundEmail, phoneNumber,img);
+                        mainUser = new User(displayName, foundEmail, phoneNumber);
                         break;
                     }
                 }
