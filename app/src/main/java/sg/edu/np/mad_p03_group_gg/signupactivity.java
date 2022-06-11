@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,18 +45,89 @@ public class signupactivity extends AppCompatActivity {
         Button signup = findViewById(R.id.button);
         auth=FirebaseAuth.getInstance();
         //Check if users has registered
+        EditText name = findViewById(R.id.setusername);
+        EditText Password = findViewById(R.id.enterpassword);
+        EditText Email = findViewById(R.id.emailaddr);
+        EditText PhoneNumber = findViewById(R.id.phone_number);
+        String email = Email.getText().toString().trim();
+        String password = Password.getText().toString().trim();
+        String ph = PhoneNumber.getText().toString().trim();
+        String userName = name.getText().toString().trim();
+        String img ="";
+
+        User u = new User(userName,email,ph,img);
+        name.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(TextUtils.isEmpty(userName)){
+                    name.setError("Invalid Username");
+
+                }
+            }
+
+        });
+        Password.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (TextUtils.isEmpty(password)) {
+                    Password.setError("Password required");
+
+                }
+                if(password.length()<6){
+                    Password.setError("Password lesser then 6 characters");
+
+                }
+
+            }
+
+        });
+        Email.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (TextUtils.isEmpty(email)) {
+                    Email.setError("Email Required");
+
+                }
+            }
+
+        });
+        PhoneNumber.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(TextUtils.isEmpty(ph)){
+                    PhoneNumber.setError("Invalid phone number");
+
+                }
+            }
+
+        });
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 User u = new User();
                 u = Register(v);
-                String key = database.getReference("quiz").push().getKey();
-
-                u.setId(key);
-
-
-                //do something if not exists
+                if(u!=null) {
+                    String key = database.getReference("quiz").push().getKey();
+                    u.setId(key);
+                    //do something if not exists
+                }
 
 
             }
@@ -83,20 +156,30 @@ public class signupactivity extends AppCompatActivity {
         String ph = PhoneNumber.getText().toString().trim();
         String userName = name.getText().toString().trim();
         String img ="";
-
-        User u = new User(userName,email,ph,img);
-        if (TextUtils.isEmpty(email)) {
-            Email.setError("Email Required");
+        if(TextUtils.isEmpty(userName)){
+            name.setError("Invalid Username");
             return null;
         }
         if (TextUtils.isEmpty(password)) {
             Password.setError("Password required");
             return null;
+
         }
-        if(password.length()<6){
-            Password.setError("Password lesser then 6 characters");
+        if (TextUtils.isEmpty(email)) {
+            Email.setError("Email Required");
             return null;
+
         }
+        if(TextUtils.isEmpty(ph)){
+            PhoneNumber.setError("Invalid phone number");
+            return null;
+
+        }
+
+        User u = new User(userName,email,ph,img);
+
+
+
         auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
