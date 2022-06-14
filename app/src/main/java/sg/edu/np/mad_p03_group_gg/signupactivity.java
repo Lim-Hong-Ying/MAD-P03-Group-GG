@@ -1,30 +1,24 @@
 package sg.edu.np.mad_p03_group_gg;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class signupactivity extends AppCompatActivity {
     FirebaseAuth auth;
@@ -39,8 +33,6 @@ public class signupactivity extends AppCompatActivity {
         //Get textview
         TextView tologin= findViewById(R.id.Log_in_page);
         //setonclick listener for tologin button
-
-
 
         Button signup = findViewById(R.id.button);
         auth=FirebaseAuth.getInstance();
@@ -123,13 +115,12 @@ public class signupactivity extends AppCompatActivity {
             public void onClick(View v) {
                 User u = new User();
                 u = Register(v);
+
                 if(u!=null) {
                     String key = database.getReference("quiz").push().getKey();
                     u.setId(key);
                     //do something if not exists
                 }
-
-
             }
         });
 
@@ -137,13 +128,10 @@ public class signupactivity extends AppCompatActivity {
         tologin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent Login = new Intent(signupactivity.this,
-                        loginpage.class);
+                Intent Login = new Intent(signupactivity.this, loginpage.class);
                 startActivity(Login);//Starts sign up activity
             }
         });
-
-
 
     }
     public User Register(View v){
@@ -160,6 +148,7 @@ public class signupactivity extends AppCompatActivity {
             name.setError("Invalid Username");
             return null;
         }
+
         if (TextUtils.isEmpty(password)) {
             Password.setError("Password required");
             return null;
@@ -178,12 +167,10 @@ public class signupactivity extends AppCompatActivity {
 
         User u = new User(userName,email,ph,img);
 
-
-
         auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()){
                     Toast.makeText(signupactivity.this,"User created",Toast.LENGTH_SHORT).show();
                     if (u != null) {
                         DatabaseReference myRef = database.getReference();
@@ -191,25 +178,15 @@ public class signupactivity extends AppCompatActivity {
                         Intent Homepage = new Intent(signupactivity.this,
                                 Homepage.class);
                         startActivity(Homepage);
-
                     }
                 }
-                else{
+
+                else {
                     Toast.makeText(signupactivity.this,"Unsuccessful",Toast.LENGTH_SHORT).show();
-
-
                 }
-
-
-
-
             }
         });
         return u;
-
-
-
-
     }
 
 }

@@ -85,8 +85,8 @@ public class individual_listing extends AppCompatActivity {
 
                     new ImageDownloader(holder).execute(listing.gettURL());
                     titleholder.setText(listing.getTitle());
-                    priceholder.setText("" + listing.getPrice());
-                    itemconditionholder.setText(listing.getiC());
+                    priceholder.setText("$" + listing.getPrice());
+                    itemconditionholder.setText("Condition: " + listing.getiC());
                     descriptionholder.setText(listing.getDescription());
                     locationholder.setText(listing.getLocation());
                     deliveryoptionholder.setText(listing.getDeliveryType());

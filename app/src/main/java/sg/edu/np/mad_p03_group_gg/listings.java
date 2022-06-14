@@ -1,11 +1,18 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +33,37 @@ public class listings extends AppCompatActivity {
 
         ArrayList<listingObject> data = new ArrayList<>();
 
+        ImageButton newListing = findViewById(R.id.add_listing);
+        newListing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newList = new Intent(view.getContext(), newlisting.class);
+                view.getContext().startActivity(newList);
+            }
+        });
+
+        Switch viewMode = findViewById(R.id.view_mode);
+        viewMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences sharedPreferences = getSharedPreferences("Cashopee", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                if (b == false) {
+                    editor.putString("view", "card");
+                    Log.e("VIEW CHANGED", "CARD");
+                }
+
+                else {
+                    editor.putString("view", "grid");
+                    Log.e("VIEW CHANGED", "GRID");
+                }
+
+                editor.commit();
+                recyclerViewStarter(data);
+            }
+        });
+
         retrieveFromFirebase(data);
         //data = testlistings(data);
     }
@@ -34,10 +72,23 @@ public class listings extends AppCompatActivity {
         RecyclerView listingRecycler = findViewById(R.id.listing_recycler);
         listing_adapter adapter = new listing_adapter(data);
 
-        LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(this);
-        listingRecycler.setLayoutManager(listingLayoutMgr);
-        listingRecycler.setItemAnimator(new DefaultItemAnimator());
-        listingRecycler.setAdapter(adapter);
+        SharedPreferences sharedPreferences = getSharedPreferences("Cashopee", MODE_PRIVATE);
+
+        String mode = sharedPreferences.getString("view", "");
+
+        if (mode == "card") {
+            LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(this);
+            listingRecycler.setLayoutManager(listingLayoutMgr);
+            listingRecycler.setItemAnimator(new DefaultItemAnimator());
+            listingRecycler.setAdapter(adapter);
+        }
+
+        else {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+            listingRecycler.setLayoutManager(gridLayoutManager);
+            listingRecycler.setItemAnimator(new DefaultItemAnimator());
+            listingRecycler.setAdapter(adapter);
+        }
     }
 
     private ArrayList<listingObject> testlistings(ArrayList<listingObject> data) {
