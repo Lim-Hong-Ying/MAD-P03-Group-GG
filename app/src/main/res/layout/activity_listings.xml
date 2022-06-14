@@ -50,13 +50,13 @@
                 app:srcCompat="@android:drawable/sym_action_chat" />
         </LinearLayout>
 
-        <ToggleButton
+        <Switch
             android:id="@+id/view_mode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ToggleButton"
-            android:textOff="Card View"
-            android:textOn="Grid View" />
+            android:text="View mode"
+            android:textOff="Card view"
+            android:textOn="Grid view" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listing_recycler"
