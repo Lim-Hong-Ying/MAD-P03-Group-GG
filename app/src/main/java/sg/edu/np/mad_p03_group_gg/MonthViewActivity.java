@@ -35,7 +35,9 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_month_view);
         initWidgets();
-        CalendarUtils.selectedDate = LocalDate.now();
+        if (CalendarUtils.selectedDate == null) {
+            CalendarUtils.selectedDate = LocalDate.now();
+        }
         setMonthView();
     }
 
@@ -82,5 +84,4 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
     {
         startActivity(new Intent(this, WeekViewActivity.class));
     }
-
 }

@@ -27,7 +27,7 @@ public class EventEditActivity extends AppCompatActivity
     private int hour, min;
     private String time;
     private sg.edu.np.mad_p03_group_gg.Event selectedEvent;
-    private String userId = "123456789"; // change to current user
+    private String userId = WeekViewActivity.userId; // change to current user
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

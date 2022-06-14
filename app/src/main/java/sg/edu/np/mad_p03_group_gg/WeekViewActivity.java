@@ -5,16 +5,27 @@ import static sg.edu.np.mad_p03_group_gg.CalendarUtils.monthYearFromDate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class WeekViewActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener
@@ -22,6 +33,9 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private ListView eventListView;
+    private String name, location, time, date;
+    private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public static String userId = user.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,6 +44,10 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setContentView(R.layout.activity_week_view);
         if (CalendarUtils.selectedDate == null){
             CalendarUtils.selectedDate = LocalDate.now();
+        }
+
+        if (Event.eventsList.size() == 0){
+            readFromFireBase(userId);
         }
         initWidgets();
         setWeekView();
@@ -109,5 +127,29 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
             }
         });
     }
+    public void readFromFireBase(String userId){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference myRef = database.getReference("Planner");
+        myRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    int eventId = Integer.parseInt(snapshot.getKey());
+                    name = snapshot.child("name").getValue(String.class);
+                    location = snapshot.child("location").getValue(String.class);
+                    time = snapshot.child("time").getValue(String.class);
+                    date = snapshot.child("date").getValue(String.class);
+                    LocalDate dt = LocalDate.parse(date, dtf);
+                    Event event = new Event(eventId, name, location, dt, time);
+                    Event.eventsList.add(event);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("TAG", "Failed to read value.", error.toException());
+            }
+        });
+    }
 }
