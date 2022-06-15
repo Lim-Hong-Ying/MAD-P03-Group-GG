@@ -116,7 +116,6 @@ public class signupactivity extends AppCompatActivity {
             public void onClick(View v) {
                 User u = new User();
                 u = Register(v);
-
                 if(u!=null) {
                     String key = database.getReference("quiz").push().getKey();
                     u.setId(key);

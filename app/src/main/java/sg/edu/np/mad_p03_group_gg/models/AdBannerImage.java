@@ -1,13 +1,15 @@
 package sg.edu.np.mad_p03_group_gg.models;
 
 public class AdBannerImage {
-    private int image;
+    // To populate the advertisement banners on the homepage, or MainActivity
 
-    public AdBannerImage(int image) {
-        this.image = image;
+    private String bitmapFilePath;
+
+    public AdBannerImage(String bitmapFilePath) {
+        this.bitmapFilePath = bitmapFilePath;
     }
 
-    public int getImage() {
-        return image;
+    public String getImage() {
+        return bitmapFilePath;
     }
 }
