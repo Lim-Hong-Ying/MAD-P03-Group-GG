@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sg.edu.np.mad_p03_group_gg">
+    <!-- Permission for internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -10,6 +12,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".EventEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WeekViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MonthViewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".newlisting"
+            android:exported="false" />
+        <activity
+            android:name=".forget_password_activitiy"
+            android:exported="false" />
+        <activity
+            android:name=".signupactivity"
+            android:exported="false" />
+        <activity
+            android:name=".loginpage"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -17,6 +40,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".listings"
+            android:exported="true" />
+        <activity
+            android:name=".SplashPage"
+            android:exported="true">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> -->
         </activity>
     </application>
 
