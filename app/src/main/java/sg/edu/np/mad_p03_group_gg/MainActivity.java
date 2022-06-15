@@ -1,34 +1,48 @@
 package sg.edu.np.mad_p03_group_gg;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
-import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
+import sg.edu.np.mad_p03_group_gg.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
+    ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        // Refer to https://www.youtube.com/watch?v=O8LA26sAt7Y
-        ArrayList<AdBannerImage> adBannerImages = new ArrayList<>();
-        adBannerImages.add(new AdBannerImage(R.drawable.shopee1));
-        adBannerImages.add(new AdBannerImage(R.drawable.shopee2));
-        ViewPager2 viewPager2 = findViewById(R.id.AdBannerView);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        // When MainActivity is launched, it will display homepage as default
+        replaceFragment(new HomepageFragment());
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(adBannerImages);
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            // Get which button the user pressed
+            switch(item.getItemId()) {
+                case R.id.home:
+                    replaceFragment(new HomepageFragment());
+                    break;
+                case R.id.add:
+                    // Initiate the function of adding new post/listing
+                    break;
+                case R.id.user:
+                    //replaceFragment(new User);
+                    break;
+            }
 
-        viewPager2.setAdapter(viewPagerAdapter);
+            return true;
+        });
 
+    }
 
+    // Init the fragment
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 }

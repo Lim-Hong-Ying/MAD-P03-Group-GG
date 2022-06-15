@@ -1,5 +1,6 @@
 package sg.edu.np.mad_p03_group_gg.view;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,9 @@ import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.RecyclerViewHolder> {
-    ArrayList<AdBannerImage> adBannerImages;
+    ArrayList<Bitmap> adBannerImages;
 
-    public ViewPagerAdapter(ArrayList<AdBannerImage> adBannerImages) {
+    public ViewPagerAdapter(ArrayList<Bitmap> adBannerImages) {
         this.adBannerImages = adBannerImages;
     }
 
@@ -31,8 +32,9 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.Recy
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        AdBannerImage adBannerImage = adBannerImages.get(position);
-        holder.adBannerImage.setImageResource(adBannerImage.getImage());
+        Bitmap adBannerImage = adBannerImages.get(position);
+        adBannerImage = Bitmap.createScaledBitmap(adBannerImage, holder.adBannerImage.getWidth(), holder.adBannerImage.getHeight(),false);
+        holder.adBannerImage.setImageBitmap(adBannerImage);
     }
 
     @Override

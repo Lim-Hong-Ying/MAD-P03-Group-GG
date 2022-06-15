@@ -1,0 +1,167 @@
+package sg.edu.np.mad_p03_group_gg;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link HomepageFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class HomepageFragment extends Fragment {
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    public HomepageFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment HomepageFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static HomepageFragment newInstance(String param1, String param2) {
+        HomepageFragment fragment = new HomepageFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_homepage, container, false);
+
+        // Download images from /advertisement which are stored as temp files
+        ArrayList<File> tempFiles = new ArrayList<File>();
+
+        downloadFiles("advertisement", tempFiles);
+        try {
+            Log.d("tempfiles:", Integer.toString(tempFiles.size()));
+        }
+        catch (Exception e) {
+            Log.d("tempFiles exception", e.getMessage());
+        }
+        ArrayList<Bitmap> adBannerImages = new ArrayList<>();
+
+        for (int i = 0; i < tempFiles.size(); i++) {
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(tempFiles.get(i).getAbsolutePath(),bmOptions);
+
+            adBannerImages.add(bitmap);
+        }
+
+        // Implementation of a Horizontal ViewPager2, able to scroll and snap
+        // Refer to https://www.youtube.com/watch?v=O8LA26sAt7Y
+        ViewPager2 viewPager2 = view.findViewById(R.id.AdBannerView);
+
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(adBannerImages);
+
+        viewPager2.setAdapter(viewPagerAdapter);
+
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_homepage, container, false);
+    }
+
+
+    protected void downloadFiles(String folder, ArrayList<File> tempFiles) {
+        // Init Firebase Storage instance
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://cashoppe-179d4.appspot.com/");
+
+        // Create a storage reference, basically a pointer to a file in the Firebase cloud
+        StorageReference storageRef = storage.getReference();
+
+        // Create a child reference
+        // imagesRef now points to "images"
+        StorageReference imagesRef = storageRef.child(folder);
+
+        // List all images in /<folder> eg. can be /advertisement
+        imagesRef.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference fileRef : listResult.getItems()) {
+                            // TODO: Download the file using its reference (fileRef)
+
+                            // Download images
+                            try {
+                                File localFile = File.createTempFile("shopee", ".jpg");
+                                fileRef.getFile(localFile).addOnSuccessListener(
+                                        new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                // Local temp file has been created
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle any errors
+                                    }
+                                });
+
+                                tempFiles.add(localFile);
+
+                            }
+                            catch (Exception e) {
+                                Log.e("Unable to download from Firebase", String.valueOf(e));
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Uh-oh, an error occurred!
+                        Toast.makeText(getActivity(),
+                                "An Error Occured: Unable to List Items from Firebase",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+}
