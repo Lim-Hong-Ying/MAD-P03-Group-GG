@@ -1,10 +1,12 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -110,6 +112,20 @@ public class HomepageFragment extends Fragment {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(adBannerImages);
 
         viewPager2.setAdapter(viewPagerAdapter);
+
+        // Set onClickListeners for Buttons
+        CardView listingsCardView = view.findViewById(R.id.listingsButton);
+        CardView meetingPlannerCardView = view.findViewById(R.id.meetingPlannerButton);
+
+        listingsCardView.setOnClickListener(v -> {
+            // When clicked, will bring to listings page which displays all listings
+            Intent listingsIntent = new Intent(getContext(), listings.class);
+        });
+
+        meetingPlannerCardView.setOnClickListener(v -> {
+            // When clicked, will bring to meeting planner page which displays all listings
+            Intent meetingPlannerIntent = new Intent(getContext(), this.getClass());
+        });
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_homepage, container, false);
