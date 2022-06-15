@@ -8,10 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,6 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.ArrayList;
 
+import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 
 /**
@@ -32,7 +35,6 @@ import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
  * create an instance of this fragment.
  */
 public class HomepageFragment extends Fragment {
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -79,22 +81,26 @@ public class HomepageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
         // Download images from /advertisement which are stored as temp files
-        ArrayList<File> tempFiles = new ArrayList<File>();
+        File dir = new File(getContext().getCacheDir(),"advertisement");
+        ArrayList<String> filePaths = new ArrayList<>();
 
-        downloadFiles("advertisement", tempFiles);
-        try {
-            Log.d("tempfiles:", Integer.toString(tempFiles.size()));
+        if (dir.exists()) {
+            if (dir.listFiles().length == 0) {
+                downloadFiles("advertisement");
+            }
+            for (File f : dir.listFiles()) {
+                filePaths.add(f.getAbsolutePath());
+            }
         }
-        catch (Exception e) {
-            Log.d("tempFiles exception", e.getMessage());
+        else {
+            downloadFiles("advertisement");
         }
-        ArrayList<Bitmap> adBannerImages = new ArrayList<>();
 
-        for (int i = 0; i < tempFiles.size(); i++) {
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            Bitmap bitmap = BitmapFactory.decodeFile(tempFiles.get(i).getAbsolutePath(),bmOptions);
+        ArrayList<AdBannerImage> adBannerImages = new ArrayList<>();
 
-            adBannerImages.add(bitmap);
+        for (int i = 0; i < filePaths.size(); i++) {
+            AdBannerImage adBannerImage = new AdBannerImage(filePaths.get(i));
+            adBannerImages.add(adBannerImage);
         }
 
         // Implementation of a Horizontal ViewPager2, able to scroll and snap
@@ -109,8 +115,7 @@ public class HomepageFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_homepage, container, false);
     }
 
-
-    protected void downloadFiles(String folder, ArrayList<File> tempFiles) {
+    private void downloadFiles(String folder) {
         // Init Firebase Storage instance
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://cashoppe-179d4.appspot.com/");
 
@@ -129,14 +134,19 @@ public class HomepageFragment extends Fragment {
                         for (StorageReference fileRef : listResult.getItems()) {
                             // TODO: Download the file using its reference (fileRef)
 
-                            // Download images
+                            // Download files from the folder, eg. images from /advertisement
                             try {
-                                File localFile = File.createTempFile("shopee", ".jpg");
+                                File outputDirectory = new File(getContext().getCacheDir(), folder);
+                                if (!outputDirectory.exists()) {
+                                    outputDirectory.mkdirs();
+                                }
+
+                                File localFile = File.createTempFile("shopee", ".jpg", outputDirectory);
                                 fileRef.getFile(localFile).addOnSuccessListener(
                                         new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
                                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                // Local temp file has been created
+
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -144,12 +154,9 @@ public class HomepageFragment extends Fragment {
                                         // Handle any errors
                                     }
                                 });
-
-                                tempFiles.add(localFile);
-
                             }
                             catch (Exception e) {
-                                Log.e("Unable to download from Firebase", String.valueOf(e));
+                                Log.e("Unable to download image", String.valueOf(e));
                             }
                         }
                     }
@@ -163,5 +170,10 @@ public class HomepageFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private boolean searchCache(ArrayList<String> fileNames, String directory) {
+        File storagePath = new File(Environment.getExternalStorageDirectory(), directory);
+        return true;
     }
 }

@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new HomepageFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            // Get which button the user pressed
+            // Get which button the user pressed and display the fragment accordingly
             switch(item.getItemId()) {
                 case R.id.home:
                     replaceFragment(new HomepageFragment());
