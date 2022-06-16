@@ -85,6 +85,7 @@ public class fragmenttest extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
+        Log.e("VIEW MODE", mode);
 
         if (mode == "card") {
             LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(view.getContext());
