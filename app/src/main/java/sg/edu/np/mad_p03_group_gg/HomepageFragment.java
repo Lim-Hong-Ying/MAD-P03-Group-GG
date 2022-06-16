@@ -126,7 +126,8 @@ public class HomepageFragment extends Fragment {
         });
       
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
-        return view;
+        return view
+        }
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
