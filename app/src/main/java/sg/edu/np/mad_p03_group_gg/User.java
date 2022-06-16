@@ -1,56 +1,10 @@
 package sg.edu.np.mad_p03_group_gg;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-import java.util.ArrayList;
-
-public class User implements Parcelable{
+public class User {
     private String name;
     private String email;
     private String phonenumber;
-    private String id;
-
-    private String userprofilepic;
-    private ArrayList<String> likinglst;
-
-    // Parcelable (To pass objects from activity to activity)
-    protected User(Parcel in) {
-        name = in.readString();
-        email = in.readString();
-        phonenumber = in.readString();
-        id = in.readString();
-        userprofilepic=in.readString();
-        in.readStringList(likinglst);
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeString(email);
-        parcel.writeString(phonenumber);
-        parcel.writeString(id);
-        parcel.writeString(userprofilepic);
-        parcel.writeStringList(likinglst);
-    }
-
-    // End
+    private int id;
 
     public String getName() {
         return name;
@@ -76,50 +30,18 @@ public class User implements Parcelable{
         this.phonenumber = phonenumber;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
-
-
-    public String getUserprofilepic() {
-        return userprofilepic;
-    }
-
-    public void setUserprofilepic(String userprofilepic) {
-        this.userprofilepic = userprofilepic;
-    }
-
-    public ArrayList<String> getLikinglst() {
-        return likinglst;
-    }
-
-    public void setLikinglst(ArrayList<String> likinglst) {
-        this.likinglst = likinglst;
-    }
-
     public User(){}
-    public User(String n, String e,String p){
-        setPhonenumber(p);
-        setName(n);
-        setEmail(e);
-    }
 
-    public User(String n, String e, String p,String up){
+    public User(String n, String e, String p){
         setEmail(e);
         setName(n);
         setPhonenumber(p);
-        setUserprofilepic(up);
     }
-    public User(String n, String e, String p,String up, ArrayList<String> lList){
-        setEmail(e);
-        setName(n);
-        setPhonenumber(p);
-        setUserprofilepic(up);
-        setLikinglst(lList);
-    }
-
 }

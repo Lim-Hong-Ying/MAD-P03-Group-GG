@@ -7,166 +7,85 @@
     tools:context=".individual_listing">
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/ic_menu_revert" />
-
-        <SearchView
-            android:id="@+id/search_bar"
-            android:layout_width="338dp"
-            android:layout_height="48dp"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/liked_listings"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/btn_star" />
-
-        <ImageButton
-            android:id="@+id/chat_button"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/sym_action_chat" />
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
-
-        <LinearLayout
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            tools:srcCompat="@tools:sample/avatars" />
 
-            <ImageView
-                android:id="@+id/imageholder"
-                android:layout_width="match_parent"
-                android:layout_height="256dp"
-                tools:srcCompat="@tools:sample/avatars" />
+        <TextView
+            android:id="@+id/individual_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title" />
 
-            <TextView
-                android:id="@+id/individual_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Title"
-                android:textSize="34sp" />
+        <TextView
+            android:id="@+id/individual_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price" />
 
-            <TextView
-                android:id="@+id/individual_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Price"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_itemcondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Condition" />
 
-            <TextView
-                android:id="@+id/individual_itemcondition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Item Condition"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_descriptionheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description:" />
 
-            <TextView
-                android:id="@+id/individual_descriptionheader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Description:"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description" />
 
-            <TextView
-                android:id="@+id/individual_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="@font/roboto"
-                android:text="Description"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_saleoptionheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sale location:" />
 
-            <TextView
-                android:id="@+id/individual_saleoptionheader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto"
-                android:text="Sale location:"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_salelocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address" />
 
-            <TextView
-                android:id="@+id/individual_salelocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto"
-                android:text="Address"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_deliveryheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delivery option:" />
 
-            <TextView
-                android:id="@+id/individual_deliveryheader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto"
-                android:text="Delivery option:"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_deliveryoption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delivery type" />
 
-            <TextView
-                android:id="@+id/individual_deliveryoption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto"
-                android:text="Delivery type"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_deliveryprice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delivery Price" />
 
-            <TextView
-                android:id="@+id/individual_deliveryprice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto"
-                android:text="Delivery Price"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/individual_deliverytime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estimated Lead Time" />
 
-            <TextView
-                android:id="@+id/individual_deliverytime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:fontFamily="@font/roboto"
-                android:text="Estimated Lead Time"
-                android:textSize="24sp" />
-
-        </LinearLayout>
-    </ScrollView>
-
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

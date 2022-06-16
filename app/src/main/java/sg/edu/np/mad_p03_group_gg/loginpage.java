@@ -26,7 +26,7 @@ public class loginpage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginpage);
-        auth=FirebaseAuth.getInstance(); // singleton
+        auth=FirebaseAuth.getInstance();
         //find views and buttons
         Button button = (Button) findViewById(R.id.sign);
         TextView signup = findViewById(R.id.Sign_up);

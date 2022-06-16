@@ -3,9 +3,6 @@
     package="sg.edu.np.mad_p03_group_gg">
     <!-- Permission for internet -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -25,7 +22,7 @@
             android:exported="true" />
         <activity
             android:name=".newlisting"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".forget_password_activitiy"
             android:exported="false" />
@@ -37,16 +34,6 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" >
-        </activity>
-        <activity
-            android:name=".listings"
-            android:exported="true" />
-        <activity
-            android:name=".individual_listing"
-            android:exported="true" />
-        <activity
-            android:name=".SplashPage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,16 +42,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".chat.Chat"
-            android:exported="false" />
+            android:name=".listings"
+            android:exported="true" />
         <activity
-            android:name=".ChatList"
+            android:name=".SplashPage"
             android:exported="true">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> -->
         </activity>
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

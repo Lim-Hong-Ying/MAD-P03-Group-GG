@@ -1,20 +1,20 @@
 package sg.edu.np.mad_p03_group_gg;
 
 public class listingObject {
-    protected String lID; //listing ID in DB
+    protected int lID; //listing ID in DB
     protected String title; //listing title
     protected String tURL; //thumbnail URL
     protected String sID; //seller ID
     protected String sPPU; //seller profile picture
     protected String iC; //item condition
-    protected String price; //item price
+    protected int price; //item price
     protected Boolean reserved; //is item reserved?
 
     public listingObject() {
 
     }
 
-    public listingObject(String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r) {
+    public listingObject(int lID, String t, String turl, String sid, String sppu, String ic, int p, Boolean r) {
         setlID(lID);
         setTitle(t);
         settURL(turl);
@@ -25,11 +25,11 @@ public class listingObject {
         setReserved(r);
     }
 
-    public void setlID(String id) {
+    public void setlID(int id) {
         lID = id;
     }
 
-    public String getlID() {
+    public int getlID() {
         return lID;
     }
 
@@ -45,7 +45,7 @@ public class listingObject {
         tURL = s;
     }
 
-    public String gettURL() {
+    public String getttURL() {
         return tURL;
     }
 
@@ -73,11 +73,11 @@ public class listingObject {
         return iC;
     }
 
-    public void setPrice(String p) {
+    public void setPrice(int p) {
         price = p;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
