@@ -79,37 +79,14 @@ public class fragmenttest extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragmenttest, container, false);
         ArrayList<listingObject> data = new ArrayList<>();
-        RecyclerView listingRecycler = view.findViewById(R.id.listing_recycler);
-        listing_adapter adapter = new listing_adapter(data);
+        viewChanger(view, data);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+        retrieveFromFirebase(view, data);
+        //data = testlistings(data);
+        return view;
+    }
 
-        String mode = sharedPreferences.getString("view", "");
-        Log.e("VIEW MODE", mode);
-
-        if (mode == "card") {
-            LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(view.getContext());
-            listingRecycler.setLayoutManager(listingLayoutMgr);
-            listingRecycler.setItemAnimator(new DefaultItemAnimator());
-            listingRecycler.setAdapter(adapter);
-        }
-
-        else {
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
-            listingRecycler.setLayoutManager(gridLayoutManager);
-            listingRecycler.setItemAnimator(new DefaultItemAnimator());
-            listingRecycler.setAdapter(adapter);
-        }
-
-        /*ImageButton newListing = findViewById(R.id.add_listing);
-        newListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent newList = new Intent(view.getContext(), newlisting.class);
-                view.getContext().startActivity(newList);
-            }
-        });*/
-
+    private void viewChanger(View view, ArrayList<listingObject> data) {
         Switch viewMode = view.findViewById(R.id.view_mode);
         viewMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -131,8 +108,12 @@ public class fragmenttest extends Fragment {
                 recyclerViewStarter(view, data);
             }
         });
+    }
+
+    private void retrieveFromFirebase(View view, ArrayList<listingObject> data) {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
+        listing_adapter adapter = recyclerViewStarter(view, data);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -149,6 +130,7 @@ public class fragmenttest extends Fragment {
                     listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
                     data.add(listing);
                     Log.e("listing", String.valueOf(data.size()));
+                    //recyclerViewStarter(view, data);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -158,18 +140,16 @@ public class fragmenttest extends Fragment {
 
             }
         });
-        //retrieveFromFirebase(view, data);
-        //data = testlistings(data);
-        return view;
     }
 
-    private void recyclerViewStarter(View view, ArrayList<listingObject> data) {
+    private listing_adapter recyclerViewStarter(View view, ArrayList<listingObject> data) {
         RecyclerView listingRecycler = view.findViewById(R.id.listing_recycler);
         listing_adapter adapter = new listing_adapter(data);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
+        Log.e("mode", mode);
 
         if (mode == "card") {
             LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(view.getContext());
@@ -184,6 +164,8 @@ public class fragmenttest extends Fragment {
             listingRecycler.setItemAnimator(new DefaultItemAnimator());
             listingRecycler.setAdapter(adapter);
         }
+
+        return adapter;
     }
 
     private ArrayList<listingObject> testlistings(ArrayList<listingObject> data) {
@@ -202,35 +184,5 @@ public class fragmenttest extends Fragment {
         data.add(test5);
 
         return data;
-    }
-
-    private void retrieveFromFirebase(View view, ArrayList<listingObject> data) {
-        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
-        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot datasnap : snapshot.getChildren()) {
-                    String listingid = datasnap.getKey();
-                    String titles = datasnap.child("title").getValue(String.class);
-                    String thumbnailurl = datasnap.child("tURL").getValue(String.class);
-                    String sellerid = datasnap.child("sid").getValue(String.class);
-                    String sellerprofilepicurl = datasnap.child("sppu").getValue(String.class);
-                    String itemcondition = datasnap.child("iC").getValue(String.class);
-                    String price = datasnap.child("price").getValue(String.class);
-                    Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
-
-                    listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
-                    data.add(listing);
-                    Log.e("listing", String.valueOf(data.size()));
-                    recyclerViewStarter(view, data);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 }

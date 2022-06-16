@@ -1,5 +1,6 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new HomepageFragment());
                     break;
                 case R.id.add:
-                    replaceFragment(new fragmenttest());
+                    Intent newList = new Intent(this, newlisting.class);
+                    this.startActivity(newList);
                     break;
                 case R.id.user:
                     //replaceFragment(new User);
