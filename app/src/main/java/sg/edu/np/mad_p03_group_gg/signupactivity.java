@@ -176,7 +176,7 @@ public class signupactivity extends AppCompatActivity {
                         DatabaseReference myRef = database.getReference();
                         myRef.child("users").child(u.getId()).setValue(u);
                         Intent Homepage = new Intent(signupactivity.this,
-                                Homepage.class);
+                                MainActivity.class);
                         startActivity(Homepage);
                     }
                 }

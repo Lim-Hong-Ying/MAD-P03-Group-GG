@@ -52,7 +52,7 @@ public class newlisting extends AppCompatActivity {
             public void onClick(View view) {
                 writeToDatabaseAndFirebase();
 
-                Intent returnhome = new Intent(view.getContext(), Homepage.class);
+                Intent returnhome = new Intent(view.getContext(), MainActivity.class);
                 view.getContext().startActivity(returnhome);
             }
         });

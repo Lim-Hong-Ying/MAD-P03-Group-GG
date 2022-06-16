@@ -1,11 +1,12 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.os.Bundle;
 
 import sg.edu.np.mad_p03_group_gg.databinding.ActivityMainBinding;
 
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.add:
                     // Initiate the function of adding new post/listing
+                    Intent newList = new Intent(this, newlisting.class);
+                    this.startActivity(newList);
                     break;
                 case R.id.user:
                     //replaceFragment(new User);
