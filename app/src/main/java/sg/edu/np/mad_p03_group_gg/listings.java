@@ -1,12 +1,9 @@
 package sg.edu.np.mad_p03_group_gg;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
@@ -33,14 +30,14 @@ public class listings extends AppCompatActivity {
 
         ArrayList<listingObject> data = new ArrayList<>();
 
-        ImageButton newListing = findViewById(R.id.add_listing);
+        /*ImageButton newListing = findViewById(R.id.add_listing);
         newListing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent newList = new Intent(view.getContext(), newlisting.class);
                 view.getContext().startActivity(newList);
             }
-        });
+        });*/
 
         Switch viewMode = findViewById(R.id.view_mode);
         viewMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -128,7 +125,7 @@ public class listings extends AppCompatActivity {
                     listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
                     data.add(listing);
                     Log.e("listing", String.valueOf(data.size()));
-                    recyclerViewStarter(data);
+                    recyclerViewStarter(data); //consider .notifyDataSetChanged()
                 }
             }
 
