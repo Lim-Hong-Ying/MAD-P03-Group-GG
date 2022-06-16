@@ -119,7 +119,8 @@ public class HomepageFragment extends Fragment {
 
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
-            Intent listingsIntent = new Intent(getContext(), listings.class);
+            Intent listingsIntent = new Intent(this.getContext(), listings.class);
+            startActivity(listingsIntent);
         });
 
         meetingPlannerCardView.setOnClickListener(v -> {
@@ -127,8 +128,8 @@ public class HomepageFragment extends Fragment {
             Intent meetingPlannerIntent = new Intent(getContext(), this.getClass());
         });
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_homepage, container, false);
+        // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
+        return view;
     }
 
     private void downloadFiles(String folder) {
@@ -188,8 +189,4 @@ public class HomepageFragment extends Fragment {
                 });
     }
 
-    private boolean searchCache(ArrayList<String> fileNames, String directory) {
-        File storagePath = new File(Environment.getExternalStorageDirectory(), directory);
-        return true;
-    }
 }
