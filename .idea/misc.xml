@@ -15,12 +15,12 @@
         <entry key="app/src/main/res/layout/chat_list_row.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/event_cell.xml" value="0.19067028985507245" />
 
-        <entry key="..\:/Users/Kai/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_main.xml" value="0.14722222222222223" />
-        <entry key="..\:/Users/Kai/Downloads/MAD-P03-Group-GG/app/src/main/res/layout/activity_main.xml" value="0.35778985507246375" />
-        <entry key="..\:/Users/Kai/Downloads/MAD-P03-Group-GG/app/src/main/res/layout/fragment_homepage.xml" value="0.35778985507246375" />
-        <entry key="..\:/Users/Kai/Downloads/MAD-P03-Group-GG/app/src/main/res/layout/pager_item.xml" value="0.25" />
-        <entry key="..\:/Users/Kai/Downloads/MAD-P03-Group-GG/app/src/main/res/menu/bottom_navmenu.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/kaizh/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.14722222222222223" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.35778985507246375" />
+        <entry key="app/src/main/res/layout/fragment_homepage.xml" value="0.35778985507246375" />
+        <entry key="app/src/main/res/layout/pager_item.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/bottom_navmenu.xml" value="0.36666666666666664" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.3625" />
 
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_shape_half_circle_half_rectengle.xml" value="0.1" />
@@ -28,7 +28,10 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/inpu_text.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/sign_in_button.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.19067028985507245" />
+        <entry key="app/src/main/res/layout/activity_chat_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_displaysettings.xml" value="0.1734375" />
+        <entry key="app/src/main/res/layout/activity_event_edit.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_event_edit.xml" value="0.1793478260869565" />
         <entry key="app/src/main/res/layout/activity_forget_password_activitiy.xml" value="0.15534420289855072" />
         <entry key="app/src/main/res/layout/activity_individual_listing.xml" value="0.3458333333333333" />
@@ -40,6 +43,12 @@
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.24048913043478262" />
         <entry key="app/src/main/res/layout/activity_signupactivity.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_splash_page.xml" value="0.13333333333333333" />
+        <entry key="app/src/main/res/layout/activity_week_view.xml" value="0.19067028985507245" />
+        <entry key="app/src/main/res/layout/calendar_cell.xml" value="0.19067028985507245" />
+        <entry key="app/src/main/res/layout/chat_layout.xml" value="0.19067028985507245" />
+        <entry key="app/src/main/res/layout/chat_list_row.xml" value="0.19067028985507245" />
+        <entry key="app/src/main/res/layout/event_cell.xml" value="0.19067028985507245" />
+        <entry key="app/src/main/res/layout/fragment_persistent.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/listing_card.xml" value="0.4" />
         <entry key="app/src/main/res/layout/listing_grid.xml" value="0.26403985507246375" />
         <entry key="app/src/main/res/layout/pager_item.xml" value="0.3380208333333333" />
