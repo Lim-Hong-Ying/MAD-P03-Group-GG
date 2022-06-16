@@ -3,6 +3,9 @@
     package="sg.edu.np.mad_p03_group_gg">
     <!-- Permission for internet -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +25,7 @@
             android:exported="true" />
         <activity
             android:name=".newlisting"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".forget_password_activitiy"
             android:exported="false" />
@@ -30,16 +33,17 @@
             android:name=".signupactivity"
             android:exported="false" />
         <activity
-            android:name=".Homepage"
-            android:exported="false" />
-        <activity
             android:name=".loginpage"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true" >
+        </activity>
         <activity
             android:name=".listings"
+            android:exported="true" />
+        <activity
+            android:name=".individual_listing"
             android:exported="true" />
         <activity
             android:name=".SplashPage"
@@ -50,6 +54,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".chat.Chat"
+            android:exported="false" />
+        <activity
+            android:name=".ChatList"
+            android:exported="true">
+
+        </activity>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
