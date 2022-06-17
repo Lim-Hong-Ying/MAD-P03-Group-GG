@@ -102,7 +102,14 @@ public class signupactivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(signupactivity.this,"User created",Toast.LENGTH_SHORT).show();
-
+                    if (u != null) {
+                        DatabaseReference myRef = database.getReference();
+                        myRef.child("users").child(u.getId()).setValue(u);
+                        Intent Homepage = new Intent(signupactivity.this,
+                                MainActivity.class);
+                        startActivity(Homepage);
+                    }
+                }
                 }
                 else{
                     Toast.makeText(signupactivity.this,"Unsuccessful",Toast.LENGTH_SHORT).show();

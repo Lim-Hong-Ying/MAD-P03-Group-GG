@@ -27,6 +27,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
+                android:clickable="true"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/newListingsRecycler"
                 app:layout_constraintEnd_toStartOf="@+id/meetingPlannerButton"
