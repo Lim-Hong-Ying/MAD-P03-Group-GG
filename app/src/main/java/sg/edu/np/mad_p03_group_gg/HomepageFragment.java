@@ -124,9 +124,10 @@ public class HomepageFragment extends Fragment {
             // When clicked, will bring to meeting planner page which displays all listings
             Intent meetingPlannerIntent = new Intent(getContext(), this.getClass());
         });
-      
-        // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
+
+        // Inflate the layout for this fragment
         return view;
+    }
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -192,4 +193,8 @@ public class HomepageFragment extends Fragment {
                 });
     }
 
+    private boolean searchCache(ArrayList<String> fileNames, String directory) {
+        File storagePath = new File(Environment.getExternalStorageDirectory(), directory);
+        return true;
+    }
 }

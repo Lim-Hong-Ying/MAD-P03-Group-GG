@@ -1,11 +1,38 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Date;
 
 public class newlisting extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,4 +97,76 @@ public class newlisting extends AppCompatActivity {
             }
         });
     }
+
+    private void createListingObject(String url) {
+        EditText title_input = findViewById(R.id.input_title);
+        EditText price_input = findViewById(R.id.input_price);
+        RadioGroup condition_input = findViewById(R.id.input_condition);
+        RadioButton condition_input_new = findViewById(R.id.input_condition_new);
+        RadioButton condition_input_used = findViewById(R.id.input_condition_used);
+        EditText desc_input = findViewById(R.id.input_description);
+        EditText address_input = findViewById(R.id.input_address);
+        EditText deltype_input = findViewById(R.id.input_deliverytype);
+        EditText delprice_input = findViewById(R.id.input_deliveryprice);
+        EditText deltime_input = findViewById(R.id.input_deliverytime);
+
+        String title = title_input.getText().toString();
+        String price = price_input.getText().toString();
+        String condition;
+        if (condition_input_new.isChecked()) {
+            condition = "New";
+        }
+
+        else if (condition_input_used.isChecked()){
+            condition = "Used";
+        }
+
+        else {
+            condition = null;
+        }
+        String desc = desc_input.getText().toString();
+        String address = address_input.getText().toString();
+        String deltype = deltype_input.getText().toString();
+        String delprice = delprice_input.getText().toString();
+        String deltime = deltime_input.getText().toString();
+        //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
+
+        individualListingObject listing = new individualListingObject(null, title, url, "1", url, condition, price, false, desc, address, false, deltype, delprice, deltime);
+        writeToFirebase(listing);
+    }
+
+    private void writeToFirebase(individualListingObject listing) {
+        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
+
+        //individualListingObject listing = new individualListingObject("1", "FB test title 1", url, "test seller id 1", url, "New", 10, false, "test description", "ngee ann poly", false, "null", 0, 0);
+        db.push().setValue(listing);
+    }
+
+    private void chooseImage() {
+        Intent chooser = new Intent();
+        chooser.setType("image/*");
+        chooser.setAction(Intent.ACTION_GET_CONTENT);
+        launchPicker.launch(chooser);
+    }
+
+    ActivityResultLauncher<Intent> launchPicker
+            = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+
+                    if (data != null && data.getData() != null) {
+                        Uri selectedImageUri = data.getData();
+                        Bitmap selectedImageBitmap = null;
+                        try {
+                            selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ImageView selectimage = findViewById(R.id.choose_image);
+                        selectimage.setImageBitmap(selectedImageBitmap);
+                    }
+                }
+            });
 }
