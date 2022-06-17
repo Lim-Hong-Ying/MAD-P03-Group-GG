@@ -73,6 +73,20 @@ public class HomepageFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        File dir = new File(getContext().getCacheDir(),"advertisement");
+
+        if (dir.exists()) {
+            if (dir.listFiles().length == 0) {
+                // If directory exists, but empty, will download files
+                downloadFiles("advertisement");
+            }
+        }
+        else {
+            // If directory specified does not exist, call downloadFiles() which will also
+            // create a new directory
+            downloadFiles("advertisement");
+        }
     }
 
     @Override
@@ -84,16 +98,8 @@ public class HomepageFragment extends Fragment {
         File dir = new File(getContext().getCacheDir(),"advertisement");
         ArrayList<String> filePaths = new ArrayList<>();
 
-        if (dir.exists()) {
-            if (dir.listFiles().length == 0) {
-                downloadFiles("advertisement");
-            }
-            for (File f : dir.listFiles()) {
-                filePaths.add(f.getAbsolutePath());
-            }
-        }
-        else {
-            downloadFiles("advertisement");
+        for (File f : dir.listFiles()) {
+            filePaths.add(f.getAbsolutePath());
         }
 
         ArrayList<AdBannerImage> adBannerImages = new ArrayList<>();
@@ -170,7 +176,7 @@ public class HomepageFragment extends Fragment {
                                     outputDirectory.mkdirs();
                                 }
 
-                                File localFile = File.createTempFile("shopee", ".jpg", outputDirectory);
+                                File localFile = File.createTempFile("advert", ".jpg", outputDirectory);
                                 fileRef.getFile(localFile).addOnSuccessListener(
                                         new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
