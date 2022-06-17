@@ -5,14 +5,14 @@
 
 ![AdvertBanner](resources/advertbanner.png)
 
-### Team Members
+## Team Members
 Tan Kai Zhe | S10219390 </br>
 Lim Hong Ying | S10223298 </br>
 Ooi Jun Heng Ryan | S10223647 </br>
 William Francis Siah | S10222938 </br>
 Koh Han Jie Isaac | S10222275 </br>
 
-### Description
+## Description
 Download the Cashshope app now to interact with the huge Cashshope community, discover and buy all
 the things  you need at competitive prices!
 
@@ -32,16 +32,16 @@ your confidential data are in good hands.
 
 Tagline: Cashshope, your friendly next-generation shopping companion.
 
-### Roles and Contributions
+## Roles and Contributions
 Tan Kai Zhe: Homepage, MainActivity, Wishlist, Graphics </br>
 Lim Hong Ying | S10223298 </br>
 Ooi Jun Heng Ryan | S10223647 </br>
 William Francis Siah | S10222938 </br>
 Koh Han Jie Isaac | S10222275 </br>
 
-### Features
+## Features
 
 
-### User Guide
+## User Guide
 
-### Screenshots
+## Screenshots
