@@ -25,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.ArrayList;
 
+import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 
@@ -125,12 +126,18 @@ public class HomepageFragment extends Fragment {
 
         meetingPlannerCardView.setOnClickListener(v -> {
             // When clicked, will bring to meeting planner page which displays all listings
-            Intent meetingPlannerIntent = new Intent(getContext(), this.getClass());
+            Intent meetingPlannerIntent = new Intent(this.getContext(), MonthViewActivity.class);
+            startActivity(meetingPlannerIntent);
         });
 
         likedPageButton.setOnClickListener(v -> {
             Intent likedPageIntent = new Intent(this.getContext(), LikedPage.class);
             startActivity(likedPageIntent);
+        });
+
+        chatPageButton.setOnClickListener(v -> {
+            Intent chatPageIntent = new Intent(this.getContext(), Chat.class);
+            startActivity(chatPageIntent);
         });
 
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
