@@ -140,21 +140,21 @@
                     </SearchView>
 
                     <ImageButton
-                        android:id="@+id/imageButton"
+                        android:id="@+id/likedPageButton"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
                         android:background="#00FFFFFF"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                        app:layout_constraintEnd_toStartOf="@+id/chatPageButton"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/searchView"
                         app:srcCompat="@drawable/ic_baseline_shopping_cart_48" />
 
                     <ImageButton
-                        android:id="@+id/imageButton2"
+                        android:id="@+id/chatPageButton"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginTop="16dp"
@@ -163,7 +163,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton"
+                        app:layout_constraintStart_toEndOf="@+id/likedPageButton"
                         app:layout_constraintTop_toBottomOf="@+id/searchView"
                         app:srcCompat="@drawable/ic_baseline_chat_48" />
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".LikedPage"
+            android:exported="false" />
+        <activity
             android:name=".EventEditActivity"
             android:exported="false" />
         <activity
@@ -47,11 +50,14 @@
         <activity
             android:name=".SplashPage"
             android:exported="true">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
+            -->
         </activity>
     </application>
 

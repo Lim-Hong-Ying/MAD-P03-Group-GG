@@ -1,8 +1,6 @@
 package sg.edu.np.mad_p03_group_gg;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,7 +8,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,6 +114,9 @@ public class HomepageFragment extends Fragment {
         CardView listingsCardView = view.findViewById(R.id.listingsButton);
         CardView meetingPlannerCardView = view.findViewById(R.id.meetingPlannerButton);
 
+        ImageView likedPageButton = view.findViewById(R.id.likedPageButton);
+        ImageView chatPageButton = view.findViewById(R.id.chatPageButton);
+
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
             Intent listingsIntent = new Intent(this.getContext(), listings.class);
@@ -126,6 +126,11 @@ public class HomepageFragment extends Fragment {
         meetingPlannerCardView.setOnClickListener(v -> {
             // When clicked, will bring to meeting planner page which displays all listings
             Intent meetingPlannerIntent = new Intent(getContext(), this.getClass());
+        });
+
+        likedPageButton.setOnClickListener(v -> {
+            Intent likedPageIntent = new Intent(this.getContext(), LikedPage.class);
+            startActivity(likedPageIntent);
         });
 
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
