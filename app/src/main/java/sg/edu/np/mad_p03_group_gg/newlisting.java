@@ -22,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -124,14 +126,25 @@ public class newlisting extends AppCompatActivity {
         else {
             condition = null;
         }
+
         String desc = desc_input.getText().toString();
         String address = address_input.getText().toString();
         String deltype = deltype_input.getText().toString();
         String delprice = delprice_input.getText().toString();
         String deltime = deltime_input.getText().toString();
+        String sid = "";
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            sid = String.valueOf(user.getUid());
+        } else {
+            // No user is signed in
+        }
+
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(null, title, url, "1", url, condition, price, false, desc, address, false, deltype, delprice, deltime);
+        individualListingObject listing = new individualListingObject(null, title, url, sid, url, condition, price, false, desc, address, false, deltype, delprice, deltime);
         writeToFirebase(listing);
     }
 
