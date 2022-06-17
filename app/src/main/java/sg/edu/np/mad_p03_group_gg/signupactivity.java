@@ -110,16 +110,9 @@ public class signupactivity extends AppCompatActivity {
                         startActivity(Homepage);
                     }
                 }
-                }
                 else{
                     Toast.makeText(signupactivity.this,"Unsuccessful",Toast.LENGTH_SHORT).show();
-
-
                 }
-
-
-
-
             }
         });
         return u;
