@@ -1,11 +1,9 @@
 package sg.edu.np.mad_p03_group_gg;
 
-import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,8 +24,10 @@ public class EventEditActivity extends AppCompatActivity
     private Button timeBtn;
     private int hour, min;
     private String time;
-    private sg.edu.np.mad_p03_group_gg.Event selectedEvent;
-    private String userId = WeekViewActivity.userId; // change to current user
+    // Get selected event
+    private Event selectedEvent;
+    // Get userId of current user
+    private String userId = WeekViewActivity.userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,9 +37,11 @@ public class EventEditActivity extends AppCompatActivity
         initWidgets();
         eventDateTV.setText(CalendarUtils.formattedDate(CalendarUtils.selectedDate));
         Intent previousIntent = getIntent();
+        // Get eventId of selected event if intent is called
         int passedEventID = previousIntent.getIntExtra("eventEdit", -1);
-        selectedEvent = sg.edu.np.mad_p03_group_gg.Event.getEventForID(passedEventID);
-
+        // Get selected event
+        selectedEvent = Event.getEventForID(passedEventID);
+        // Initialise event details for editing / deleting events
         if (selectedEvent != null){
             eventNameET.setText(selectedEvent.getName());
             locationNameET.setText(selectedEvent.getLocation());
@@ -48,6 +50,7 @@ public class EventEditActivity extends AppCompatActivity
         }
     }
 
+    // Initialise event details
     private void initWidgets()
     {
         eventNameET = findViewById(R.id.eventNameET);
@@ -56,6 +59,7 @@ public class EventEditActivity extends AppCompatActivity
         timeBtn = findViewById(R.id.timeBtn);
     }
 
+    // Create the interface for selecting time
     public void timePicker(View view) {
         TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -70,14 +74,17 @@ public class EventEditActivity extends AppCompatActivity
         timePickerDialog.show();
     }
 
+    // Save or edit event into Firebase
     public void saveEventAction(View view)
     {
+        // Format event details into strings to store into Firebase
         String eventName = eventNameET.getText().toString();
         String location = locationNameET.getText().toString();
         String sHour = String.valueOf(hour);
         String sMin = String.valueOf(min);
-        time= sHour.format("%02d", hour) + ":" + sMin.format("%02d", min);  // add 0 in front of int if starting int is a 0
+        time = sHour.format("%02d", hour) + ":" + sMin.format("%02d", min);
 
+        // Get eventId for events
         int eventId;
         if (Event.eventsList.size() == 0){
             eventId = 1;
@@ -87,6 +94,7 @@ public class EventEditActivity extends AppCompatActivity
             eventId = previousEvent.getID() + 1;
         }
 
+        // Validation for event name and location
         if (TextUtils.isEmpty(eventName)){
             eventNameET.setError("Enter an Event Name");
             return;
@@ -95,11 +103,14 @@ public class EventEditActivity extends AppCompatActivity
             locationNameET.setError("Enter a location");
             return;
         }
+
+        // Add new event into Firebase
         if (selectedEvent == null){
             Event newEvent = new Event(eventId, eventName, location, CalendarUtils.selectedDate, time);
             Event.eventsList.add(newEvent);
             addDataToFireBase(userId, eventId, eventName, location, time, CalendarUtils.selectedDate.toString());
         }
+        // Edit event details and saving it into Firebase
         else{
             removeDataFromFireBase(userId, selectedEvent.getID());
             selectedEvent.setName(eventName);
@@ -110,13 +121,14 @@ public class EventEditActivity extends AppCompatActivity
         finish();
     }
 
-    // delete event button OnClick
+    // Delete event when delete button is clicked
     public void deleteEventAction(View view){
         removeDataFromFireBase(userId, selectedEvent.getID());
         Event.eventsList.remove(selectedEvent);
         finish();
     }
 
+    // Adding event details into Firebase
     public void addDataToFireBase(String userID, int id, String name, String location, String time, String date){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("Planner");
@@ -132,6 +144,7 @@ public class EventEditActivity extends AppCompatActivity
         userDate.setValue(date);
     }
 
+    // Deleting event from Firebase
     public void removeDataFromFireBase(String userId, int eventId){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("Planner").child(userId);

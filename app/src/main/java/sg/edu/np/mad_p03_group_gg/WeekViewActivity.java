@@ -34,6 +34,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     private RecyclerView calendarRecyclerView;
     private ListView eventListView;
     private String name, location, time, date;
+    // Get current user
     private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     public static String userId = user.getUid();
 
@@ -45,7 +46,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         if (CalendarUtils.selectedDate == null){
             CalendarUtils.selectedDate = LocalDate.now();
         }
-
+        // Only read from Firebase if it is the first time user logged in
         if (Event.eventsList.size() == 0){
             readFromFireBase(userId);
         }
@@ -54,6 +55,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setOnClickListener();
     }
 
+    // Initialise views and text
     private void initWidgets()
     {
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
@@ -61,6 +63,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         eventListView = findViewById(R.id.eventListView);
     }
 
+    // Create the weekly view calendar
     private void setWeekView()
     {
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
@@ -73,12 +76,14 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setEventAdapter();
     }
 
+    // Go to previous week
     public void previousWeekAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
         setWeekView();
     }
 
+    // Go to next week
     public void nextWeekAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
@@ -106,27 +111,34 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         eventListView.setAdapter(eventAdapter);
     }
 
+    // Direct to EventEditActivity
     public void newEventAction(View view)
     {
         startActivity(new Intent(this, EventEditActivity.class));
     }
 
+    // Direct to monthly calendar view
     public void monthlyAction(View view)
     {
         startActivity(new Intent(this, MonthViewActivity.class));
     }
 
+    // Direct to Event edit activity when event is clicked
     private void setOnClickListener(){
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // Get selected event
                 Event selectedEvent = (Event) eventListView.getItemAtPosition(position);
                 Intent editEvent = new Intent(getApplicationContext(), EventEditActivity.class);
+                // Pass eventID to Event edit activity
                 editEvent.putExtra("eventEdit", selectedEvent.getID());
                 startActivity(editEvent);
             }
         });
     }
+
+    // Read event details of user from Firebase
     public void readFromFireBase(String userId){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");

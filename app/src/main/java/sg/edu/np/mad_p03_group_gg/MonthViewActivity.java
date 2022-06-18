@@ -34,19 +34,21 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_month_view);
-        initWidgets();
         if (CalendarUtils.selectedDate == null) {
             CalendarUtils.selectedDate = LocalDate.now();
         }
+        initWidgets();
         setMonthView();
     }
 
+    // initialise recycler view and text
     private void initWidgets()
     {
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
     }
 
+    // create monthly calendar view
     private void setMonthView()
     {
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
@@ -58,12 +60,14 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
 
+    // Go to previous month of selected date
     public void previousMonthAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
         setMonthView();
     }
 
+    // Go to next month of selected date
     public void nextMonthAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
@@ -80,6 +84,7 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         }
     }
 
+    // Direct to weekly calendar
     public void weeklyAction(View view)
     {
         startActivity(new Intent(this, WeekViewActivity.class));
