@@ -7,8 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.LikedRecyclerAdapter;
 
 public class LikedPage extends AppCompatActivity {
@@ -19,8 +25,12 @@ public class LikedPage extends AppCompatActivity {
         setContentView(R.layout.activity_likedpage);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // To disable appname title
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); // To disable appname title
+
+        /**
+         * Retrive likedListing from current authenticated user session
+         */
+
 
         ImageView closeButton = findViewById(R.id.likedCloseButton);
 
@@ -40,5 +50,9 @@ public class LikedPage extends AppCompatActivity {
         });
 
         // Save liked listings in sharedPrefences or SQLite
+    }
+
+    private void retriveLikedList() {
+
     }
 }

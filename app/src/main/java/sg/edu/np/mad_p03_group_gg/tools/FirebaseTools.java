@@ -31,50 +31,23 @@ import sg.edu.np.mad_p03_group_gg.User;
 
 public  class FirebaseTools {
 
-    public static User getIndividualUser() {
+    public static @Nullable String getCurrentAuthenticatedUser() {
         // Retrive user data using the current authenticated session
-        final User[] mainUser = new User[1];
-
+        String userID;
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference databaseReference = database.getReference();
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        FirebaseAuth finalAuth = auth;
-        Log.d("current user in FirebaseTools", finalAuth.getCurrentUser().getUid());
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Get key id of current user
-                FirebaseUser fbUser = finalAuth.getCurrentUser();
-                String userID = fbUser.getUid();
-                for(DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
+        if (firebaseUser != null) {
+            // User is signed in
+            userID = String.valueOf(firebaseUser.getUid());
 
-                    String foundID = dataSnapshot.child("id").getValue(String.class);
-                    if(foundID.equals(userID)){
-                        String phoneNumber = dataSnapshot.child("phonenumber").getValue(String.class);
-                        String displayName = dataSnapshot.child("name").getValue(String.class);
-                        String profilePic = dataSnapshot.child("image").getValue(String.class);
-                        String email = dataSnapshot.child("email").getValue(String.class);
-
-                        mainUser[0] = new User(displayName, email, phoneNumber, profilePic, foundID);
-                        break;
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Database Error", error.getDetails());
-            }
-        });
-
-        return mainUser[0];
+            return userID;
+        } else {
+            // No user is signed in
+            Log.d("Error:", "Something went wrong, there is no authenticated user.");
+            return null;
+        }
     }
-
-    public static void dateTimeConversion() {
-
-    }
-
 }

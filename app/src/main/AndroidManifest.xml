@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".view.ui.SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".EventEditActivity"
             android:exported="false" />
         <activity
@@ -30,17 +33,14 @@
         <activity
             android:name=".signupactivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".loginpage"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".listings"
             android:exported="true" />
@@ -64,8 +64,7 @@
             android:exported="false" />
         <activity
             android:name=".ChatList"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

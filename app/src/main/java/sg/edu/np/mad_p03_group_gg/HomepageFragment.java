@@ -147,18 +147,6 @@ public class HomepageFragment extends Fragment {
             Intent chatPageIntent = new Intent(this.getContext(), Chat.class);
             startActivity(chatPageIntent);
         });
-
-        /**
-         *         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-         *         DatabaseReference databaseReference = database.getReference();
-         *
-         *         FirebaseAuth auth = FirebaseAuth.getInstance();
-         *
-         *         auth.getCurrentUser().get
-         *
-         *          User currentUser = FirebaseTools.getIndividualUser();
-        */
-
         /**
          * TO-DO:
          *
@@ -166,6 +154,9 @@ public class HomepageFragment extends Fragment {
          * If user like, store into list of user and update DB with the list (in the form of child)
          *
          */
+
+        String userID = FirebaseTools.getCurrentAuthenticatedUser();
+        Log.d("Current Authenticated User in Liked Page", userID);
 
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
         return view;

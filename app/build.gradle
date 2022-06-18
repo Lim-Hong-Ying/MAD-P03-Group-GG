@@ -27,6 +27,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    // For fragments
     buildFeatures {
         viewBinding true
     }
