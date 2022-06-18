@@ -2,18 +2,17 @@ package sg.edu.np.mad_p03_group_gg;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,7 +25,9 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.ArrayList;
 
+import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
+import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 
 /**
@@ -86,6 +87,7 @@ public class HomepageFragment extends Fragment {
 
         if (dir.exists()) {
             if (dir.listFiles().length == 0) {
+                // If directory exists, but empty, will download files
                 downloadFiles("advertisement");
             }
             for (File f : dir.listFiles()) {
@@ -93,6 +95,8 @@ public class HomepageFragment extends Fragment {
             }
         }
         else {
+            // If directory specified does not exist, call downloadFiles() which will also
+            // create a new directory
             downloadFiles("advertisement");
         }
 
@@ -114,26 +118,50 @@ public class HomepageFragment extends Fragment {
         // Set onClickListeners for Buttons
         CardView listingsCardView = view.findViewById(R.id.listingsButton);
         CardView meetingPlannerCardView = view.findViewById(R.id.meetingPlannerButton);
+        ImageView chatButtonView = view.findViewById(R.id.chatPageButton);
+
+        ImageView likedPageButton = view.findViewById(R.id.likedPageButton);
+        ImageView chatPageButton = view.findViewById(R.id.chatPageButton);
 
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
-            replaceFragment(new listingFragment());
+            Intent listingsIntent = new Intent(this.getContext(), listings.class);
+            startActivity(listingsIntent);
+        });
+
+        chatButtonView.setOnClickListener(v -> {
+            Intent chatListIntent = new Intent(getContext(), ChatList.class);
+            startActivity(chatListIntent);
         });
 
         meetingPlannerCardView.setOnClickListener(v -> {
             // When clicked, will bring to meeting planner page which displays all listings
-            Intent meetingPlannerIntent = new Intent(getContext(), this.getClass());
+            Intent meetingPlannerIntent = new Intent(this.getContext(), MonthViewActivity.class);
+            startActivity(meetingPlannerIntent);
         });
 
-        // Inflate the layout for this fragment
-        return view;
-    }
+        likedPageButton.setOnClickListener(v -> {
+            Intent likedPageIntent = new Intent(this.getContext(), LikedPage.class);
+            startActivity(likedPageIntent);
+        });
 
-    private void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, fragment);
-        fragmentTransaction.commit();
+        chatPageButton.setOnClickListener(v -> {
+            Intent chatPageIntent = new Intent(this.getContext(), Chat.class);
+            startActivity(chatPageIntent);
+        });
+        /**
+         * TO-DO:
+         *
+         * Get current user session
+         * If user like, store into list of user and update DB with the list (in the form of child)
+         *
+         */
+
+        String userID = FirebaseTools.getCurrentAuthenticatedUser();
+        Log.d("Current Authenticated User in Liked Page", userID);
+
+        // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
+        return view;
     }
 
     private void downloadFiles(String folder) {
@@ -145,10 +173,10 @@ public class HomepageFragment extends Fragment {
 
         // Create a child reference
         // imagesRef now points to "images"
-        StorageReference imagesRef = storageRef.child(folder);
+        StorageReference filesRef = storageRef.child(folder);
 
         // List all images in /<folder> eg. can be /advertisement
-        imagesRef.listAll()
+        filesRef.listAll()
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
@@ -162,7 +190,7 @@ public class HomepageFragment extends Fragment {
                                     outputDirectory.mkdirs();
                                 }
 
-                                File localFile = File.createTempFile("shopee", ".jpg", outputDirectory);
+                                File localFile = File.createTempFile("advert", ".jpg", outputDirectory);
                                 fileRef.getFile(localFile).addOnSuccessListener(
                                         new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
@@ -191,10 +219,5 @@ public class HomepageFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private boolean searchCache(ArrayList<String> fileNames, String directory) {
-        File storagePath = new File(Environment.getExternalStorageDirectory(), directory);
-        return true;
     }
 }

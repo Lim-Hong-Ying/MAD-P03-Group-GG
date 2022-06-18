@@ -56,20 +56,7 @@ public class ChatList extends AppCompatActivity {
         // mainUser = new User("98765432","Test Name 2","test2@gmail.com");
         // TO DO: Add back for final app:
         // Get intent data from main activity
-        //FirebaseUser fbUser = auth.getCurrentUser();
-        //String userEmail = fbUser.getEmail();
-
-        //mainUser = new User(fbUser.getDisplayName(),fbUser.getEmail(), fbUser.getPhoneNumber());
-        //fbUser.
         //mainUser = getIntent().getParcelableExtra("user");
-
-        // Set recyclerView
-        chatList = findViewById(R.id.chatList);
-        chatList.setHasFixedSize(true);
-        chatList.setLayoutManager(new LinearLayoutManager(this));
-        // Setting adapter for recyclerView
-        chatListAdapter = new ChatListAdapter(new ArrayList<MessageList>(),ChatList.this,mainUser);
-        chatList.setAdapter(chatListAdapter);
 
         // Adding back button
         ImageView backBtn = findViewById(R.id.backBtn);
@@ -80,25 +67,31 @@ public class ChatList extends AppCompatActivity {
             }
         });
 
-        // Get profile picture from firebase db
+
+        // Get current user details and Get profile picture from firebase db
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get id of current user
                 FirebaseUser fbUser = auth.getCurrentUser();
-                String userEmail = fbUser.getEmail();
-                for(DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
+                String userId = fbUser.getUid();
 
-                    String foundEmail = dataSnapshot.child("email").getValue(String.class);
-                    if(foundEmail.equalsIgnoreCase(userEmail)){
-                        String phoneNumber = dataSnapshot.child("phonenumber").getValue(String.class);
+                // Create main use object using current ID
+                for(DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
+                    String foundId = dataSnapshot.child("id").getValue(String.class);
+                    if(userId.equalsIgnoreCase(foundId)){
+                        String email = dataSnapshot.child("email").getValue(String.class);
                         String displayName = dataSnapshot.child("name").getValue(String.class);
-                        mainUser = new User(displayName, foundEmail, phoneNumber);
+                        mainUser = new User(displayName, email, userId);
                         break;
                     }
                 }
 
-                String profilePicUrl = snapshot.child("users").child(mainUser.getPhonenumber())
-                        .child("profile_pic").getValue(String.class);
+                chatListAdapter = new ChatListAdapter(new ArrayList<MessageList>(),ChatList.this,mainUser);
+                chatList.setAdapter(chatListAdapter);
+
+                String profilePicUrl = snapshot.child("users").child(mainUser.getId())
+                        .child("userprofilepic").getValue(String.class);
 
                 if(!TextUtils.isEmpty(profilePicUrl)){
                     // Set profile pic to the (circle) image view
@@ -112,6 +105,14 @@ public class ChatList extends AppCompatActivity {
                 Log.w(TAG,"Failed to read value.", error.toException());
             }
         });
+
+        // Set recyclerView
+        chatList = findViewById(R.id.chatList);
+        chatList.setHasFixedSize(true);
+        chatList.setLayoutManager(new LinearLayoutManager(this));
+        // Setting adapter for recyclerView
+        //chatListAdapter = new ChatListAdapter(new ArrayList<MessageList>(),ChatList.this,mainUser);
+        //chatList.setAdapter(chatListAdapter);
 
         // Populating recycler view with users
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -131,9 +132,9 @@ public class ChatList extends AppCompatActivity {
                     //dataSet = false;
 
                     // If id number is not equals to the main user's id number
-                    if(!TextUtils.equals(getid,mainUser.getPhonenumber())){
+                    if(!TextUtils.equals(getid,mainUser.getId())){
                         String getName = dataSnapshot.child("name").getValue(String.class);
-                        String getProfilePic = dataSnapshot.child("profile_pic").getValue(String.class);
+                        String getProfilePic = dataSnapshot.child("userprofilepic").getValue(String.class);
 
                         // load our friends in, chat or without chat.
                         MessageList messageList =
@@ -166,8 +167,8 @@ public class ChatList extends AppCompatActivity {
                                             String getUserTwo = dataSnapshotCurrentChat.child("user2").getValue(String.class);
 
                                                 // If id numbers are the same as main user and selected user's id number
-                                            if((TextUtils.equals(getUserOne,getid) && TextUtils.equals(getUserTwo,mainUser.getPhonenumber()))
-                                                    || (TextUtils.equals(getUserOne,mainUser.getPhonenumber()) && TextUtils.equals(getUserTwo, getid))){
+                                            if((TextUtils.equals(getUserOne,getid) && TextUtils.equals(getUserTwo,mainUser.getId()))
+                                                    || (TextUtils.equals(getUserOne,mainUser.getId()) && TextUtils.equals(getUserTwo, getid))){
 //                                                unseenMessages = 0;
                                                 for (DataSnapshot chatDataSnapshot : dataSnapshotCurrentChat.child("messages").getChildren()){
 

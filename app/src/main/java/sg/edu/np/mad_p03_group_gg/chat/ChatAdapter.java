@@ -26,7 +26,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     public ChatAdapter(List<ChatInfo> chatInfoList, Context context, User mainUser) {
         this.chatInfoList = chatInfoList;
         this.context = context;
-        this.mainUserid = mainUser.getPhonenumber();
+        this.mainUserid = mainUser.getId();
     }
 
     @NonNull
