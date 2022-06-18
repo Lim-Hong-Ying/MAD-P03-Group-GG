@@ -42,6 +42,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         SharedPreferences sharedPreferences = parent.getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
+        Log.e("mode", mode);
 
         if (mode == "card") {
             card = LayoutInflater.from(parent.getContext()).inflate(R.layout.listing_card, parent, false);
