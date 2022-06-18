@@ -4,6 +4,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class User implements Parcelable{
     private String name;
@@ -12,7 +13,7 @@ public class User implements Parcelable{
     private String id;
 
     private String userprofilepic;
-    private ArrayList<String> likinglst;
+    private ArrayList<String> likedList;
 
     // Parcelable (To pass objects from activity to activity)
     protected User(Parcel in) {
@@ -22,7 +23,7 @@ public class User implements Parcelable{
         phonenumber = in.readString();
         id = in.readString();
         userprofilepic=in.readString();
-        in.readStringList(likinglst);
+        in.readStringList(likedList);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -49,7 +50,7 @@ public class User implements Parcelable{
         parcel.writeString(phonenumber);
         parcel.writeString(id);
         parcel.writeString(userprofilepic);
-        parcel.writeStringList(likinglst);
+        parcel.writeStringList(likedList);
     }
 
     // End
@@ -96,11 +97,11 @@ public class User implements Parcelable{
     }
 
     public ArrayList<String> getLikinglst() {
-        return likinglst;
+        return likedList;
     }
 
-    public void setLikinglst(ArrayList<String> likinglst) {
-        this.likinglst = likinglst;
+    public void setLikinglst(ArrayList<String> likedList) {
+        this.likedList = likedList;
     }
 
     public User(){
@@ -114,12 +115,20 @@ public class User implements Parcelable{
         likinglst = new ArrayList<String>();
     }
 
-    public User(String n, String e, String p,String up){
-        setEmail(e);
+    public User(String n, String e, String p, String up){
         setName(n);
+        setEmail(e);
+        setPhonenumber(p);
+        setUserprofilepic(up);
+    }
+
+    public User(String n, String e, String p, String up, @NonNull String userID){
+        setName(n);
+        setEmail(e);
         setPhonenumber(p);
         setUserprofilepic(up);
         likinglst = new ArrayList<String>();
+        setId(userID);
     }
 
     public User(String n, String e, String p,String up, ArrayList<String> lList){
