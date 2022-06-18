@@ -27,7 +27,7 @@ public class EventEditActivity extends AppCompatActivity
     // Get selected event
     private Event selectedEvent;
     // Get userId of current user
-    private String userId = WeekViewActivity.userId;
+    private String userId = HomepageFragment.userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

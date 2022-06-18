@@ -35,8 +35,6 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     private ListView eventListView;
     private String name, location, time, date;
     // Get current user
-    private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    public static String userId = user.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,10 +43,6 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setContentView(R.layout.activity_week_view);
         if (CalendarUtils.selectedDate == null){
             CalendarUtils.selectedDate = LocalDate.now();
-        }
-        // Only read from Firebase if it is the first time user logged in
-        if (Event.eventsList.size() == 0){
-            readFromFireBase(userId);
         }
         initWidgets();
         setWeekView();
