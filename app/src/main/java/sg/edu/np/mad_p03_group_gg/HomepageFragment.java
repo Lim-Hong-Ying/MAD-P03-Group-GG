@@ -3,7 +3,6 @@ package sg.edu.np.mad_p03_group_gg;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +15,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
@@ -130,7 +118,7 @@ public class HomepageFragment extends Fragment {
         // Set onClickListeners for Buttons
         CardView listingsCardView = view.findViewById(R.id.listingsButton);
         CardView meetingPlannerCardView = view.findViewById(R.id.meetingPlannerButton);
-        ImageView chatButtonView = view.findViewById(R.id.chatButton);
+        ImageView chatButtonView = view.findViewById(R.id.chatPageButton);
 
         ImageView likedPageButton = view.findViewById(R.id.likedPageButton);
         ImageView chatPageButton = view.findViewById(R.id.chatPageButton);
