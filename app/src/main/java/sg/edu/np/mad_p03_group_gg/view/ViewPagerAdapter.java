@@ -1,11 +1,16 @@
 package sg.edu.np.mad_p03_group_gg.view;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Advanceable;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -32,7 +37,8 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.Recy
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         AdBannerImage adBannerImage = adBannerImages.get(position);
-        holder.adBannerImage.setImageResource(adBannerImage.getImage());
+        Bitmap image = BitmapFactory.decodeFile(adBannerImage.getImage());
+        holder.adBannerImageView.setImageBitmap(image);
     }
 
     @Override
@@ -41,10 +47,10 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.Recy
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        ImageView adBannerImage;
+        ImageView adBannerImageView;
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            adBannerImage = itemView.findViewById(R.id.imageView);
+            adBannerImageView = itemView.findViewById(R.id.imageView);
         }
     }
 }

@@ -51,6 +51,9 @@ public class newlisting extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 writeToDatabaseAndFirebase();
+
+                Intent returnhome = new Intent(view.getContext(), MainActivity.class);
+                view.getContext().startActivity(returnhome);
             }
         });
     }

@@ -28,7 +28,7 @@ public class loginpage extends AppCompatActivity {
         setContentView(R.layout.activity_loginpage);
         auth=FirebaseAuth.getInstance(); // singleton
         //find views and buttons
-        Button button = (Button) findViewById(R.id.sign);
+        Button button = (Button) findViewById(R.id.fgt_pswrd_btn);
         TextView signup = findViewById(R.id.Sign_up);
         TextView fgtpassword = findViewById(R.id.forgetpsswrdbtn);
         fgtpassword.setOnClickListener(new View.OnClickListener(){
@@ -87,9 +87,7 @@ public class loginpage extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         //When user's sign in is sucessful, it will automatically go to the next page
-                        Intent login = new Intent(loginpage.this, Homepage.class);
-                        // test chat list
-                        //Intent login = new Intent(loginpage.this, ChatList.class);
+                        Intent login = new Intent(loginpage.this, MainActivity.class);
                         startActivity(login);//Starts sign up activity
                     } else {
                         TextView error = findViewById(R.id.siginerror);
