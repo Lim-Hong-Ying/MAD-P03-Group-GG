@@ -2,7 +2,11 @@ package sg.edu.np.mad_p03_group_gg;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class User implements Parcelable{
     private String name;
@@ -108,12 +112,21 @@ public class User implements Parcelable{
         setEmail(e);
     }
 
-    public User(String n, String e, String p,String up){
-        setEmail(e);
+    public User(String n, String e, String p, String up){
         setName(n);
+        setEmail(e);
         setPhonenumber(p);
         setUserprofilepic(up);
     }
+
+    public User(String n, String e, String p, String up, @NonNull String userID){
+        setName(n);
+        setEmail(e);
+        setPhonenumber(p);
+        setUserprofilepic(up);
+        setId(userID);
+    }
+
     public User(String n, String e, String p,String up, ArrayList<String> lList){
         setEmail(e);
         setName(n);

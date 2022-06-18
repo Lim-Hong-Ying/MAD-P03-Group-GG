@@ -17,6 +17,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
@@ -27,6 +31,7 @@ import java.util.ArrayList;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
+import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 
 /**
@@ -73,20 +78,6 @@ public class HomepageFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        File dir = new File(getContext().getCacheDir(),"advertisement");
-
-        if (dir.exists()) {
-            if (dir.listFiles().length == 0) {
-                // If directory exists, but empty, will download files
-                downloadFiles("advertisement");
-            }
-        }
-        else {
-            // If directory specified does not exist, call downloadFiles() which will also
-            // create a new directory
-            downloadFiles("advertisement");
-        }
     }
 
     @Override
@@ -98,8 +89,19 @@ public class HomepageFragment extends Fragment {
         File dir = new File(getContext().getCacheDir(),"advertisement");
         ArrayList<String> filePaths = new ArrayList<>();
 
-        for (File f : dir.listFiles()) {
-            filePaths.add(f.getAbsolutePath());
+        if (dir.exists()) {
+            if (dir.listFiles().length == 0) {
+                // If directory exists, but empty, will download files
+                downloadFiles("advertisement");
+            }
+            for (File f : dir.listFiles()) {
+                filePaths.add(f.getAbsolutePath());
+            }
+        }
+        else {
+            // If directory specified does not exist, call downloadFiles() which will also
+            // create a new directory
+            downloadFiles("advertisement");
         }
 
         ArrayList<AdBannerImage> adBannerImages = new ArrayList<>();
@@ -146,6 +148,25 @@ public class HomepageFragment extends Fragment {
             startActivity(chatPageIntent);
         });
 
+        /**
+         *         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+         *         DatabaseReference databaseReference = database.getReference();
+         *
+         *         FirebaseAuth auth = FirebaseAuth.getInstance();
+         *
+         *         auth.getCurrentUser().get
+         *
+         *          User currentUser = FirebaseTools.getIndividualUser();
+        */
+
+        /**
+         * TO-DO:
+         *
+         * Get current user session
+         * If user like, store into list of user and update DB with the list (in the form of child)
+         *
+         */
+
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
         return view;
     }
@@ -159,10 +180,10 @@ public class HomepageFragment extends Fragment {
 
         // Create a child reference
         // imagesRef now points to "images"
-        StorageReference imagesRef = storageRef.child(folder);
+        StorageReference filesRef = storageRef.child(folder);
 
         // List all images in /<folder> eg. can be /advertisement
-        imagesRef.listAll()
+        filesRef.listAll()
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
@@ -206,5 +227,4 @@ public class HomepageFragment extends Fragment {
                     }
                 });
     }
-
 }

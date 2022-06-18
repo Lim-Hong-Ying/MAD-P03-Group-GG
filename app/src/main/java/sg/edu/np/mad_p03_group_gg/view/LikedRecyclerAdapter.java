@@ -1,5 +1,6 @@
 package sg.edu.np.mad_p03_group_gg.view;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -7,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import sg.edu.np.mad_p03_group_gg.R;
 
 public class LikedRecyclerAdapter extends RecyclerView.Adapter<LikedRecyclerAdapter.LikedRecyclerViewHolder> {
     ArrayList<String> likedList;
@@ -20,7 +23,10 @@ public class LikedRecyclerAdapter extends RecyclerView.Adapter<LikedRecyclerAdap
     @NonNull
     @Override
     public LikedRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.liked_item, parent, false);;
+
+        return new LikedRecyclerViewHolder(view);
     }
 
     @Override
@@ -30,7 +36,7 @@ public class LikedRecyclerAdapter extends RecyclerView.Adapter<LikedRecyclerAdap
 
     @Override
     public int getItemCount() {
-        return 0;
+        return likedList.size();
     }
 
     public class LikedRecyclerViewHolder extends RecyclerView.ViewHolder {
