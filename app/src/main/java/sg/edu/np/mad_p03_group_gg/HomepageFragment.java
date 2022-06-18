@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -114,10 +115,16 @@ public class HomepageFragment extends Fragment {
         // Set onClickListeners for Buttons
         CardView listingsCardView = view.findViewById(R.id.listingsButton);
         CardView meetingPlannerCardView = view.findViewById(R.id.meetingPlannerButton);
+        ImageView chatButtonView = view.findViewById(R.id.chatButton);
 
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
             replaceFragment(new listingFragment());
+        });
+
+        chatButtonView.setOnClickListener(v -> {
+            Intent chatListIntent = new Intent(getContext(), ChatList.class);
+            startActivity(chatListIntent);
         });
 
         meetingPlannerCardView.setOnClickListener(v -> {

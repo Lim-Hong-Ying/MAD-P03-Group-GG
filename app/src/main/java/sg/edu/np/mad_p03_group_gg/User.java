@@ -2,6 +2,7 @@ package sg.edu.np.mad_p03_group_gg;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class User implements Parcelable{
@@ -15,6 +16,7 @@ public class User implements Parcelable{
 
     // Parcelable (To pass objects from activity to activity)
     protected User(Parcel in) {
+        likinglst = new ArrayList<String>();
         name = in.readString();
         email = in.readString();
         phonenumber = in.readString();
@@ -101,11 +103,15 @@ public class User implements Parcelable{
         this.likinglst = likinglst;
     }
 
-    public User(){}
-    public User(String n, String e,String p){
-        setPhonenumber(p);
+    public User(){
+        likinglst = new ArrayList<String>();
+    }
+
+    public User(String n, String e,String i){
+        setId(i);
         setName(n);
         setEmail(e);
+        likinglst = new ArrayList<String>();
     }
 
     public User(String n, String e, String p,String up){
@@ -113,7 +119,9 @@ public class User implements Parcelable{
         setName(n);
         setPhonenumber(p);
         setUserprofilepic(up);
+        likinglst = new ArrayList<String>();
     }
+
     public User(String n, String e, String p,String up, ArrayList<String> lList){
         setEmail(e);
         setName(n);

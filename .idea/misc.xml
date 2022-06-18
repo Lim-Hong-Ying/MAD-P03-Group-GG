@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/CSFS Course/Year 2 Sem 1/Mobile App Development/Assignment/MADAssignment/app/src/main/res/layout/activity_chat.xml" value="0.13269927536231885" />
+        <entry key="..\:/CSFS Course/Year 2 Sem 1/Mobile App Development/Assignment/MADAssignment/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/CSFS Course/Year 2 Sem 1/Mobile App Development/Assignment/MADAssignment/app/src/main/res/layout/fragment_homepage.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_shape_half_circle_half_rectengle.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
