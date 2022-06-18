@@ -134,8 +134,8 @@
             android:id="@+id/create_listing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#2196F3"
             android:clickable="true"
+            android:background="@drawable/sign_in_button"
             android:text="Create listing" />
 
     </LinearLayout>
