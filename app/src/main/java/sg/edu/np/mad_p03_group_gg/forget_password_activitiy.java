@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,19 +20,32 @@ public class forget_password_activitiy extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password_activitiy);
-        EditText fgtEmail = findViewById(R.id.fgtemail);
         TextView passwordStatus= findViewById(R.id.fgtpasswordstatus);
-        String ForgetEmail = fgtEmail.toString().trim();
+        Button fgtpassword_btn = findViewById(R.id.fgt_pswrd_btn);
+
         FirebaseAuth auth;
-        FirebaseAuth.getInstance().sendPasswordResetEmail(ForgetEmail)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            passwordStatus.setText("An email has been send to your email address");
-                        }
-                    }
-                });
+        fgtpassword_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText fgtEmail = findViewById(R.id.fgtemail);
+
+                String ForgetEmail = fgtEmail.getText().toString();
+                Log.e( "onClick: ",ForgetEmail);
+
+                FirebaseAuth.getInstance().sendPasswordResetEmail(ForgetEmail)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    passwordStatus.setText("An email has been send to your email address");
+                                }
+                            }
+                        });
+
+                }
+
+        });
+
 
     }
 }
