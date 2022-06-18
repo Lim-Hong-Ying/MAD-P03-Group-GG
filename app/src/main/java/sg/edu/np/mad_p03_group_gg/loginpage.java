@@ -29,7 +29,7 @@ public class loginpage extends AppCompatActivity {
         setContentView(R.layout.activity_loginpage);
         auth=FirebaseAuth.getInstance(); // singleton
         //find views and buttons
-        Button button = (Button) findViewById(R.id.sign);
+        Button button = (Button) findViewById(R.id.fgt_pswrd_btn);
         TextView signup = findViewById(R.id.Sign_up);
         TextView fgtpassword = findViewById(R.id.forgetpsswrdbtn);
         fgtpassword.setOnClickListener(new View.OnClickListener(){
