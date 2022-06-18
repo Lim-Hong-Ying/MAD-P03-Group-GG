@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -123,8 +124,13 @@ public class EventEditActivity extends AppCompatActivity
 
     // Delete event when delete button is clicked
     public void deleteEventAction(View view){
-        removeDataFromFireBase(userId, selectedEvent.getID());
-        Event.eventsList.remove(selectedEvent);
+        try {
+            removeDataFromFireBase(userId, selectedEvent.getID());
+            Event.eventsList.remove(selectedEvent);
+        }
+        catch(Exception e){
+            Toast.makeText(getApplicationContext(), "Unable to delete event", Toast.LENGTH_SHORT).show();
+        }
         finish();
     }
 

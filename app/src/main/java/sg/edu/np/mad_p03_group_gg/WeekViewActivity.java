@@ -33,14 +33,15 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private ListView eventListView;
-    private String name, location, time, date;
-    // Get current user
+    // Selected date from monthly calendar
+    public static LocalDate monthlyDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_view);
+        // Initialise date for first time
         if (CalendarUtils.selectedDate == null){
             CalendarUtils.selectedDate = LocalDate.now();
         }
@@ -60,6 +61,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     // Create the weekly view calendar
     private void setWeekView()
     {
+        // Display month and year
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
@@ -70,20 +72,21 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setEventAdapter();
     }
 
-    // Go to previous week
+    // Navigate to previous week
     public void previousWeekAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
         setWeekView();
     }
 
-    // Go to next week
+    // Navigate to next week
     public void nextWeekAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
         setWeekView();
     }
 
+    // Initialises date when selected
     @Override
     public void onItemClick(int position, LocalDate date)
     {
@@ -94,8 +97,16 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     @Override
     protected void onResume()
     {
+        // retrieve date from monthly calendar
+        if (monthlyDate != null){
+            CalendarUtils.selectedDate = monthlyDate;
+            monthlyDate = null;
+        }
+        Log.d("Date", CalendarUtils.selectedDate.toString());
         super.onResume();
         setEventAdapter();
+        // Set selected date from monthly calendar onto weekly calendar
+        setWeekView();
     }
 
     private void setEventAdapter()
@@ -125,36 +136,9 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
                 // Get selected event
                 Event selectedEvent = (Event) eventListView.getItemAtPosition(position);
                 Intent editEvent = new Intent(getApplicationContext(), EventEditActivity.class);
-                // Pass eventID to Event edit activity
+                // Pass eventID to EventEdit activity
                 editEvent.putExtra("eventEdit", selectedEvent.getID());
                 startActivity(editEvent);
-            }
-        });
-    }
-
-    // Read event details of user from Firebase
-    public void readFromFireBase(String userId){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("Planner");
-        myRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    int eventId = Integer.parseInt(snapshot.getKey());
-                    name = snapshot.child("name").getValue(String.class);
-                    location = snapshot.child("location").getValue(String.class);
-                    time = snapshot.child("time").getValue(String.class);
-                    date = snapshot.child("date").getValue(String.class);
-                    LocalDate dt = LocalDate.parse(date, dtf);
-                    Event event = new Event(eventId, name, location, dt, time);
-                    Event.eventsList.add(event);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("TAG", "Failed to read value.", error.toException());
             }
         });
     }

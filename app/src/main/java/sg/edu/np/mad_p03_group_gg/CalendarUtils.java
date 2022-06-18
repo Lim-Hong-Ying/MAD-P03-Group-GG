@@ -17,30 +17,27 @@ public class CalendarUtils
         return date.format(formatter);
     }
 
-    public static String formattedTime(LocalTime time)
-    {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
-        return time.format(formatter);
-    }
-
     public static String monthYearFromDate(LocalDate date)
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
         return date.format(formatter);
     }
 
+    // Get number of days in each month
     public static ArrayList<LocalDate> daysInMonthArray(LocalDate date)
     {
         ArrayList<LocalDate> daysInMonthArray = new ArrayList<>();
         YearMonth yearMonth = YearMonth.from(date);
 
         int daysInMonth = yearMonth.lengthOfMonth();
-
+        // First day of month
         LocalDate firstOfMonth = CalendarUtils.selectedDate.withDayOfMonth(1);
         int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
 
+        // i <= 42 as there are 35 squares in monthly calendar + 7 days in a week
         for(int i = 1; i <= 42; i++)
         {
+            // If its before the first or last day of month, add a blank square
             if(i <= dayOfWeek || i > daysInMonth + dayOfWeek)
                 daysInMonthArray.add(null);
             else
@@ -49,6 +46,7 @@ public class CalendarUtils
         return  daysInMonthArray;
     }
 
+    // Add weekly dates to list
     public static ArrayList<LocalDate> daysInWeekArray(LocalDate selectedDate)
     {
         ArrayList<LocalDate> days = new ArrayList<>();
@@ -63,10 +61,10 @@ public class CalendarUtils
         return days;
     }
 
+    // Search for Sunday as first day in weekly calendar is Sunday
     private static LocalDate sundayForDate(LocalDate current)
     {
         LocalDate oneWeekAgo = current.minusWeeks(1);
-
         while (current.isAfter(oneWeekAgo))
         {
             if(current.getDayOfWeek() == DayOfWeek.SUNDAY)
@@ -74,7 +72,6 @@ public class CalendarUtils
 
             current = current.minusDays(1);
         }
-
         return null;
     }
 }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,11 +35,20 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_month_view);
+        // Initialise date only for the first time
         if (CalendarUtils.selectedDate == null) {
             CalendarUtils.selectedDate = LocalDate.now();
         }
         initWidgets();
         setMonthView();
+        // Initialise close button
+        ImageView closeBtn = findViewById(R.id.monthlyCloseButton);
+        // Removes activity from stack
+        closeBtn.setOnClickListener(view -> {
+            // Pass selected date to weekly calendar
+            WeekViewActivity.monthlyDate =  CalendarUtils.selectedDate;
+            finish();
+        });
     }
 
     // initialise recycler view and text
@@ -51,7 +61,9 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
     // create monthly calendar view
     private void setMonthView()
     {
+        // Set month and year of monthly calendar
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
+        // Get days in month
         ArrayList<LocalDate> daysInMonth = daysInMonthArray(CalendarUtils.selectedDate);
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
@@ -60,14 +72,14 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
 
-    // Go to previous month of selected date
+    // Navigate to previous month of selected date
     public void previousMonthAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
         setMonthView();
     }
 
-    // Go to next month of selected date
+    // Navigate to next month of selected date
     public void nextMonthAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
