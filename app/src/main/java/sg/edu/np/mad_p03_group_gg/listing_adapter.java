@@ -1,6 +1,9 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -30,7 +33,17 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
     public listing_viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View card;
 
-        card = LayoutInflater.from(parent.getContext()).inflate(R.layout.listing_card, parent, false);
+        SharedPreferences sharedPreferences = parent.getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
+
+        String mode = sharedPreferences.getString("view", "");
+
+        if (mode == "card") {
+            card = LayoutInflater.from(parent.getContext()).inflate(R.layout.listing_card, parent, false);
+        }
+
+        else {
+            card = LayoutInflater.from(parent.getContext()).inflate(R.layout.listing_grid, parent, false);
+        }
 
         return new listing_viewholder(card);
     }

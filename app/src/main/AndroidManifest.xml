@@ -33,9 +33,6 @@
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".Homepage"
-            android:exported="false" />
-        <activity
             android:name=".loginpage"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -43,9 +40,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" >
-
         </activity>
-
         <activity
             android:name=".listings"
             android:exported="true" />

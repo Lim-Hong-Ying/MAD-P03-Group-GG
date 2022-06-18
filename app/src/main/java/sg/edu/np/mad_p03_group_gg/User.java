@@ -9,6 +9,7 @@ public class User implements Parcelable{
     private String email;
     private String phonenumber;
     private String id;
+
     private String userprofilepic;
     private ArrayList<String> likinglst;
 
@@ -51,7 +52,6 @@ public class User implements Parcelable{
 
     // End
 
-
     public String getName() {
         return name;
     }
@@ -83,6 +83,7 @@ public class User implements Parcelable{
     public void setId(String id) {
         this.id = id;
     }
+
 
     public String getUserprofilepic() {
         return userprofilepic;

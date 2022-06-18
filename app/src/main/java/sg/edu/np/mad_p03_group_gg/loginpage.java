@@ -16,13 +16,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class loginpage extends AppCompatActivity {
@@ -94,12 +87,7 @@ public class loginpage extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         //When user's sign in is sucessful, it will automatically go to the next page
-                        Intent login = new Intent(loginpage.this, Homepage.class);
-                        // test chat list
-                        //Intent login = new Intent(loginpage.this, ChatList.class);
-
-
-
+                        Intent login = new Intent(loginpage.this, MainActivity.class);
                         startActivity(login);//Starts sign up activity
                     } else {
                         TextView error = findViewById(R.id.siginerror);
