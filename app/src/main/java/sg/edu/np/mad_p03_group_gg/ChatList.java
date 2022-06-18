@@ -5,18 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,13 +22,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.messages.ChatListAdapter;
 import sg.edu.np.mad_p03_group_gg.messages.MessageList;
-import sg.edu.np.mad_p03_group_gg.others.MemoryData;
 
 public class ChatList extends AppCompatActivity {
     private static final String TAG = "ChatList";
@@ -59,7 +49,7 @@ public class ChatList extends AppCompatActivity {
         setContentView(R.layout.activity_chat_list);
         auth = FirebaseAuth.getInstance();
         // Getting main profile pic from chat list
-        CircleImageView mainProfilePic = findViewById(R.id.mainProfilePic);
+        CircleImageView mainProfilePic = findViewById(R.id.uprofilepic);
 
         // TESTING: Code for testing purposes. Remove for final app
         // mainUser = new User("Test Name","test@gmail.com", "98877562");
