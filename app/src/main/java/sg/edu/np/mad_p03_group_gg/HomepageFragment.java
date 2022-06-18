@@ -3,6 +3,14 @@ package sg.edu.np.mad_p03_group_gg;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Environment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -122,6 +130,7 @@ public class HomepageFragment extends Fragment {
         // Set onClickListeners for Buttons
         CardView listingsCardView = view.findViewById(R.id.listingsButton);
         CardView meetingPlannerCardView = view.findViewById(R.id.meetingPlannerButton);
+        ImageView chatButtonView = view.findViewById(R.id.chatButton);
 
         ImageView likedPageButton = view.findViewById(R.id.likedPageButton);
         ImageView chatPageButton = view.findViewById(R.id.chatPageButton);
@@ -130,6 +139,11 @@ public class HomepageFragment extends Fragment {
             // When clicked, will bring to listings page which displays all listings
             Intent listingsIntent = new Intent(this.getContext(), listings.class);
             startActivity(listingsIntent);
+        });
+
+        chatButtonView.setOnClickListener(v -> {
+            Intent chatListIntent = new Intent(getContext(), ChatList.class);
+            startActivity(chatListIntent);
         });
 
         meetingPlannerCardView.setOnClickListener(v -> {

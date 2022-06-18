@@ -7,12 +7,17 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,6 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -37,6 +44,8 @@ public class newlisting extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newlisting);
+
+        activeChecker();
 
         ImageView selectimage = findViewById(R.id.choose_image);
         selectimage.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +63,188 @@ public class newlisting extends AppCompatActivity {
 
                 Intent returnhome = new Intent(view.getContext(), MainActivity.class);
                 view.getContext().startActivity(returnhome);
+            }
+        });
+    }
+
+    private void activeChecker() {
+        EditText title_input = findViewById(R.id.input_title);
+        EditText price_input = findViewById(R.id.input_price);
+        RadioGroup condition_input = findViewById(R.id.input_condition);
+        RadioButton condition_input_new = findViewById(R.id.input_condition_new);
+        RadioButton condition_input_used = findViewById(R.id.input_condition_used);
+        EditText desc_input = findViewById(R.id.input_description);
+        EditText address_input = findViewById(R.id.input_address);
+        EditText deltype_input = findViewById(R.id.input_deliverytype);
+        EditText delprice_input = findViewById(R.id.input_deliveryprice);
+        EditText deltime_input = findViewById(R.id.input_deliverytime);
+        Switch meeting_toggle = findViewById(R.id.meet_toggle);
+        Switch delivery_toggle = findViewById(R.id.del_toggle);
+
+        address_input.setVisibility(View.GONE);
+        deltype_input.setVisibility(View.GONE);
+        delprice_input.setVisibility(View.GONE);
+        deltime_input.setVisibility(View.GONE);
+
+        title_input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (TextUtils.isEmpty(title_input.getText().toString())) {
+                    title_input.setError("A title is required");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        price_input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (TextUtils.isEmpty(price_input.getText().toString())) {
+                    price_input.setError("A price is required");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        desc_input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (TextUtils.isEmpty(desc_input.getText().toString())) {
+                    desc_input.setError("A description is required");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        meeting_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b == true) {
+                    address_input.setVisibility(View.VISIBLE);
+                    address_input.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                            if (TextUtils.isEmpty(address_input.getText().toString())) {
+                                address_input.setError("An address is required");
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+                }
+
+                else {
+                    address_input.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        delivery_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b == true) {
+                    deltype_input.setVisibility(View.VISIBLE);
+                    delprice_input.setVisibility(View.VISIBLE);
+                    deltime_input.setVisibility(View.VISIBLE);
+
+                    deltype_input.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            if (TextUtils.isEmpty(deltype_input.getText().toString())) {
+                                deltype_input.setError("A delivery type is required");
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+
+                    delprice_input.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            if (TextUtils.isEmpty(delprice_input.getText().toString())) {
+                                delprice_input.setError("A price is required");
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+                    deltime_input.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            if (TextUtils.isEmpty(deltime_input.getText().toString())) {
+                                deltime_input.setError("A delivery estimate is required");
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+                }
+
+                else {
+                    deltype_input.setVisibility(View.GONE);
+                    delprice_input.setVisibility(View.GONE);
+                    deltime_input.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -124,14 +315,25 @@ public class newlisting extends AppCompatActivity {
         else {
             condition = null;
         }
+
         String desc = desc_input.getText().toString();
         String address = address_input.getText().toString();
         String deltype = deltype_input.getText().toString();
         String delprice = delprice_input.getText().toString();
         String deltime = deltime_input.getText().toString();
+        String sid = "";
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            sid = String.valueOf(user.getUid());
+        } else {
+            // No user is signed in
+        }
+
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(null, title, url, "1", url, condition, price, false, desc, address, false, deltype, delprice, deltime);
+        individualListingObject listing = new individualListingObject(null, title, url, sid, url, condition, price, false, desc, address, false, deltype, delprice, deltime);
         writeToFirebase(listing);
     }
 
