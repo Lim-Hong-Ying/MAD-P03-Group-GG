@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,11 +34,7 @@ public class signupactivity extends AppCompatActivity {
 
         //Get textview
         TextView tologin= findViewById(R.id.Log_in_page);
-        //setonclick listener for tologin button
-
-        Button signup = findViewById(R.id.button);
-        auth=FirebaseAuth.getInstance();
-        //Check if users has registered
+        //Get EditText view
         EditText name = findViewById(R.id.setusername);
         EditText Password = findViewById(R.id.enterpassword);
         EditText Email = findViewById(R.id.emailaddr);
@@ -47,69 +44,15 @@ public class signupactivity extends AppCompatActivity {
         String ph = PhoneNumber.getText().toString().trim();
         String userName = name.getText().toString().trim();
         String img ="";
+        //setonclick listener for tologin button
+
+        Button signup = findViewById(R.id.button);
+        auth=FirebaseAuth.getInstance();
+        //Check if users has registered
+
 
         User u = new User(userName,email,ph,img);
-        name.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(TextUtils.isEmpty(userName)){
-                    name.setError("Invalid Username");
-
-                }
-            }
-
-        });
-        Password.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(password)) {
-                    Password.setError("Password required");
-
-                }
-                if(password.length()<6){
-                    Password.setError("Password lesser then 6 characters");
-
-                }
-
-            }
-
-        });
-        Email.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(email)) {
-                    Email.setError("Email Required");
-
-                }
-            }
-
-        });
-        PhoneNumber.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(TextUtils.isEmpty(ph)){
-                    PhoneNumber.setError("Invalid phone number");
-
-                }
-            }
-
-        });
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +61,7 @@ public class signupactivity extends AppCompatActivity {
                 u = Register(v);
                 if(u!=null) {
                     String key = database.getReference("quiz").push().getKey();
-                    u.setId(key);
+
                     //do something if not exists
                 }
             }
@@ -134,6 +77,38 @@ public class signupactivity extends AppCompatActivity {
         });
 
     }
+    boolean isEmpty(EditText text) {
+        CharSequence str = text.getText().toString();
+        return TextUtils.isEmpty(str);
+    }
+    boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
+        CharSequence email = text.getText().toString();
+        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+
+    public boolean checkDateEntered(View v){  // returns true when all input fields are correct, return false when not correct
+        EditText Name = findViewById(R.id.setusername);
+        EditText Password = findViewById(R.id.enterpassword);
+        EditText Email = findViewById(R.id.emailaddr);
+        EditText PhoneNumber = findViewById(R.id.phone_number);
+        if (isEmpty(Name)) {
+            Name.setError("Last name is required!");
+            return false;
+        }
+        if (isEmail(Email) == false) {
+            Email.setError("Enter valid email!");
+            return false;
+        }
+        if (isEmpty(Password)) {
+            Password.setError("Last name is required!");
+            return false;
+        }
+        if (isEmpty(PhoneNumber)) {
+            PhoneNumber.setError("Last name is required!");
+            return false;
+        }
+        return true;
+    }
     public User Register(View v){
         EditText name = findViewById(R.id.setusername);
         EditText Password = findViewById(R.id.enterpassword);
@@ -144,26 +119,6 @@ public class signupactivity extends AppCompatActivity {
         String ph = PhoneNumber.getText().toString().trim();
         String userName = name.getText().toString().trim();
         String img ="";
-        if(TextUtils.isEmpty(userName)){
-            name.setError("Invalid Username");
-            return null;
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            Password.setError("Password required");
-            return null;
-
-        }
-        if (TextUtils.isEmpty(email)) {
-            Email.setError("Email Required");
-            return null;
-
-        }
-        if(TextUtils.isEmpty(ph)){
-            PhoneNumber.setError("Invalid phone number");
-            return null;
-
-        }
 
         User u = new User(userName,email,ph,img);
 
@@ -174,6 +129,8 @@ public class signupactivity extends AppCompatActivity {
                     Toast.makeText(signupactivity.this,"User created",Toast.LENGTH_SHORT).show();
                     if (u != null) {
                         DatabaseReference myRef = database.getReference();
+                        String ID = auth.getUid();
+                        u.setId(ID);
                         myRef.child("users").child(u.getId()).setValue(u);
                         Intent Homepage = new Intent(signupactivity.this,
                                 MainActivity.class);
