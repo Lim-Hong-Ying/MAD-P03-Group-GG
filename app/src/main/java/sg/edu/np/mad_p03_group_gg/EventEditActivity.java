@@ -4,6 +4,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,7 +68,8 @@ public class EventEditActivity extends AppCompatActivity
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMin) {
                 hour = selectedHour;
                 min = selectedMin;
-                timeBtn.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, min)); // format to 2 decimal place
+                Log.d("Hour", String.valueOf(hour));
+                checkAmOrPm(hour, min);
             }
         };
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, min, true);
@@ -81,9 +83,26 @@ public class EventEditActivity extends AppCompatActivity
         // Format event details into strings to store into Firebase
         String eventName = eventNameET.getText().toString();
         String location = locationNameET.getText().toString();
+        String am_Pm = "AM";
         String sHour = String.valueOf(hour);
         String sMin = String.valueOf(min);
-        time = sHour.format("%02d", hour) + ":" + sMin.format("%02d", min);
+        if (hour >= 12){
+            if (hour != 12){
+                hour -= 12;
+            }
+            am_Pm = "PM";
+        }
+        else{
+            if (hour == 0){
+                hour = 12;
+            }
+        }
+        if (hour >= 10){
+            time = sHour.format("%02d", hour) + ":" + sMin.format("%02d", min) + " " + am_Pm;
+        }
+        else {
+            time = sHour.format("%01d", hour) + ":" + sMin.format("%02d", min) + " " + am_Pm;
+        }
 
         // Get eventId for events
         int eventId;
@@ -132,6 +151,29 @@ public class EventEditActivity extends AppCompatActivity
             Toast.makeText(getApplicationContext(), "Unable to delete event", Toast.LENGTH_SHORT).show();
         }
         finish();
+    }
+
+    public void checkAmOrPm(int hour, int min){
+        String am_Pm;
+        if (hour > 11) {
+            am_Pm = "PM";
+            if (hour != 12) {
+                hour -= 12;
+            }
+        }
+        else{
+            am_Pm = "AM";
+            if (hour == 0){
+                hour = 12;
+            }
+        }
+        Log.d("Hour", String.valueOf(hour));
+        if (hour >= 10){
+            timeBtn.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, min) + " " + am_Pm);
+        }
+        else{
+            timeBtn.setText(String.format(Locale.getDefault(), "%01d:%02d", hour, min) + " " + am_Pm);
+        }
     }
 
     // Adding event details into Firebase
