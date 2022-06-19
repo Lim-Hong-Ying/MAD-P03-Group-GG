@@ -34,7 +34,7 @@ Tagline: Cashshope, your friendly next-generation shopping companion.
 
 ## Roles and Contributions
 Tan Kai Zhe: Homepage, MainActivity, Wishlist, Graphics </br>
-Lim Hong Ying | S10223298 </br>
+Lim Hong Ying: Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist </br>
 Ooi Jun Heng Ryan | S10223647 </br>
 William Francis Siah | S10222938 </br>
 Koh Han Jie Isaac | S10222275 </br>

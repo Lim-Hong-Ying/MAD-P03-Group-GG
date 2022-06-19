@@ -1,8 +1,12 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,6 +18,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -63,6 +69,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * create an instance of this fragment.
  */
 public class User_Profile_Fragment extends Fragment {
+    private int YourRequestCode = 1;
     DatabaseReference reference;
 
 
@@ -127,6 +134,7 @@ public class User_Profile_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
 
+//Get Views
         TextView Email = (EditText) view.findViewById(R.id.user_profile_email);
         TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
         TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
@@ -214,7 +222,24 @@ public class User_Profile_Fragment extends Fragment {
         uprofilepic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launcher.launch("image/*");
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            YourRequestCode);
+
+                }
+                else{
+                    launcher.launch("image/*");
+                }
+
+
+
+
+
             }
         });
 
@@ -254,6 +279,7 @@ public class User_Profile_Fragment extends Fragment {
 
         return mime.getExtensionFromMimeType(cr.getType(uri));
     }
+
 
     private void onupload() {
         ImageView imageView = (ImageView) getActivity().findViewById(R.id.uprofilepic);
@@ -296,7 +322,6 @@ public class User_Profile_Fragment extends Fragment {
             }
 
 
-
             // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
 
 
@@ -329,10 +354,14 @@ public class User_Profile_Fragment extends Fragment {
             }
 
 
-
-
         });
     }
+
+
+
+
+
+
 
 
     private class ImageDownloader extends AsyncTask<String, Void, Bitmap> {

@@ -155,8 +155,8 @@ public class Chat extends AppCompatActivity {
                     return;
                 }
 
-                // Get current time (added 28800000 milliseconds to convert to SGT)
-                String currentTime = String.valueOf(System.currentTimeMillis() + 28800000);
+                // Get current time (add 28800000 milliseconds to convert to SGT, if emulator timezone is UTC)
+                String currentTime = String.valueOf(System.currentTimeMillis());
 
                 databaseReference.child("chat").child(chatKey).child("user1").setValue(mainUserid);
                 databaseReference.child("chat").child(chatKey).child("user2").setValue(getid);
