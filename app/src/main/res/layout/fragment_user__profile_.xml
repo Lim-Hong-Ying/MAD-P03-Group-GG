@@ -5,56 +5,45 @@
     android:id="@+id/Username"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".User_Profile_Fragment">
+    tools:context=".User_Profile_Fragment"
+    android:background="@drawable/inpu_text"
+    >
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
 
+        >
+
+
+        <TextView
+            android:id="@+id/user_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/uprofilepic"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
-            android:layout_width="411dp"
-            android:layout_height="217dp"
-            android:background="#B9E8FF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/uprofilepic"
-                android:layout_width="192dp"
-                android:layout_height="182dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/profile_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/Userprofile_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-
-                android:textSize="34sp"
-                app:layout_constraintStart_toEndOf="@+id/uprofilepic"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            app:layout_constraintTop_toBottomOf="@+id/uprofilepic">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/shadowContainer"
-                android:layout_width="409dp"
-                android:layout_height="530dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -64,22 +53,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="512dp">
-
-                    <Button
-                        android:id="@+id/change_profile"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-
-                        android:layout_marginStart="61dp"
-                        android:layout_marginTop="25dp"
-                        android:layout_marginEnd="61dp"
-                        android:background="@drawable/sign_in_button"
-                        android:text="Change Profile"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/User_Profile_phonenumber"></Button>
+                    android:layout_height="548dp">
 
                     <TextView
                         android:id="@+id/textView9"
@@ -94,18 +68,17 @@
                         app:layout_constraintStart_toEndOf="@+id/imageView2"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/user_profile_email"
                         android:layout_width="253dp"
                         android:layout_height="66dp"
+                        android:layout_marginStart="116dp"
                         android:layout_marginTop="28dp"
                         android:textSize="17sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.829"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/User_Profile_phonenumber"
                         android:layout_width="197dp"
                         android:layout_height="53dp"
@@ -147,23 +120,37 @@
                         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
                     <Button
-                        android:id="@+id/fgt_pswrd_btn4"
+                        android:id="@+id/log_out"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
 
                         android:layout_marginStart="61dp"
-                        android:layout_marginTop="25dp"
                         android:layout_marginEnd="61dp"
                         android:background="@drawable/sign_in_button"
                         android:text="Log out"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/change_profile"></Button>
+                        app:layout_constraintTop_toBottomOf="@+id/User_Profile_phonenumber"></Button>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/uprofilepic"
+            android:layout_width="210dp"
+            android:layout_height="117dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/profile_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </FrameLayout>

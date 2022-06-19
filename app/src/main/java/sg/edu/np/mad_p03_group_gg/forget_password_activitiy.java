@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,15 +23,19 @@ public class forget_password_activitiy extends AppCompatActivity {
         setContentView(R.layout.activity_forget_password_activitiy);
         TextView passwordStatus= findViewById(R.id.fgtpasswordstatus);
         Button fgtpassword_btn = findViewById(R.id.fgt_pswrd_btn);
+        EditText fgtEmail = findViewById(R.id.fgtemail);
 
         FirebaseAuth auth;
         fgtpassword_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText fgtEmail = findViewById(R.id.fgtemail);
+
+                if (!isEmpty(fgtEmail)) {
+
 
                 String ForgetEmail = fgtEmail.getText().toString();
                 Log.e( "onClick: ",ForgetEmail);
+
 
                 FirebaseAuth.getInstance().sendPasswordResetEmail(ForgetEmail)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -42,10 +47,25 @@ public class forget_password_activitiy extends AppCompatActivity {
                             }
                         });
 
+
                 }
+                else{
+                    fgtEmail.setError("Invalid Password!");
+
+                }
+
+
+
+
+            }
 
         });
 
 
+
+    }
+    private boolean isEmpty(EditText text) {
+        CharSequence str = text.getText().toString();
+        return TextUtils.isEmpty(str);
     }
 }

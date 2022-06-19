@@ -58,12 +58,16 @@ public class signupactivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 User u = new User();
-                u = Register(v);
-                if(u!=null) {
-                    String key = database.getReference("quiz").push().getKey();
+                if(checkDataEntered(v)){
+                    u = Register(v);
+                    if(u!=null) {
+                        String key = database.getReference("quiz").push().getKey();
 
-                    //do something if not exists
+                        //do something if not exists
+                    }
+
                 }
+
             }
         });
 
@@ -86,7 +90,7 @@ public class signupactivity extends AppCompatActivity {
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
-    public boolean checkDateEntered(View v){  // returns true when all input fields are correct, return false when not correct
+    public boolean checkDataEntered(View v){  // returns true when all input fields are correct, return false when not correct
         EditText Name = findViewById(R.id.setusername);
         EditText Password = findViewById(R.id.enterpassword);
         EditText Email = findViewById(R.id.emailaddr);
@@ -100,11 +104,11 @@ public class signupactivity extends AppCompatActivity {
             return false;
         }
         if (isEmpty(Password)) {
-            Password.setError("Last name is required!");
+            Password.setError("Password is required!");
             return false;
         }
         if (isEmpty(PhoneNumber)) {
-            PhoneNumber.setError("Last name is required!");
+            PhoneNumber.setError("Enter a valid number");
             return false;
         }
         return true;
