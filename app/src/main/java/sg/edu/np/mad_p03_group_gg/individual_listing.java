@@ -253,7 +253,9 @@ public class individual_listing extends AppCompatActivity {
                             TextView name_holder = findViewById(R.id.seller_name);
 
                             name_holder.setText(sellername);
-                            new ImageDownloader(sellerpfp).execute(SPPU);
+                            if (!SPPU.isEmpty()) {
+                                new ImageDownloader(sellerpfp).execute(SPPU);
+                            }
                         }
                     });
                 }
