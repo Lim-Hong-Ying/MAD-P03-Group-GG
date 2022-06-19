@@ -8,10 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,13 +42,20 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_view);
-        // Initialise date for first time
+        // Initialises date for first time
         if (CalendarUtils.selectedDate == null){
             CalendarUtils.selectedDate = LocalDate.now();
         }
         initWidgets();
         setWeekView();
         setOnClickListener();
+        ImageView closeBtn = findViewById(R.id.weeklyCloseButton);
+        // Removes activity from stack
+        closeBtn.setOnClickListener(view -> {
+            // Pass selected date to weekly calendar
+            WeekViewActivity.monthlyDate =  CalendarUtils.selectedDate;
+            finish();
+        });
     }
 
     // Initialise views and text
