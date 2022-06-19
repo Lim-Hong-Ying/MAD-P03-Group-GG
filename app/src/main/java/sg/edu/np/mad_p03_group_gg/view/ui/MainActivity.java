@@ -1,4 +1,4 @@
-package sg.edu.np.mad_p03_group_gg;
+package sg.edu.np.mad_p03_group_gg.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import sg.edu.np.mad_p03_group_gg.R;
+import sg.edu.np.mad_p03_group_gg.view.ui.fragments.User_Profile_Fragment;
 import sg.edu.np.mad_p03_group_gg.databinding.ActivityMainBinding;
+import sg.edu.np.mad_p03_group_gg.newlisting;
+import sg.edu.np.mad_p03_group_gg.view.ui.fragments.HomepageFragment;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;

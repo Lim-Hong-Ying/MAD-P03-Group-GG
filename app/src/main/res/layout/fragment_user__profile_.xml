@@ -5,7 +5,7 @@
     android:id="@+id/Username"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".User_Profile_Fragment"
+    tools:context=".view.ui.fragments.User_Profile_Fragment"
     android:background="@drawable/inpu_text"
     >
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"

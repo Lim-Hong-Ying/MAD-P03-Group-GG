@@ -19,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Locale;
 
+import sg.edu.np.mad_p03_group_gg.view.ui.fragments.HomepageFragment;
+
 public class EventEditActivity extends AppCompatActivity
 {
     private EditText eventNameET, locationNameET;

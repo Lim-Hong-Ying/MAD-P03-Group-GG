@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +31,6 @@ import sg.edu.np.mad_p03_group_gg.listingObject;
 
 public class SearchActivity extends AppCompatActivity {
     private EditText searchField;
-    private ImageButton searchImageButton;
     private RecyclerView searchResultsView;
     private FirebaseRecyclerAdapter<listingObject, SearchResultsViewHolder> firebaseRecyclerAdapter;
 
@@ -45,11 +43,10 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar); // Set a toolbar which allows user to close the activity
         getSupportActionBar().setDisplayShowTitleEnabled(false); // To disable appname title
 
         searchField = findViewById(R.id.searchField);
-        searchImageButton = findViewById(R.id.searchImageButton);
         ImageView searchPageCloseButton = findViewById(R.id.searchPageCloseButton);
 
         // Get user query from intent
@@ -57,8 +54,6 @@ public class SearchActivity extends AppCompatActivity {
         String searchViewQuery = fromSearchView.getStringExtra("query");
         searchField.setText(searchViewQuery);
 
-        // When user presses the like button, will store listing unique ID into
-        // individual user's likedList.
         searchPageCloseButton.setOnClickListener(v -> {
             // Termintate the LikedPage activity
             finish();
@@ -69,13 +64,6 @@ public class SearchActivity extends AppCompatActivity {
         searchResultsView.setHasFixedSize(true);
 
         firebaseListingSearch(searchField.getText().toString());
-
-        searchImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                firebaseListingSearch(searchField.getText().toString());
-            }
-        });
     }
 
     // View Holder
@@ -174,6 +162,12 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        /**
+         * MUST: Otherwise there will be inconsistency error.
+         *
+         * This occurs when the fragment/activity is closed and all data on the recycler view
+         * have been reset, which will raise an inconsistency error.
+         */
         firebaseRecyclerAdapter.notifyDataSetChanged();
         firebaseRecyclerAdapter.stopListening();
     }

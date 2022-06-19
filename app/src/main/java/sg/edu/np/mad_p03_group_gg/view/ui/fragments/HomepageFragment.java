@@ -1,4 +1,4 @@
-package sg.edu.np.mad_p03_group_gg;
+package sg.edu.np.mad_p03_group_gg.view.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,7 +47,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.ChatList;
+import sg.edu.np.mad_p03_group_gg.Event;
+import sg.edu.np.mad_p03_group_gg.R;
+import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
+import sg.edu.np.mad_p03_group_gg.individual_listing;
+import sg.edu.np.mad_p03_group_gg.listingObject;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
@@ -125,12 +130,14 @@ public class HomepageFragment extends Fragment {
         File dir = new File(getContext().getCacheDir(),"advertisement");
         ArrayList<String> filePaths = new ArrayList<>();
 
+        // Check for advertisement directory (for storage of ad images)
         if (dir.exists()) {
             if (dir.listFiles().length == 0) {
                 // If directory exists, but empty, will download files
                 downloadFiles("advertisement");
             }
             for (File f : dir.listFiles()) {
+                // Add path to the filePaths array list (later used for RecyclerView Adapter)
                 filePaths.add(f.getAbsolutePath());
             }
         }
@@ -143,6 +150,7 @@ public class HomepageFragment extends Fragment {
         ArrayList<AdBannerImage> adBannerImages = new ArrayList<>();
 
         for (int i = 0; i < filePaths.size(); i++) {
+            // Store file path into respective adBannerImage object
             AdBannerImage adBannerImage = new AdBannerImage(filePaths.get(i));
             adBannerImages.add(adBannerImage);
         }
@@ -178,8 +186,6 @@ public class HomepageFragment extends Fragment {
         });
 
         likedPageButton.setOnClickListener(v -> {
-            /*Intent likedPageIntent = new Intent(this.getContext(), LikedPage.class);
-            startActivity(likedPageIntent);*/
             replaceFragment(new wishListFragment());
         });
 
@@ -218,13 +224,27 @@ public class HomepageFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Used to replace an existing fragment in view (similar to startActivity)
+     * @param fragment
+     */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit(); // To apply changes
     }
 
+    /**
+     * Download ALL files in a certain directory (specified with the parameter, folder) from
+     * the Firebase Storage and store them into a folder located within the cache (named after
+     * the parameter)
+     *
+     * eg. downloadFiles("advertisement"), expect to find your files in the cache directory of
+     * /advertisement
+     *
+     * @param folder
+     */
     private void downloadFiles(String folder) {
         // Init Firebase Storage instance
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://cashoppe-179d4.appspot.com/");
@@ -282,12 +302,10 @@ public class HomepageFragment extends Fragment {
                 });
     }
 
-    private boolean searchCache(ArrayList<String> fileNames, String directory) {
-        File storagePath = new File(Environment.getExternalStorageDirectory(), directory);
-        return true;
-    }
-
-    // Read event details of user from Firebase
+    /**
+     * Read event details of user from Firebase
+     * @param userId
+     */
     public void readFromFireBase(String userId){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -314,9 +332,16 @@ public class HomepageFragment extends Fragment {
         });
     }
 
+    /**
+     * Utilize the FirebaseRecyclerAdapter (from com.firebaseui:firebase-ui-database:8.0.1)
+     * to populate a RecyclerView of listing objects
+     *
+     * Since for each individual listing on the database has other attributes that are not used
+     * for this scenario, the data snapshot retrieved from the database must be parsed with
+     * the correct attributes.
+     */
     private void firebaseNewListing() {
-
-        Query query = databaseReference.limitToLast(10);
+        Query query = databaseReference.limitToLast(10); // Recent 10 listings
 
         FirebaseRecyclerOptions<listingObject> options =
                 new FirebaseRecyclerOptions.Builder<listingObject>()
@@ -369,6 +394,7 @@ public class HomepageFragment extends Fragment {
                         });
                     }
                 };
+
         newListingsRecycler.setAdapter(firebaseRecyclerAdapter);
     }
 
@@ -394,6 +420,8 @@ public class HomepageFragment extends Fragment {
             listingNameView.setText(model.getTitle());
             listingPriceView.setText(model.getPrice());
             listingItemConditionView.setText(model.getiC());
+
+            // The Glide library is used for easy application of images into their respective views.
             Glide.with(getActivity().getApplicationContext()).load(model.getSPPU()).into(sellerProfilePic);
             Glide.with(getActivity().getApplicationContext()).load(model.gettURL()).into(listingImageView);
         }
@@ -408,6 +436,12 @@ public class HomepageFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        /**
+         * MUST: Otherwise there will be inconsistency error.
+         *
+         * This occurs when the fragment/activity is closed and all data on the recycler view
+         * have been reset, which will raise an inconsistency error.
+         */
         firebaseRecyclerAdapter.notifyDataSetChanged();
         firebaseRecyclerAdapter.stopListening();
     }
