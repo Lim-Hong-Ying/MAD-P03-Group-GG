@@ -427,8 +427,10 @@ public class HomepageFragment extends Fragment {
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     DataSnapshot result = task.getResult();
                     String sellerName = String.valueOf(result.child("name").getValue(String.class));
+                    String sellerProfileUrl = String.valueOf(result.child("userprofilepic").getValue(String.class));
 
                     usernameView.setText(sellerName);
+                    Glide.with(getActivity().getApplicationContext()).load(sellerProfileUrl).into(sellerProfilePic);
                 }
             });
 
@@ -437,7 +439,6 @@ public class HomepageFragment extends Fragment {
             listingItemConditionView.setText(model.getiC());
 
             // The Glide library is used for easy application of images into their respective views.
-            Glide.with(getActivity().getApplicationContext()).load(model.getSPPU()).into(sellerProfilePic);
             Glide.with(getActivity().getApplicationContext()).load(model.gettURL()).into(listingImageView);
         }
     }
