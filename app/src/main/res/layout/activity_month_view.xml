@@ -29,7 +29,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="411dp"
                 android:layout_height="70dp"
-                android:background="@color/white"
+                android:background="@color/theme_light_blue"
                 android:elevation="0dp"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
@@ -59,7 +59,7 @@
                 android:layout_marginStart="130dp"
                 android:background="#00FFFFFF"
                 android:text="Monthly"
-                android:textColor="#0000FF"
+                android:textColor="#135995"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/toolbar"
@@ -75,7 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10sp">
 
         <Button
             android:layout_width="0dp"
@@ -84,7 +85,7 @@
             android:background="#00FFFFFF"
             android:onClick="previousMonthAction"
             android:text="@string/back"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -105,7 +106,7 @@
             android:background="#00FFFFFF"
             android:onClick="nextMonthAction"
             android:text="@string/forward"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -122,7 +123,7 @@
             android:layout_weight="1"
             android:text="SUN"
             android:textAlignment="center"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="16sp" />
 
         <TextView
@@ -131,7 +132,7 @@
             android:layout_weight="1"
             android:text="MON"
             android:textAlignment="center"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="16sp" />
 
         <TextView
@@ -140,7 +141,7 @@
             android:layout_weight="1"
             android:text="TUE"
             android:textAlignment="center"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="16sp" />
 
         <TextView
@@ -149,7 +150,7 @@
             android:layout_weight="1"
             android:text="WED"
             android:textAlignment="center"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="16sp" />
 
         <TextView
@@ -158,7 +159,7 @@
             android:layout_weight="1"
             android:text="THUR"
             android:textAlignment="center"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="16sp" />
 
         <TextView
@@ -167,7 +168,7 @@
             android:layout_weight="1"
             android:text="FRI"
             android:textAlignment="center"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="16sp" />
 
         <TextView
@@ -176,7 +177,7 @@
             android:layout_weight="1"
             android:text="SAT"
             android:textAlignment="center"
-            android:textColor="#0000FF"
+            android:textColor="#135995"
             android:textSize="16sp" />
 
 
