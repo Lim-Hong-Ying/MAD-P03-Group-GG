@@ -143,7 +143,6 @@ public class HomepageFragment extends Fragment {
         ImageView chatButtonView = view.findViewById(R.id.chatPageButton);
 
         ImageView likedPageButton = view.findViewById(R.id.likedPageButton);
-        ImageView chatPageButton = view.findViewById(R.id.chatPageButton);
 
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
@@ -166,10 +165,6 @@ public class HomepageFragment extends Fragment {
             startActivity(likedPageIntent);
         });
 
-        chatPageButton.setOnClickListener(v -> {
-            Intent chatPageIntent = new Intent(this.getContext(), Chat.class);
-            startActivity(chatPageIntent);
-        });
         /**
          * TO-DO:
          *
