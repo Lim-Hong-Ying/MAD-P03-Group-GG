@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,31 +29,41 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
 
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
-    private String name, location, time, date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_month_view);
-        initWidgets();
-        CalendarUtils.selectedDate = LocalDate.now();
-        setMonthView();
-        if (Event.eventsList.size() == 0){
-            String userId = "123456789"; // temporary only
-            readFromFireBase(userId);
+        // Initialise date only for the first time
+        if (CalendarUtils.selectedDate == null) {
+            CalendarUtils.selectedDate = LocalDate.now();
         }
+        initWidgets();
+        setMonthView();
+        // Initialise close button
+        ImageView closeBtn = findViewById(R.id.monthlyCloseButton);
+        // Removes activity from stack
+        closeBtn.setOnClickListener(view -> {
+            // Pass selected date to weekly calendar
+            WeekViewActivity.monthlyDate =  CalendarUtils.selectedDate;
+            finish();
+        });
     }
 
+    // initialise recycler view and text
     private void initWidgets()
     {
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         monthYearText = findViewById(R.id.monthYearTV);
     }
 
+    // create monthly calendar view
     private void setMonthView()
     {
+        // Set month and year of monthly calendar
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
+        // Get days in month
         ArrayList<LocalDate> daysInMonth = daysInMonthArray(CalendarUtils.selectedDate);
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
@@ -61,12 +72,14 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
 
+    // Navigate to previous month of selected date
     public void previousMonthAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
         setMonthView();
     }
 
+    // Navigate to next month of selected date
     public void nextMonthAction(View view)
     {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
@@ -83,34 +96,9 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         }
     }
 
+    // Direct to weekly calendar
     public void weeklyAction(View view)
     {
         startActivity(new Intent(this, WeekViewActivity.class));
-    }
-
-    public void readFromFireBase(String userId){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("Planner");
-        myRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    int eventId = Integer.parseInt(snapshot.getKey());
-                    name = snapshot.child("name").getValue(String.class);
-                    location = snapshot.child("location").getValue(String.class);
-                    time = snapshot.child("time").getValue(String.class);
-                    date = snapshot.child("date").getValue(String.class);
-                    LocalDate dt = LocalDate.parse(date, dtf);
-                    Event event = new Event(eventId, name, location, dt, time);
-                    Event.eventsList.add(event);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("TAG", "Failed to read value.", error.toException());
-            }
-        });
     }
 }

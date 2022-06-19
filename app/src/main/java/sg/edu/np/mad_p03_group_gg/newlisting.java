@@ -61,7 +61,7 @@ public class newlisting extends AppCompatActivity {
             public void onClick(View view) {
                 writeToDatabaseAndFirebase();
 
-                Intent returnhome = new Intent(view.getContext(), MainActivity.class);
+                Intent returnhome = new Intent(view.getContext(), successListPage.class);
                 view.getContext().startActivity(returnhome);
             }
         });
@@ -253,8 +253,18 @@ public class newlisting extends AppCompatActivity {
         String dblink = "gs://cashoppe-179d4.appspot.com";
         StorageReference db = FirebaseStorage.getInstance(dblink).getReference().child("listing-images");
 
+        String sID = "";
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            sID = String.valueOf(user.getUid());
+        } else {
+            // No user is signed in
+        }
+
         long currenttime = new Date().getTime();
-        final StorageReference newfilename = db.child("" + currenttime); //add userid for further uniqueness
+        final StorageReference newfilename = db.child(sID + currenttime); //add userid for further uniqueness
         ImageView selectimage = findViewById(R.id.choose_image);
 
         selectimage.setDrawingCacheEnabled(true);
@@ -321,28 +331,32 @@ public class newlisting extends AppCompatActivity {
         String deltype = deltype_input.getText().toString();
         String delprice = delprice_input.getText().toString();
         String deltime = deltime_input.getText().toString();
-        String sid = "";
+
+        String sID = "";
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
-            sid = String.valueOf(user.getUid());
+            sID = String.valueOf(user.getUid());
         } else {
             // No user is signed in
         }
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(null, title, url, sid, url, condition, price, false, desc, address, false, deltype, delprice, deltime);
+        individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, false, deltype, delprice, deltime);
         writeToFirebase(listing);
     }
 
-    private void writeToFirebase(individualListingObject listing) {
+    private String writeToFirebase(individualListingObject listing) {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
 
         //individualListingObject listing = new individualListingObject("1", "FB test title 1", url, "test seller id 1", url, "New", 10, false, "test description", "ngee ann poly", false, "null", 0, 0);
-        db.push().setValue(listing);
+        DatabaseReference pushTask = db.push();
+        Task<Void> setValue = pushTask.setValue(listing);
+        String pID = String.valueOf(pushTask.getKey());
+        return pID;
     }
 
     private void chooseImage() {

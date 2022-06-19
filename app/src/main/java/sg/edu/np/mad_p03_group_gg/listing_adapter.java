@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         SharedPreferences sharedPreferences = parent.getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
+        Log.e("mode", mode);
 
         if (mode == "card") {
             card = LayoutInflater.from(parent.getContext()).inflate(R.layout.listing_card, parent, false);
@@ -65,11 +67,13 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         String sid = "";
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
-        individualdb.getReference().child("users").child(sid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        individualdb.getReference().child("users").child(listing.getSID()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 DataSnapshot result = task.getResult();
+                Log.e("ss", String.valueOf(result));
                 String sid = String.valueOf(result.child("name").getValue(String.class));
+                Log.e("sid", sid);
 
                 holder.seller_username.setText(sid);
             }
