@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,25 +17,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.firebase.ui.database.FirebaseListOptions;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.concurrent.RecursiveAction;
 
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.individual_listing;
 import sg.edu.np.mad_p03_group_gg.listingObject;
-import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 
 public class SearchActivity extends AppCompatActivity {
     private EditText searchField;
@@ -90,7 +80,6 @@ public class SearchActivity extends AppCompatActivity {
 
     // View Holder
     public class SearchResultsViewHolder extends RecyclerView.ViewHolder {
-
         View searchView;
 
         public SearchResultsViewHolder(@NonNull View itemView) {
@@ -185,6 +174,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        firebaseRecyclerAdapter.notifyDataSetChanged();
         firebaseRecyclerAdapter.stopListening();
     }
 }

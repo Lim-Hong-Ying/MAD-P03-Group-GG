@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -13,7 +14,6 @@ public class User implements Parcelable{
     private String email;
     private String phonenumber;
     private String id;
-
     private String userprofilepic;
 
     // Parcelable (To pass objects from activity to activity)
