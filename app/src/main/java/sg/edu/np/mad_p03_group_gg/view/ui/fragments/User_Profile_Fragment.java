@@ -1,10 +1,7 @@
-package sg.edu.np.mad_p03_group_gg;
+package sg.edu.np.mad_p03_group_gg.view.ui.fragments;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -35,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,20 +44,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.Reference;
 import java.net.MalformedURLException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import sg.edu.np.mad_p03_group_gg.R;
+import sg.edu.np.mad_p03_group_gg.User;
+import sg.edu.np.mad_p03_group_gg.loginpage;
 
 /**
  * A simple {@link Fragment} subclass.
