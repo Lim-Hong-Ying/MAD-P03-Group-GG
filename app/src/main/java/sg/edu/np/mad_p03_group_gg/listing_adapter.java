@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -83,7 +84,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
             }
         });
 
-        holder.listing_image.setOnClickListener(new View.OnClickListener() {
+        holder.listing_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle listinginfo = new Bundle();
