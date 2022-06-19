@@ -5,16 +5,23 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,8 +35,19 @@ public class individual_listing extends AppCompatActivity {
         setContentView(R.layout.activity_individual_listing);
 
         Bundle listinginfo = getIntent().getExtras();
+        String pID = listinginfo.getString("lID");
+        String uID = null;
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            uID = String.valueOf(user.getUid());
+        } else {
+            // No user is signed in
+        }
 
-        createObjectFromFB(listinginfo.getString("lID"));
+        initialCheckLiked(pID, uID);
+        createObjectFromFB(pID);
+        checkLiked(pID, uID);
     }
 
     private void createObjectFromFB(String pid) {
@@ -95,6 +113,72 @@ public class individual_listing extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void initialCheckLiked(String pID, String uID) {
+        ToggleButton like_button = findViewById(R.id.button_like);
+
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
+        DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked");
+        liked.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild(pID)) {
+                    like_button.setChecked(true);
+                }
+
+                else {
+                    like_button.setChecked(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void checkLiked(String pID, String uID) {
+        ToggleButton like_button = findViewById(R.id.button_like);
+
+        like_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (like_button.isChecked()) {
+                    likeFunction(pID, uID);
+                }
+
+                else {
+                    unlikeFunction(pID, uID);
+                }
+            }
+        });
+    }
+
+    private void likeFunction(String pID, String uID) {
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
+        DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked").child(pID);
+        liked.setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.e("LIKE", "successful");
+            }
+        });
+    }
+
+    private void unlikeFunction(String pID, String uID) {
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
+        DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked");
+        liked.child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.e("UNLIKE", "successful");
+            }
+        });;
     }
 
     /*private void createObjectFromFB(String pid) {
