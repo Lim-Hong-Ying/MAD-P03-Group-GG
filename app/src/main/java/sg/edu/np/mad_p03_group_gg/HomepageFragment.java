@@ -3,6 +3,7 @@ package sg.edu.np.mad_p03_group_gg;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -144,8 +147,7 @@ public class HomepageFragment extends Fragment {
 
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
-            Intent listingsIntent = new Intent(this.getContext(), listings.class);
-            startActivity(listingsIntent);
+            replaceFragment(new listingFragment());
         });
 
         chatButtonView.setOnClickListener(v -> {
@@ -181,6 +183,13 @@ public class HomepageFragment extends Fragment {
 
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
         return view;
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 
     private void downloadFiles(String folder) {
