@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,7 +42,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_view);
-        // Initialise date for first time
+        // Initialises date for first time
         if (CalendarUtils.selectedDate == null){
             CalendarUtils.selectedDate = LocalDate.now();
         }
