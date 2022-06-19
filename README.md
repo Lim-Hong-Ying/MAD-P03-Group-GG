@@ -36,7 +36,7 @@ Tagline: Cashshope, your friendly next-generation shopping companion.
 Tan Kai Zhe: Homepage, MainActivity, Wishlist, Graphics </br>
 Lim Hong Ying | S10223298 </br>
 Ooi Jun Heng Ryan | S10223647 : Meeting Planner page, WeekView and MonthView calendars, Event pages </br>
-William Francis Siah | S10222938 : Chat function(Chat List, Chat page, MemoryData etc.) Linking Individual Listing to Chat page</br>
+William Francis Siah | S10222938 : Chat function (Chat List, Chat page, MemoryData etc.), Linking Individual Listing to Chat page</br>
 Koh Han Jie Isaac | S10222275 </br>
 
 ## Features
