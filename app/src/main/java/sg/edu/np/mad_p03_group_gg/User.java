@@ -15,17 +15,14 @@ public class User implements Parcelable{
     private String id;
 
     private String userprofilepic;
-    private ArrayList<String> likedList;
 
     // Parcelable (To pass objects from activity to activity)
     protected User(Parcel in) {
-        ArrayList<String> likinglst = new ArrayList<String>();
         name = in.readString();
         email = in.readString();
         phonenumber = in.readString();
         id = in.readString();
         userprofilepic=in.readString();
-        in.readStringList(likedList);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -52,7 +49,6 @@ public class User implements Parcelable{
         parcel.writeString(phonenumber);
         parcel.writeString(id);
         parcel.writeString(userprofilepic);
-        parcel.writeStringList(likedList);
     }
 
     // End
@@ -97,24 +93,13 @@ public class User implements Parcelable{
     public void setUserprofilepic(String userprofilepic) {
         this.userprofilepic = userprofilepic;
     }
-
-    public ArrayList<String> getLikinglst() {
-        return likedList;
-    }
-
-    public void setLikinglst(ArrayList<String> likedList) {
-        this.likedList = likedList;
-    }
-
-    public User(){
-        ArrayList<String> likinglst = new ArrayList<String>();
-    }
+  
+    public User(){}
 
     public User(String n, String e,String i){
         setId(i);
         setName(n);
         setEmail(e);
-        ArrayList<String> likinglst = new ArrayList<String>();
     }
 
     public User(String n, String e, String p, String up){
@@ -124,12 +109,11 @@ public class User implements Parcelable{
         setUserprofilepic(up);
     }
 
-    public User(String n, String e, String p, String up, @NonNull String userID){
+    public User(String n, String e, String p, String up, String userID){
         setName(n);
         setEmail(e);
         setPhonenumber(p);
         setUserprofilepic(up);
-        ArrayList<String> likinglst = new ArrayList<String>();
         setId(userID);
     }
 
@@ -138,7 +122,6 @@ public class User implements Parcelable{
         setName(n);
         setPhonenumber(p);
         setUserprofilepic(up);
-        setLikinglst(lList);
     }
 
 }

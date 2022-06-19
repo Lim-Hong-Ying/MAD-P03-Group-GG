@@ -5,16 +5,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.LikedRecyclerAdapter;
 
 public class LikedPage extends AppCompatActivity {
@@ -32,7 +25,7 @@ public class LikedPage extends AppCompatActivity {
          */
 
 
-        ImageView closeButton = findViewById(R.id.likedCloseButton);
+        ImageView closeButton = findViewById(R.id.searchPageCloseButton);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2,
                 GridLayoutManager.VERTICAL, false);
