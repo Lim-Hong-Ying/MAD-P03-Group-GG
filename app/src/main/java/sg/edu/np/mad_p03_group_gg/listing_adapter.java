@@ -59,7 +59,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
     public void onBindViewHolder(@NonNull listing_viewholder holder, int position) {
         listingObject listing = data.get(position);
         new ImageDownloader(holder.listing_image).execute(listing.gettURL());
-        new ImageDownloader(holder.seller_image).execute(listing.getSPPU());
+
         holder.listing_title.setText(listing.getTitle());
         holder.price.setText("$" + listing.getPrice());
         holder.itemcondition.setText(listing.getiC());
@@ -73,9 +73,11 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
                 DataSnapshot result = task.getResult();
                 Log.e("ss", String.valueOf(result));
                 String sid = String.valueOf(result.child("name").getValue(String.class));
+                String SPPU = String.valueOf(result.child("userprofilepic").getValue(String.class));
                 Log.e("sid", sid);
 
                 holder.seller_username.setText(sid);
+                new ImageDownloader(holder.seller_image).execute(SPPU);
             }
         });
 
