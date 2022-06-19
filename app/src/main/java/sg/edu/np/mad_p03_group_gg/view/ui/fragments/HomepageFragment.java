@@ -1,4 +1,4 @@
-package sg.edu.np.mad_p03_group_gg;
+package sg.edu.np.mad_p03_group_gg.view.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,16 +18,24 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.SnapshotParser;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,7 +47,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.ChatList;
+import sg.edu.np.mad_p03_group_gg.Event;
+import sg.edu.np.mad_p03_group_gg.R;
+import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
+import sg.edu.np.mad_p03_group_gg.individual_listing;
+import sg.edu.np.mad_p03_group_gg.listingObject;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
@@ -59,6 +73,13 @@ public class HomepageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    // Database Constants
+    private FirebaseRecyclerAdapter<listingObject, newListingViewholder> firebaseRecyclerAdapter;
+    private DatabaseReference databaseReference = FirebaseDatabase.
+            getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").
+            getReference().child("individual-listing");
+    private RecyclerView newListingsRecycler;
 
     // Initialises event details for meeting planner
     private String name, location, time, date;
@@ -109,12 +130,14 @@ public class HomepageFragment extends Fragment {
         File dir = new File(getContext().getCacheDir(),"advertisement");
         ArrayList<String> filePaths = new ArrayList<>();
 
+        // Check for advertisement directory (for storage of ad images)
         if (dir.exists()) {
             if (dir.listFiles().length == 0) {
                 // If directory exists, but empty, will download files
                 downloadFiles("advertisement");
             }
             for (File f : dir.listFiles()) {
+                // Add path to the filePaths array list (later used for RecyclerView Adapter)
                 filePaths.add(f.getAbsolutePath());
             }
         }
@@ -127,6 +150,7 @@ public class HomepageFragment extends Fragment {
         ArrayList<AdBannerImage> adBannerImages = new ArrayList<>();
 
         for (int i = 0; i < filePaths.size(); i++) {
+            // Store file path into respective adBannerImage object
             AdBannerImage adBannerImage = new AdBannerImage(filePaths.get(i));
             adBannerImages.add(adBannerImage);
         }
@@ -162,8 +186,6 @@ public class HomepageFragment extends Fragment {
         });
 
         likedPageButton.setOnClickListener(v -> {
-            /*Intent likedPageIntent = new Intent(this.getContext(), LikedPage.class);
-            startActivity(likedPageIntent);*/
             replaceFragment(new wishListFragment());
         });
 
@@ -187,13 +209,13 @@ public class HomepageFragment extends Fragment {
             }
         });
 
-        /**
-         * TO-DO:
-         *
-         * Get current user session
-         * If user like, store into list of user and update DB with the list (in the form of child)
-         *
-         */
+        // RecyclerView to display last 10 new listings
+        newListingsRecycler = view.findViewById(R.id.newListingsRecycler);
+        newListingsRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        //newListingsRecycler.setHasFixedSize(true);
+        newListingsRecycler.setFocusable(false);
+        newListingsRecycler.setNestedScrollingEnabled(false);
+        firebaseNewListing();
 
         String userID = FirebaseTools.getCurrentAuthenticatedUser();
         Log.d("Current Authenticated User in Liked Page", userID);
@@ -202,13 +224,27 @@ public class HomepageFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Used to replace an existing fragment in view (similar to startActivity)
+     * @param fragment
+     */
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit(); // To apply changes
     }
 
+    /**
+     * Download ALL files in a certain directory (specified with the parameter, folder) from
+     * the Firebase Storage and store them into a folder located within the cache (named after
+     * the parameter)
+     *
+     * eg. downloadFiles("advertisement"), expect to find your files in the cache directory of
+     * /advertisement
+     *
+     * @param folder
+     */
     private void downloadFiles(String folder) {
         // Init Firebase Storage instance
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://cashoppe-179d4.appspot.com/");
@@ -266,12 +302,10 @@ public class HomepageFragment extends Fragment {
                 });
     }
 
-    private boolean searchCache(ArrayList<String> fileNames, String directory) {
-        File storagePath = new File(Environment.getExternalStorageDirectory(), directory);
-        return true;
-    }
-
-    // Read event details of user from Firebase
+    /**
+     * Read event details of user from Firebase
+     * @param userId
+     */
     public void readFromFireBase(String userId){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -296,5 +330,119 @@ public class HomepageFragment extends Fragment {
                 Log.w("TAG", "Failed to read value.", error.toException());
             }
         });
+    }
+
+    /**
+     * Utilize the FirebaseRecyclerAdapter (from com.firebaseui:firebase-ui-database:8.0.1)
+     * to populate a RecyclerView of listing objects
+     *
+     * Since for each individual listing on the database has other attributes that are not used
+     * for this scenario, the data snapshot retrieved from the database must be parsed with
+     * the correct attributes.
+     */
+    private void firebaseNewListing() {
+        Query query = databaseReference.limitToLast(10); // Recent 10 listings
+
+        FirebaseRecyclerOptions<listingObject> options =
+                new FirebaseRecyclerOptions.Builder<listingObject>()
+                        .setQuery(query, new SnapshotParser<listingObject>() {
+                            @NonNull
+                            @Override
+                            public listingObject parseSnapshot(@NonNull DataSnapshot snapshot) {
+
+                                String listingid = snapshot.getKey();
+                                String titles = snapshot.child("title").getValue(String.class);
+                                String thumbnailurl = snapshot.child("tURL").getValue(String.class);
+                                String sellerid = snapshot.child("sid").getValue(String.class);
+                                String sellerprofilepicurl = snapshot.child("sppu").getValue(String.class);
+                                String itemcondition = snapshot.child("iC").getValue(String.class);
+                                String price = snapshot.child("price").getValue(String.class);
+                                Boolean reserved = snapshot.child("reserved").getValue(Boolean.class);
+
+                                listingObject listing = new listingObject(listingid, titles,
+                                        thumbnailurl, sellerid, sellerprofilepicurl,
+                                        itemcondition, price, reserved);
+
+                                return listing;
+                            }
+                        })
+                        .build();
+
+        firebaseRecyclerAdapter =
+                new FirebaseRecyclerAdapter<listingObject, newListingViewholder>(options) {
+
+                    @NonNull
+                    @Override
+                    public newListingViewholder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                                                     int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).
+                                inflate(R.layout.liked_item, parent, false);
+
+                        return new newListingViewholder(view);
+                    }
+
+                    @Override
+                    protected void onBindViewHolder(@NonNull newListingViewholder holder,
+                                                    int position, @NonNull listingObject model) {
+                        holder.setListingResultDetails(model);
+                        holder.searchView.findViewById(R.id.parentCardView).setOnClickListener(view -> {
+                            Bundle listinginfo = new Bundle();
+                            listinginfo.putString("lID", model.getlID());
+                            Intent individuallisting = new Intent(view.getContext(), individual_listing.class);
+                            individuallisting.putExtras(listinginfo);
+                            view.getContext().startActivity(individuallisting);
+                        });
+                    }
+                };
+
+        newListingsRecycler.setAdapter(firebaseRecyclerAdapter);
+    }
+
+    public class newListingViewholder extends RecyclerView.ViewHolder {
+        View searchView;
+
+        public newListingViewholder(@NonNull View itemView) {
+            super(itemView);
+
+            searchView = itemView;
+        }
+
+        public void setListingResultDetails(listingObject model) {
+
+            TextView usernameView = searchView.findViewById(R.id.usernameView  );
+            TextView listingNameView = searchView.findViewById(R.id.listingNameView);
+            TextView listingPriceView = searchView.findViewById(R.id.listingPriceView);
+            TextView listingItemConditionView = searchView.findViewById(R.id.listingItemConditionView);
+            ShapeableImageView sellerProfilePic = searchView.findViewById(R.id.profilePictureView);
+            ImageView listingImageView = searchView.findViewById(R.id.listingImageView);
+
+            usernameView.setText(model.getSID());
+            listingNameView.setText(model.getTitle());
+            listingPriceView.setText(model.getPrice());
+            listingItemConditionView.setText(model.getiC());
+
+            // The Glide library is used for easy application of images into their respective views.
+            Glide.with(getActivity().getApplicationContext()).load(model.getSPPU()).into(sellerProfilePic);
+            Glide.with(getActivity().getApplicationContext()).load(model.gettURL()).into(listingImageView);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseRecyclerAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        /**
+         * MUST: Otherwise there will be inconsistency error.
+         *
+         * This occurs when the fragment/activity is closed and all data on the recycler view
+         * have been reset, which will raise an inconsistency error.
+         */
+        firebaseRecyclerAdapter.notifyDataSetChanged();
+        firebaseRecyclerAdapter.stopListening();
     }
 }

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
+
 public class successListPage extends AppCompatActivity {
 
     @Override
