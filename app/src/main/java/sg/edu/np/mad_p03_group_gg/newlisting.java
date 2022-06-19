@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -52,6 +53,14 @@ public class newlisting extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 chooseImage();
+            }
+        });
+
+        ImageButton back_button = findViewById(R.id.back_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
 
@@ -368,21 +377,21 @@ public class newlisting extends AppCompatActivity {
 
     ActivityResultLauncher<Intent> launchPicker
             = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
 
-                    if (data != null && data.getData() != null) {
-                        Uri selectedImageUri = data.getData();
-                        Bitmap selectedImageBitmap = null;
-                        try {
-                            selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-                        }
-                        catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        ImageView selectimage = findViewById(R.id.choose_image);
-                        selectimage.setImageBitmap(selectedImageBitmap);
-                    }
+            if (data != null && data.getData() != null) {
+                Uri selectedImageUri = data.getData();
+                Bitmap selectedImageBitmap = null;
+                try {
+                    selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
                 }
-            });
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ImageView selectimage = findViewById(R.id.choose_image);
+                selectimage.setImageBitmap(selectedImageBitmap);
+            }
+        }
+    });
 }

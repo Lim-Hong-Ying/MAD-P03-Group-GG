@@ -178,8 +178,9 @@ public class HomepageFragment extends Fragment {
         });
 
         likedPageButton.setOnClickListener(v -> {
-            Intent likedPageIntent = new Intent(this.getContext(), LikedPage.class);
-            startActivity(likedPageIntent);
+            /*Intent likedPageIntent = new Intent(this.getContext(), LikedPage.class);
+            startActivity(likedPageIntent);*/
+            replaceFragment(new wishListFragment());
         });
 
         // When user submits search view query, will start search activity

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -68,8 +69,10 @@ public class individual_listing extends AppCompatActivity {
         });
 
         initialCheckLiked(pID, uID);
-        createObjectFromFB(pID);
+        createObjectFromFB(pID, uID);
         checkLiked(pID, uID);
+
+        //############## WILLIAM CHAT SECTION ##################
 
         // Get direct chat button from xml
         Button directChat = findViewById(R.id.button_chat);
@@ -143,10 +146,10 @@ public class individual_listing extends AppCompatActivity {
                 individual_listing.this.startActivity(intent);
             }
         });
-
+        // ############# END WILLIAM SECTION ###############
     }
 
-    private void createObjectFromFB(String pid) {
+    private void createObjectFromFB(String pid, String currentuID) {
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         individualdb.getReference().child("individual-listing").child(pid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -202,10 +205,59 @@ public class individual_listing extends AppCompatActivity {
                     priceholder.setText("$" + listing.getPrice());
                     itemconditionholder.setText("Condition: " + listing.getiC());
                     descriptionholder.setText(listing.getDescription());
-                    locationholder.setText(listing.getLocation());
-                    deliveryoptionholder.setText(listing.getDeliveryType());
-                    deliverypriceholder.setText(listing.getDeliveryPrice());
-                    deliverytimeholder.setText(listing.getDeliveryTime());
+
+                    if (!listing.getLocation().isEmpty()) {
+                        locationholder.setText("Address: " + listing.getLocation());
+                    }
+
+                    else {
+                        TextView addressheader = findViewById(R.id.individual_saleoptionheader);
+                        addressheader.setVisibility(View.GONE);
+                        locationholder.setVisibility(View.GONE);
+                    }
+
+                    if (!listing.getDeliveryType().isEmpty()) {
+                        deliveryoptionholder.setText("Delivery type: " + listing.getDeliveryType());
+                        deliverypriceholder.setText("Delivery price: " + listing.getDeliveryPrice());
+                        deliverytimeholder.setText("Estimated delivery time: " + listing.getDeliveryTime());
+                    }
+
+                    else {
+                        TextView deliveryheader = findViewById(R.id.individual_deliveryheader);
+                        deliveryheader.setVisibility(View.GONE);
+                        deliveryoptionholder.setVisibility(View.GONE);
+                        deliverypriceholder.setVisibility(View.GONE);
+                        deliverytimeholder.setVisibility(View.GONE);
+                    }
+
+                    Log.e("sellerid", sellerid);
+                    Log.e("currentuID", currentuID);
+
+                    if (sellerid.equals(currentuID)) {
+                        ToggleButton likebutton = findViewById(R.id.button_like);
+                        Button chatbutton = findViewById(R.id.button_chat);
+
+                        likebutton.setVisibility(View.GONE);
+                        chatbutton.setVisibility(View.GONE);
+                    }
+
+
+                    individualdb.getReference().child("users").child(sellerid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            DataSnapshot result = task.getResult();
+                            String sellername = String.valueOf(result.child("name").getValue(String.class));
+                            String SPPU = String.valueOf(result.child("userprofilepic").getValue(String.class));
+
+                            ImageView sellerpfp = findViewById(R.id.seller_pfp);
+                            TextView name_holder = findViewById(R.id.seller_name);
+
+                            name_holder.setText(sellername);
+                            if (!SPPU.isEmpty()) {
+                                new ImageDownloader(sellerpfp).execute(SPPU);
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -276,74 +328,6 @@ public class individual_listing extends AppCompatActivity {
             }
         });;
     }
-
-    /*private void createObjectFromFB(String pid) {
-        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
-        DatabaseReference individualListing = individualdb.getReference().child("individual-listing").child(pid);
-
-        individualListingObject listing;
-
-        individualListing.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot datasnap : snapshot.getChildren()) {
-                    String listingid = datasnap.getKey();
-                    String title = datasnap.child("title").getValue(String.class);
-                    String thumbnailurl = datasnap.child("tURL").getValue(String.class);
-                    String sellerid = datasnap.child("sid").getValue(String.class);
-                    String sellerprofilepicurl = datasnap.child("sppu").getValue(String.class);
-                    String itemcondition = datasnap.child("iC").getValue(String.class);
-                    String price = datasnap.child("price").getValue(String.class);
-                    Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
-                    String desc = datasnap.child("description").getValue(String.class);
-                    String location = datasnap.child("location").getValue(String.class);
-                    Boolean delivery = datasnap.child("delivery").getValue(Boolean.class);
-                    String deliverytype = datasnap.child("deliveryType").getValue(String.class);
-                    String deliveryprice = datasnap.child("deliveryPrice").getValue(String.class);
-                    String deliverytime = datasnap.child("deliveryTime").getValue(String.class);
-
-                    individualListingObject listing = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
-
-                    ImageView holder;
-                    TextView titleholder;
-                    TextView priceholder;
-                    TextView itemconditionholder;
-                    TextView descriptionholder;
-                    TextView locationholder;
-                    TextView deliveryoptionholder;
-                    TextView deliverypriceholder;
-                    TextView deliverytimeholder;
-
-                    holder = findViewById(R.id.imageholder);
-                    titleholder = findViewById(R.id.individual_title);
-                    priceholder = findViewById(R.id.individual_price);
-                    itemconditionholder = findViewById(R.id.individual_itemcondition);
-                    descriptionholder = findViewById(R.id.individual_description);
-                    locationholder = findViewById(R.id.individual_salelocation);
-                    deliveryoptionholder = findViewById(R.id.individual_deliveryoption);
-                    deliverypriceholder = findViewById(R.id.individual_deliveryprice);
-                    deliverytimeholder = findViewById(R.id.individual_deliverytime);
-
-                    new ImageDownloader(holder).execute(listing.gettURL());
-                    titleholder.setText(listing.getTitle());
-                    priceholder.setText("" + listing.getPrice());
-                    itemconditionholder.setText(listing.getiC());
-                    descriptionholder.setText(listing.getDescription());
-                    locationholder.setText(listing.getLocation());
-                    deliveryoptionholder.setText(listing.getDeliveryType());
-                    deliverypriceholder.setText(listing.getDeliveryPrice());
-                    deliverytimeholder.setText(listing.getDeliveryTime());
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }*/
 
     private class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
         ImageView bitmap;

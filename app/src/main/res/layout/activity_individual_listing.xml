@@ -19,8 +19,6 @@
             android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_weight="0.5"
             android:background="#d0b4fc"
             app:srcCompat="@drawable/back_icon" />
@@ -46,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
                 android:adjustViewBounds="true"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:srcCompat="@drawable/default_image_icon" />
 
             <TextView
                 android:id="@+id/individual_title"
@@ -101,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:fontFamily="@font/roboto"
+                android:fontFamily="@font/roboto_bold"
                 android:text="Sale location:"
                 android:textSize="24sp" />
 
@@ -109,7 +107,10 @@
                 android:id="@+id/individual_salelocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/roboto"
                 android:text="Address"
                 android:textSize="24sp" />
@@ -119,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:fontFamily="@font/roboto"
+                android:fontFamily="@font/roboto_bold"
                 android:text="Delivery option:"
                 android:textSize="24sp" />
 
@@ -127,7 +128,10 @@
                 android:id="@+id/individual_deliveryoption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/roboto"
                 android:text="Delivery type"
                 android:textSize="24sp" />
@@ -136,7 +140,10 @@
                 android:id="@+id/individual_deliveryprice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/roboto"
                 android:text="Delivery Price"
                 android:textSize="24sp" />
@@ -145,10 +152,44 @@
                 android:id="@+id/individual_deliverytime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/roboto"
                 android:text="Estimated Lead Time"
                 android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Seller information:"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/seller_pfp"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_weight="0.5"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/profile_icon_160" />
+
+                <TextView
+                    android:id="@+id/seller_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/roboto"
+                    android:text="Seller name"
+                    android:textSize="24sp" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
@@ -177,6 +218,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:background="#D0B4FC"
             android:text="Chat with seller" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
