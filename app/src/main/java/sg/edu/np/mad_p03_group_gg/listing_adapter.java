@@ -77,7 +77,9 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
                 Log.e("sid", sid);
 
                 holder.seller_username.setText(sid);
-                new ImageDownloader(holder.seller_image).execute(SPPU);
+                if (!SPPU.isEmpty()) {
+                    new ImageDownloader(holder.seller_image).execute(SPPU);
+                }
             }
         });
 
