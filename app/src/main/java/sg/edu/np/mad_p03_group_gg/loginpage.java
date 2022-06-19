@@ -1,9 +1,15 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class loginpage extends AppCompatActivity {
     FirebaseAuth auth;
+    private int EXTERNAL_STORAGE_PERMISSION_CODE = 23;
 
 
     @Override
@@ -28,6 +35,14 @@ public class loginpage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginpage);
         auth=FirebaseAuth.getInstance(); // singleton
+        if (ContextCompat.checkSelfPermission(loginpage.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(loginpage.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    23);
+        }
         //find views and buttons
         Button button = (Button) findViewById(R.id.fgt_pswrd_btn);
         TextView signup = findViewById(R.id.Sign_up);
@@ -93,6 +108,13 @@ public class loginpage extends AppCompatActivity {
                     }
                 }
             });
+
+
+    }
+    public void request(View view) {
+        // Requesting Permission to access External Storage
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                EXTERNAL_STORAGE_PERMISSION_CODE);
 
 
     }
