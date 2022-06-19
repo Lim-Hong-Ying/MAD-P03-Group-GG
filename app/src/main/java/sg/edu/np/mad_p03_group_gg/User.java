@@ -93,7 +93,7 @@ public class User implements Parcelable{
     public void setUserprofilepic(String userprofilepic) {
         this.userprofilepic = userprofilepic;
     }
-
+  
     public User(){}
 
     public User(String n, String e,String i){
@@ -109,7 +109,7 @@ public class User implements Parcelable{
         setUserprofilepic(up);
     }
 
-    public User(String n, String e, String p, String up, @NonNull String userID){
+    public User(String n, String e, String p, String up, String userID){
         setName(n);
         setEmail(e);
         setPhonenumber(p);
