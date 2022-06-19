@@ -19,8 +19,6 @@
             android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_weight="0.5"
             android:background="#d0b4fc"
             app:srcCompat="@drawable/back_icon" />
