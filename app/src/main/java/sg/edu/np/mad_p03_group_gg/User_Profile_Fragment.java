@@ -55,6 +55,8 @@ import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.net.MalformedURLException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link User_Profile_Fragment#newInstance} factory method to
@@ -119,218 +121,239 @@ public class User_Profile_Fragment extends Fragment {
 
 
 
-        @Override
-        public View onCreateView (LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState){
-            //Get storage reference
+    @Override
+    public View onCreateView (LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState){
+        //Get storage reference
 
-            // Inflate the layout for this fragment
-            View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
 
-            TextView Email = (EditText) view.findViewById(R.id.user_profile_email);
-            TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
-            TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
-            ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
-            Button save_changes = (Button) view.findViewById(R.id.change_profile);
-            Button log_out = (Button) view.findViewById(R.id.log_out);
-
-
-            FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-            mDataref = database.getReference();
-            storage = FirebaseStorage.getInstance().getReference("user-images");
+        TextView Email = (EditText) view.findViewById(R.id.user_profile_email);
+        TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
+        TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
+        ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
+        Button save_changes = (Button) view.findViewById(R.id.change_profile);
+        Button log_out = (Button) view.findViewById(R.id.log_out);
 
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        mDataref = database.getReference();
+        storage = FirebaseStorage.getInstance().getReference("user-images");
+
+        retrieveUserAndDisplayImage(view);
+
+        mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get phone number of current user
+                auth = FirebaseAuth.getInstance();
+                FirebaseUser fbUser = auth.getCurrentUser();
+                String uid = fbUser.getUid();
+
+                String email = fbUser.getEmail();
 
 
+                for(DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
 
+                    String foundID = dataSnapshot.child("id").getValue(String.class);
+                    if(foundID.equalsIgnoreCase(uid)){
 
-            mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // Get phone number of current user
-                    auth = FirebaseAuth.getInstance();
-                    FirebaseUser fbUser = auth.getCurrentUser();
-                    String uid = fbUser.getUid();
-
-                    String email = fbUser.getEmail();
-
-
-                    for(DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
-
-                        String foundID = dataSnapshot.child("id").getValue(String.class);
-                        if(foundID.equalsIgnoreCase(uid)){
-
-                            user  = dataSnapshot.getValue(User.class);
-                            user.setId(uid);
-                            break;
-                        }
-
+                        user  = dataSnapshot.getValue(User.class);
+                        user.setId(uid);
+                        break;
                     }
 
+                }
+
+                Email.setText(email);
+                Phonenumber.setText(user.getPhonenumber());
+                Username.setText(user.getName());
+
+                String profilePicurl = user.getUserprofilepic();
+                Log.e("test",profilePicurl);
 
 
 
 
-                    Email.setText(email);
-                    Phonenumber.setText(user.getPhonenumber());
-                    Username.setText(user.getName());
-
-                    String profilePicurl = user.getUserprofilepic();
-                    Log.e("test",profilePicurl);
+            }
 
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Log.w("Failed to read value.", error.toException());
+            }
+        });
+        Ondownload();
+
+        log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), loginpage.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
 
 
+                    uprofilepic.setImageURI(result);
+                    ImageUri=result;
+
+                    // write to firebase
+                if(muploadtask != null && muploadtask.isInProgress())
+                {
+                    Toast.makeText(getContext(), "Upload in progress",Toast.LENGTH_SHORT).show();
+                }
+                else {
+
+                    onupload();
                 }
 
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
 
-                    Log.w("Failed to read value.", error.toException());
-                }
-            });
-            Ondownload();
+            }
+        });
 
-            log_out.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), loginpage.class);
-                    startActivity(intent);
-                    getActivity().finish();
-                }
-            });
-
-            ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri result) {
-
-
-                        uprofilepic.setImageURI(result);
-                        ImageUri=result;
-
-                        // write to firebase
-                    if(muploadtask != null && muploadtask.isInProgress())
-                    {
-                        Toast.makeText(getContext(), "Upload in progress",Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-
-                        onupload();
-                    }
-
-
-
-                }
-            });
-
-            uprofilepic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    launcher.launch("image/*");
-                }
-            });
+        uprofilepic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launcher.launch("image/*");
+            }
+        });
 
 
 
 
 
 
-            return view;
+        return view;
 
+    }
+
+    private void retrieveUserAndDisplayImage(View view) {
+        String sid = "";
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        CircleImageView userPFP = view.findViewById(R.id.uprofilepic);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            sid = String.valueOf(user.getUid());
+        } else {
+            // No user is signed in
         }
-        private String getfileextension(Uri uri){
-            ContentResolver cr = getContext().getContentResolver();
-            MimeTypeMap mime = MimeTypeMap.getSingleton();
-            return mime.getExtensionFromMimeType(cr.getType(uri));
 
-        }
-        private void onupload(){
+        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
+        individualdb.getReference().child("users").child(sid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                DataSnapshot result = task.getResult();
+                String spfp = String.valueOf(result.child("userprofilepic").getValue(String.class));
+
+                new ImageDownloader(userPFP).execute(spfp);
+            }
+        });
+    }
+
+    private String getfileextension(Uri uri){
+        ContentResolver cr = getContext().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+
+        return mime.getExtensionFromMimeType(cr.getType(uri));
+    }
+
+    private void onupload(){
         ImageView imageView =(ImageView)getActivity().findViewById(R.id.uprofilepic);
-            Filepath = System.currentTimeMillis()+"."+getfileextension(ImageUri);
-        //Converts images to bytes
-            StorageReference storageReference = storage.child(Filepath);
+        Filepath = System.currentTimeMillis()+"."+getfileextension(ImageUri);
+    //Converts images to bytes
+        StorageReference storageReference = storage.child(Filepath);
 
-            imageView.setDrawingCacheEnabled(true);
-            imageView.buildDrawingCache();
-            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
 
-            UploadTask uploadTask = storageReference.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(getContext(),"Unsuccessful. Please try again",Toast.LENGTH_SHORT).show();
+        UploadTask uploadTask = storageReference.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(getContext(),"Unsuccessful. Please try again",Toast.LENGTH_SHORT).show();
 
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getContext(),"Successful.",Toast.LENGTH_SHORT).show();
-                    user.setUserprofilepic(storageReference.toString());
-                    mDataref.child("users").child(user.getId()).setValue(user);
-
-
-                }
-            });
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getContext(),"Successful.",Toast.LENGTH_SHORT).show();
+                user.setUserprofilepic(storageReference.toString());
+                mDataref.child("users").child(user.getId()).setValue(user);
 
 
-
-        /*if(ImageUri!=null){
-            StorageReference filereferences = storage.child(System.currentTimeMillis()+"."+getfileextension(ImageUri));
-            muploadtask=filereferences.putFile(ImageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getContext(),"Successful",Toast.LENGTH_SHORT).show();
-
-                            user.setUserprofilepic(storage.child(System.currentTimeMillis()+"."+getfileextension(ImageUri)).toString());
-                            mDataref.child("users").child(user.getId()).setValue(user);
+            }
+        });
 
 
 
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
+    /*if(ImageUri!=null){
+        StorageReference filereferences = storage.child(System.currentTimeMillis()+"."+getfileextension(ImageUri));
+        muploadtask=filereferences.putFile(ImageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getContext(),"Successful",Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
+                        user.setUserprofilepic(storage.child(System.currentTimeMillis()+"."+getfileextension(ImageUri)).toString());
+                        mDataref.child("users").child(user.getId()).setValue(user);
 
-        }
-        else{
 
-            Toast.makeText(getContext(),"No File Selected",Toast.LENGTH_SHORT).show();
 
-        }*/
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-        }
-        private void Ondownload(){
-            StorageReference gsReference = base.getReferenceFromUrl("gs://cashoppe-179d4.appspot.com/");
-            Log.e("test","test");
-            StorageReference imgref = gsReference.child("user-images/1655609138266.jpg");
-            Log.e("Link:",imgref.toString());
-            Log.e("test","test");
+                    }
+                });
 
-            final long ONE_MEGABYTE = 1024 * 1024;
-            imgref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    ImageView profilepic = (ImageView) getActivity().findViewById(R.id.uprofilepic);
-                    // Data for "[].jpg" is returns, use this as needed
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
+    }
+    else{
 
-        }
+        Toast.makeText(getContext(),"No File Selected",Toast.LENGTH_SHORT).show();
+
+    }*/
+
+    }
+
+    private void Ondownload(){
+        StorageReference gsReference = base.getReferenceFromUrl("gs://cashoppe-179d4.appspot.com/");
+        Log.e("test","test");
+        StorageReference imgref = gsReference.child("user-images/1655609138266.jpg");
+        Log.e("Link:",imgref.toString());
+        Log.e("test","test");
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imgref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                ImageView profilepic = (ImageView) getActivity().findViewById(R.id.uprofilepic);
+                // Data for "[].jpg" is returns, use this as needed
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
+    }
 
     // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
 

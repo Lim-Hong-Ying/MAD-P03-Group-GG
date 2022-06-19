@@ -5,9 +5,8 @@
     android:id="@+id/Username"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".User_Profile_Fragment"
     android:background="@drawable/inpu_text"
-    >
+    tools:context=".User_Profile_Fragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
