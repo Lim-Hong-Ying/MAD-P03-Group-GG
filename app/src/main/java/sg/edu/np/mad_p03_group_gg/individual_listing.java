@@ -1,10 +1,15 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +32,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 
+import sg.edu.np.mad_p03_group_gg.chat.Chat;
+
 public class individual_listing extends AppCompatActivity {
+
+    private String uID;
+    private String sID;
+    private String chatKey = "";
+    private User seller;
+    private User mainUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +49,7 @@ public class individual_listing extends AppCompatActivity {
 
         Bundle listinginfo = getIntent().getExtras();
         String pID = listinginfo.getString("lID");
-        String uID = null;
+        uID = null;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
@@ -48,6 +61,80 @@ public class individual_listing extends AppCompatActivity {
         initialCheckLiked(pID, uID);
         createObjectFromFB(pID);
         checkLiked(pID, uID);
+
+        // Get direct chat button from xml
+        Button directChat = findViewById(R.id.button_chat);
+
+        // Get database reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app");
+        DatabaseReference databaseReference = database.getReference();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get seller id
+                for(DataSnapshot dataSnapshot : snapshot.child("individual-listing").getChildren()) {
+                    String foundPID = dataSnapshot.getKey();
+                    if(pID.equalsIgnoreCase(foundPID)){
+                        sID = dataSnapshot.child("sid").getValue(String.class);
+                        break;
+                    }
+                }
+
+                // Get chatkey
+                for (DataSnapshot dataSnapshotCurrentChat : snapshot.child("chat").getChildren()){
+                    // Get id number of each user
+                    String getUserOne = dataSnapshotCurrentChat.child("user1").getValue(String.class);
+                    String getUserTwo = dataSnapshotCurrentChat.child("user2").getValue(String.class);
+
+                    // If id numbers are the same as main user and selected user's id number
+                    if((TextUtils.equals(getUserOne,sID) && TextUtils.equals(getUserTwo,uID))
+                            || (TextUtils.equals(getUserOne,uID) && TextUtils.equals(getUserTwo, sID))){
+                        chatKey = dataSnapshotCurrentChat.getKey();
+                    }
+                }
+
+                // Create seller and main user Object
+                for (DataSnapshot dataSnapshotUser : snapshot.child("users").getChildren()){
+                    // If id matches main user ID Create main user object
+                    if (TextUtils.equals(dataSnapshotUser.getKey(),uID)){
+                        mainUser = new User (dataSnapshotUser.child("name").getValue(String.class)
+                                ,dataSnapshotUser.child("email").getValue(String.class),uID);
+                    }
+                    // If id matches main SELLER ID Create seller user object
+                    if (TextUtils.equals(dataSnapshotUser.getKey(),sID)){
+                        seller = new User (dataSnapshotUser.child("name").getValue(String.class)
+                                ,dataSnapshotUser.child("email").getValue(String.class)
+                                ,dataSnapshotUser.child("phonenumber").getValue(String.class)
+                                ,dataSnapshotUser.child("userprofilepic").getValue(String.class)
+                                ,sID);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read from db
+            }
+        });
+
+        // Send main user and seller info to chat
+        directChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(individual_listing.this, Chat.class);
+                // Send selected user's data to chat activity
+                intent.putExtra("name",seller.getName());
+                intent.putExtra("profilePic",seller.getUserprofilepic());
+                intent.putExtra("chatKey", chatKey);
+                intent.putExtra("id", sID);
+                // Send main user data to chat activity
+                intent.putExtra("mainUser", (Parcelable) mainUser);
+
+                individual_listing.this.startActivity(intent);
+            }
+        });
+
     }
 
     private void createObjectFromFB(String pid) {
