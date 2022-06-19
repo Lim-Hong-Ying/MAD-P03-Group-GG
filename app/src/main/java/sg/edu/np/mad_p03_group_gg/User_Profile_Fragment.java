@@ -119,11 +119,9 @@ public class User_Profile_Fragment extends Fragment {
     }
 
 
-
-
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         //Get storage reference
 
         // Inflate the layout for this fragment
@@ -133,7 +131,7 @@ public class User_Profile_Fragment extends Fragment {
         TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
         TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
         ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
-        Button save_changes = (Button) view.findViewById(R.id.change_profile);
+
         Button log_out = (Button) view.findViewById(R.id.log_out);
 
 
@@ -154,12 +152,12 @@ public class User_Profile_Fragment extends Fragment {
                 String email = fbUser.getEmail();
 
 
-                for(DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
+                for (DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
 
                     String foundID = dataSnapshot.child("id").getValue(String.class);
-                    if(foundID.equalsIgnoreCase(uid)){
+                    if (foundID.equalsIgnoreCase(uid)) {
 
-                        user  = dataSnapshot.getValue(User.class);
+                        user = dataSnapshot.getValue(User.class);
                         user.setId(uid);
                         break;
                     }
@@ -171,9 +169,7 @@ public class User_Profile_Fragment extends Fragment {
                 Username.setText(user.getName());
 
                 String profilePicurl = user.getUserprofilepic();
-                Log.e("test",profilePicurl);
-
-
+                Log.e("test", profilePicurl);
 
 
             }
@@ -185,7 +181,6 @@ public class User_Profile_Fragment extends Fragment {
                 Log.w("Failed to read value.", error.toException());
             }
         });
-        Ondownload();
 
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,19 +196,16 @@ public class User_Profile_Fragment extends Fragment {
             public void onActivityResult(Uri result) {
 
 
-                    uprofilepic.setImageURI(result);
-                    ImageUri=result;
+                uprofilepic.setImageURI(result);
+                ImageUri = result;
 
-                    // write to firebase
-                if(muploadtask != null && muploadtask.isInProgress())
-                {
-                    Toast.makeText(getContext(), "Upload in progress",Toast.LENGTH_SHORT).show();
-                }
-                else {
+                // write to firebase
+                if (muploadtask != null && muploadtask.isInProgress()) {
+                    Toast.makeText(getContext(), "Upload in progress", Toast.LENGTH_SHORT).show();
+                } else {
 
                     onupload();
                 }
-
 
 
             }
@@ -225,10 +217,6 @@ public class User_Profile_Fragment extends Fragment {
                 launcher.launch("image/*");
             }
         });
-
-
-
-
 
 
         return view;
@@ -260,17 +248,17 @@ public class User_Profile_Fragment extends Fragment {
         });
     }
 
-    private String getfileextension(Uri uri){
+    private String getfileextension(Uri uri) {
         ContentResolver cr = getContext().getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
 
         return mime.getExtensionFromMimeType(cr.getType(uri));
     }
 
-    private void onupload(){
-        ImageView imageView =(ImageView)getActivity().findViewById(R.id.uprofilepic);
-        Filepath = System.currentTimeMillis()+"."+getfileextension(ImageUri);
-    //Converts images to bytes
+    private void onupload() {
+        ImageView imageView = (ImageView) getActivity().findViewById(R.id.uprofilepic);
+        Filepath = System.currentTimeMillis() + "." + getfileextension(ImageUri);
+        //Converts images to bytes
         StorageReference storageReference = storage.child(Filepath);
 
         imageView.setDrawingCacheEnabled(true);
@@ -284,106 +272,69 @@ public class User_Profile_Fragment extends Fragment {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(getContext(),"Unsuccessful. Please try again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Unsuccessful. Please try again", Toast.LENGTH_SHORT).show();
 
                 // Handle unsuccessful uploads
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(getContext(),"Successful.",Toast.LENGTH_SHORT).show();
-                user.setUserprofilepic(storageReference.toString());
-                mDataref.child("users").child(user.getId()).setValue(user);
+                if (taskSnapshot.getMetadata() != null) {
+                    if (taskSnapshot.getMetadata().getReference() != null) {
+                        Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Toast.makeText(getContext(), "Successful.", Toast.LENGTH_SHORT).show();
+                                user.setUserprofilepic(uri.toString());
+                                mDataref.child("users").child(user.getId()).setValue(user);
+                            }
 
-
-            }
-        });
-
-
-
-    /*if(ImageUri!=null){
-        StorageReference filereferences = storage.child(System.currentTimeMillis()+"."+getfileextension(ImageUri));
-        muploadtask=filereferences.putFile(ImageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getContext(),"Successful",Toast.LENGTH_SHORT).show();
-
-                        user.setUserprofilepic(storage.child(System.currentTimeMillis()+"."+getfileextension(ImageUri)).toString());
-                        mDataref.child("users").child(user.getId()).setValue(user);
-
-
-
+                        });
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-
-    }
-    else{
-
-        Toast.makeText(getContext(),"No File Selected",Toast.LENGTH_SHORT).show();
-
-    }*/
-
-    }
-
-    private void Ondownload(){
-        StorageReference gsReference = base.getReferenceFromUrl("gs://cashoppe-179d4.appspot.com/");
-        Log.e("test","test");
-        StorageReference imgref = gsReference.child("user-images/1655609138266.jpg");
-        Log.e("Link:",imgref.toString());
-        Log.e("test","test");
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imgref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                ImageView profilepic = (ImageView) getActivity().findViewById(R.id.uprofilepic);
-                // Data for "[].jpg" is returns, use this as needed
+                }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+
+
+
+            // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+
+
+            boolean isEmpty(EditText text) {
+                CharSequence str = text.getText().toString();
+                return TextUtils.isEmpty(str);
             }
+
+            boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
+                CharSequence email = text.getText().toString();
+                return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+            }
+
+            public boolean checkDataEntered(View v) {  // returns true when all input fields are correct, return false when not correct
+
+                EditText Phonenumber = (EditText) v.findViewById(R.id.User_Profile_phonenumber);
+                EditText Email = (EditText) v.findViewById(R.id.user_profile_email);
+
+
+                if (isEmail(Email) == false) {
+                    Email.setError("Enter valid email!");
+                    return false;
+                }
+
+                if (isEmpty(Phonenumber)) {
+                    Phonenumber.setError("Last name is required!");
+                    return false;
+                }
+                return true;
+            }
+
+
+
+
         });
-
     }
 
-    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
 
-
-    boolean isEmpty(EditText text) {
-        CharSequence str = text.getText().toString();
-        return TextUtils.isEmpty(str);
-    }
-    boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
-        CharSequence email = text.getText().toString();
-        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
-    }
-    public boolean checkDataEntered(View v){  // returns true when all input fields are correct, return false when not correct
-
-        EditText Phonenumber = (EditText) v.findViewById(R.id.User_Profile_phonenumber);
-        EditText Email = (EditText) v.findViewById(R.id.user_profile_email);
-
-
-
-        if (isEmail(Email) == false) {
-            Email.setError("Enter valid email!");
-            return false;
-        }
-
-        if (isEmpty(Phonenumber)) {
-            Phonenumber.setError("Last name is required!");
-            return false;
-        }
-        return true;
-    }
     private class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
         ImageView bitmap;
 
@@ -410,7 +361,6 @@ public class User_Profile_Fragment extends Fragment {
             bitmap.setImageBitmap(result);
         }
     }
+}
 
-
-    }
 
