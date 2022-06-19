@@ -3,6 +3,7 @@ package sg.edu.np.mad_p03_group_gg.messages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
                 intent.putExtra("chatKey", user.getChatKey());
                 intent.putExtra("id", user.getid());
                 // Send main user data to chat activity
-                intent.putExtra("mainUser", mainUser);
+                intent.putExtra("mainUser", (Parcelable) mainUser);
 
                 context.startActivity(intent);
             }

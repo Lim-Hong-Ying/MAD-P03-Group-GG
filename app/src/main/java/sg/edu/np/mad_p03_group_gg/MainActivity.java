@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                     this.startActivity(newList);
                     break;
                 case R.id.user:
-                    //replaceFragment(new User);
+                    replaceFragment(new User_Profile_Fragment());
                     break;
             }
 

@@ -3,28 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="20sp">
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:padding="10sp"
+        android:padding="5sp"
         android:text="Name"
         android:textColor="@color/black"
-        android:textSize="25sp" />
-
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:maxLines="1"
-        android:padding="10sp"
-        android:text="Location"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="26sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/time"
@@ -32,8 +23,25 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:maxLines="1"
-        android:padding="10sp"
+        android:paddingLeft="5sp"
+        android:paddingTop="10sp"
+        android:paddingRight="10sp"
+        android:paddingBottom="10sp"
         android:text="Time"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:maxLines="1"
+        android:paddingLeft="5sp"
+        android:paddingTop="10sp"
+        android:paddingRight="10sp"
+        android:paddingBottom="10sp"
+        android:text="Location"
         android:textColor="@color/black"
         android:textSize="20sp" />
 

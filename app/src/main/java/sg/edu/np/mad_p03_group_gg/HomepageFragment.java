@@ -2,11 +2,14 @@ package sg.edu.np.mad_p03_group_gg;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,16 +21,28 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
+import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
+import sg.edu.np.mad_p03_group_gg.view.ui.SearchActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +50,7 @@ import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
  * create an instance of this fragment.
  */
 public class HomepageFragment extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -43,6 +59,11 @@ public class HomepageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    // Initialises event details for meeting planner
+    private String name, location, time, date;
+    private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public static String userId = user.getUid();
 
     public HomepageFragment() {
         // Required empty public constructor
@@ -73,6 +94,10 @@ public class HomepageFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        // Only read event details from Firebase once (Meeting Planner)
+        if (Event.eventsList.size() == 0){
+            readFromFireBase(userId);
+        }
     }
 
     @Override
@@ -86,6 +111,7 @@ public class HomepageFragment extends Fragment {
 
         if (dir.exists()) {
             if (dir.listFiles().length == 0) {
+                // If directory exists, but empty, will download files
                 downloadFiles("advertisement");
             }
             for (File f : dir.listFiles()) {
@@ -93,6 +119,8 @@ public class HomepageFragment extends Fragment {
             }
         }
         else {
+            // If directory specified does not exist, call downloadFiles() which will also
+            // create a new directory
             downloadFiles("advertisement");
         }
 
@@ -114,18 +142,63 @@ public class HomepageFragment extends Fragment {
         // Set onClickListeners for Buttons
         CardView listingsCardView = view.findViewById(R.id.listingsButton);
         CardView meetingPlannerCardView = view.findViewById(R.id.meetingPlannerButton);
+        ImageView chatButtonView = view.findViewById(R.id.chatPageButton);
 
+        ImageView likedPageButton = view.findViewById(R.id.likedPageButton);
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
             replaceFragment(new listingFragment());
         });
 
-        meetingPlannerCardView.setOnClickListener(v -> {
-            // When clicked, will bring to meeting planner page which displays all listings
-            Intent meetingPlannerIntent = new Intent(getContext(), this.getClass());
+        chatButtonView.setOnClickListener(v -> {
+            Intent chatListIntent = new Intent(getContext(), ChatList.class);
+            startActivity(chatListIntent);
         });
 
-        // Inflate the layout for this fragment
+        meetingPlannerCardView.setOnClickListener(v -> {
+            // When clicked, will bring to meeting planner page which displays all listings
+            Intent meetingPlannerIntent = new Intent(this.getContext(), WeekViewActivity.class);
+            startActivity(meetingPlannerIntent);
+        });
+
+        likedPageButton.setOnClickListener(v -> {
+            /*Intent likedPageIntent = new Intent(this.getContext(), LikedPage.class);
+            startActivity(likedPageIntent);*/
+            replaceFragment(new wishListFragment());
+        });
+
+        // When user submits search view query, will start search activity
+        SearchView searchView = view.findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Intent searchActivity = new Intent(getContext(), SearchActivity.class);
+
+                searchActivity.putExtra("query", s);
+                startActivity(searchActivity);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+        /**
+         * TO-DO:
+         *
+         * Get current user session
+         * If user like, store into list of user and update DB with the list (in the form of child)
+         *
+         */
+
+        String userID = FirebaseTools.getCurrentAuthenticatedUser();
+        Log.d("Current Authenticated User in Liked Page", userID);
+
+        // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
         return view;
     }
 
@@ -145,10 +218,10 @@ public class HomepageFragment extends Fragment {
 
         // Create a child reference
         // imagesRef now points to "images"
-        StorageReference imagesRef = storageRef.child(folder);
+        StorageReference filesRef = storageRef.child(folder);
 
         // List all images in /<folder> eg. can be /advertisement
-        imagesRef.listAll()
+        filesRef.listAll()
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
@@ -162,7 +235,7 @@ public class HomepageFragment extends Fragment {
                                     outputDirectory.mkdirs();
                                 }
 
-                                File localFile = File.createTempFile("shopee", ".jpg", outputDirectory);
+                                File localFile = File.createTempFile("advert", ".jpg", outputDirectory);
                                 fileRef.getFile(localFile).addOnSuccessListener(
                                         new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
@@ -196,5 +269,32 @@ public class HomepageFragment extends Fragment {
     private boolean searchCache(ArrayList<String> fileNames, String directory) {
         File storagePath = new File(Environment.getExternalStorageDirectory(), directory);
         return true;
+    }
+
+    // Read event details of user from Firebase
+    public void readFromFireBase(String userId){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference myRef = database.getReference("Planner");
+        myRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    int eventId = Integer.parseInt(snapshot.getKey());
+                    name = snapshot.child("name").getValue(String.class);
+                    location = snapshot.child("location").getValue(String.class);
+                    time = snapshot.child("time").getValue(String.class);
+                    date = snapshot.child("date").getValue(String.class);
+                    LocalDate dt = LocalDate.parse(date, dtf);
+                    Event event = new Event(eventId, name, location, dt, time);
+                    Event.eventsList.add(event);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("TAG", "Failed to read value.", error.toException());
+            }
+        });
     }
 }

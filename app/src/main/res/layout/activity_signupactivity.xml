@@ -112,7 +112,7 @@
       android:height="48dp"
       android:clickable="true"
       android:text="Have an Account? Log-in!"
-      android:textSize="20sp"
+      android:textSize="14sp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/button"></TextView>
