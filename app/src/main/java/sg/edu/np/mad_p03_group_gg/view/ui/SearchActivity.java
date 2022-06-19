@@ -19,6 +19,8 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -85,9 +87,23 @@ public class SearchActivity extends AppCompatActivity {
             ShapeableImageView sellerProfilePic = searchView.findViewById(R.id.profilePictureView);
             ImageView listingImageView = searchView.findViewById(R.id.listingImageView);
 
-            usernameView.setText(model.getSID());
+
+            DatabaseReference dbReferenceUser = FirebaseDatabase.
+                    getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").
+                    getReference().child("users");
+
+            dbReferenceUser.child(model.getSID()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    DataSnapshot result = task.getResult();
+                    String sellerName = String.valueOf(result.child("name").getValue(String.class));
+
+                    usernameView.setText(sellerName);
+                }
+            });
+
             listingNameView.setText(model.getTitle());
-            listingPriceView.setText(model.getPrice());
+            listingPriceView.setText("$" + model.getPrice());
             listingItemConditionView.setText(model.getiC());
             Glide.with(getApplicationContext()).load(model.getSPPU()).into(sellerProfilePic);
             Glide.with(getApplicationContext()).load(model.gettURL()).into(listingImageView);

@@ -3,7 +3,6 @@ package sg.edu.np.mad_p03_group_gg.view.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +25,10 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,6 +54,7 @@ import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
 import sg.edu.np.mad_p03_group_gg.individual_listing;
 import sg.edu.np.mad_p03_group_gg.listingObject;
+import sg.edu.np.mad_p03_group_gg.listing_adapter;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
@@ -212,7 +214,6 @@ public class HomepageFragment extends Fragment {
         // RecyclerView to display last 10 new listings
         newListingsRecycler = view.findViewById(R.id.newListingsRecycler);
         newListingsRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        //newListingsRecycler.setHasFixedSize(true);
         newListingsRecycler.setFocusable(false);
         newListingsRecycler.setNestedScrollingEnabled(false);
         firebaseNewListing();
@@ -416,9 +417,23 @@ public class HomepageFragment extends Fragment {
             ShapeableImageView sellerProfilePic = searchView.findViewById(R.id.profilePictureView);
             ImageView listingImageView = searchView.findViewById(R.id.listingImageView);
 
-            usernameView.setText(model.getSID());
+            DatabaseReference dbReferenceUser = FirebaseDatabase.
+                    getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").
+                    getReference().child("users");
+
+            // Get username based on seller's ID
+            dbReferenceUser.child(model.getSID()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    DataSnapshot result = task.getResult();
+                    String sellerName = String.valueOf(result.child("name").getValue(String.class));
+
+                    usernameView.setText(sellerName);
+                }
+            });
+
             listingNameView.setText(model.getTitle());
-            listingPriceView.setText(model.getPrice());
+            listingPriceView.setText("$" + model.getPrice());
             listingItemConditionView.setText(model.getiC());
 
             // The Glide library is used for easy application of images into their respective views.
