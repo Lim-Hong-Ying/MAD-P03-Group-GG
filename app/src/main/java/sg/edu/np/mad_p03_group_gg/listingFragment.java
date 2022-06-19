@@ -94,7 +94,6 @@ public class listingFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
-        Log.e("READ FROM SP", mode);
 
         switch (mode) {
             case "card":
