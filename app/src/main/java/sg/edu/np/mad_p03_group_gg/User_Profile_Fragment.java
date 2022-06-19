@@ -134,6 +134,7 @@ public class User_Profile_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
 
+//Get Views
         TextView Email = (EditText) view.findViewById(R.id.user_profile_email);
         TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
         TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);

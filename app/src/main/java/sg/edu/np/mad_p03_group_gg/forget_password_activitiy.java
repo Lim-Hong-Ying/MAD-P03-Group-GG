@@ -41,16 +41,16 @@ public class forget_password_activitiy extends AppCompatActivity {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
+
                                     passwordStatus.setText("An email has been send to your email address");
-                                }
+
                             }
                         });
 
 
                 }
                 else{
-                    fgtEmail.setError("Invalid Password!");
+                    fgtEmail.setError("Invalid Email");
 
                 }
 
