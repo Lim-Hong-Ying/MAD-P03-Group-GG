@@ -104,11 +104,11 @@ public class signupactivity extends AppCompatActivity {
             return false;
         }
         if (isEmpty(Password)) {
-            Password.setError("Last name is required!");
+            Password.setError("Password is required!");
             return false;
         }
         if (isEmpty(PhoneNumber)) {
-            PhoneNumber.setError("Last name is required!");
+            PhoneNumber.setError("Enter a valid number");
             return false;
         }
         return true;

@@ -23,7 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:maxLines="1"
-        android:padding="10sp"
+        android:paddingLeft="5sp"
+        android:paddingTop="10sp"
+        android:paddingRight="10sp"
+        android:paddingBottom="10sp"
         android:text="Time"
         android:textColor="@color/black"
         android:textSize="20sp" />
@@ -34,7 +37,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:maxLines="1"
-        android:padding="10sp"
+        android:paddingLeft="5sp"
+        android:paddingTop="10sp"
+        android:paddingRight="10sp"
+        android:paddingBottom="10sp"
         android:text="Location"
         android:textColor="@color/black"
         android:textSize="20sp" />

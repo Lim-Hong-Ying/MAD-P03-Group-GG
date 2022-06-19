@@ -75,7 +75,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="0.5"
                     android:adjustViewBounds="true"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    tools:srcCompat="@drawable/profile_icon" />
 
                 <TextView
                     android:id="@+id/seller_username"
