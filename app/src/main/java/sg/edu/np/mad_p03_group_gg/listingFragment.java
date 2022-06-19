@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -79,6 +81,7 @@ public class listingFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listing, container, false);
         ArrayList<listingObject> data = new ArrayList<>();
+
         viewChanger(view, data);
 
         retrieveFromFirebase(view, data);
@@ -87,12 +90,40 @@ public class listingFragment extends Fragment {
     }
 
     private void viewChanger(View view, ArrayList<listingObject> data) {
-        Switch viewMode = view.findViewById(R.id.view_mode);
+        ToggleButton viewMode = view.findViewById(R.id.view_mode);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+
+        String mode = sharedPreferences.getString("view", "");
+        Log.e("READ FROM SP", mode);
+
+        switch (mode) {
+            case "card":
+                viewMode.setText("Card view");
+                break;
+
+            case "grid":
+                viewMode.setText("Grid view");
+                break;
+        }
+
         viewMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                /*switch (mode) {
+                    case "grid":
+                        editor.putString("view", "card");
+                        Log.e("VIEW CHANGED", "CARD");
+                        break;
+
+                    case "card":
+                        editor.putString("view", "grid");
+                        Log.e("VIEW CHANGED", "GRID");
+                        break;
+                }*/
 
                 if (b == false) {
                     editor.putString("view", "card");
@@ -130,7 +161,6 @@ public class listingFragment extends Fragment {
                     listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
                     data.add(listing);
                     Log.e("listing", String.valueOf(data.size()));
-                    //recyclerViewStarter(view, data);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -149,20 +179,22 @@ public class listingFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
-        Log.e("mode", mode);
+        Log.e("READ FROM SP", mode);
 
-        if (mode == "card") {
-            LinearLayoutManager listingLayoutMgr = new LinearLayoutManager(view.getContext());
-            listingRecycler.setLayoutManager(listingLayoutMgr);
-            listingRecycler.setItemAnimator(new DefaultItemAnimator());
-            listingRecycler.setAdapter(adapter);
-        }
+        switch (mode) {
+            case "card":
+                LinearLayoutManager cardLayoutManager = new LinearLayoutManager(view.getContext());
+                listingRecycler.setLayoutManager(cardLayoutManager);
+                listingRecycler.setItemAnimator(new DefaultItemAnimator());
+                listingRecycler.setAdapter(adapter);
+                break;
 
-        else {
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
-            listingRecycler.setLayoutManager(gridLayoutManager);
-            listingRecycler.setItemAnimator(new DefaultItemAnimator());
-            listingRecycler.setAdapter(adapter);
+            case "grid":
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
+                listingRecycler.setLayoutManager(gridLayoutManager);
+                listingRecycler.setItemAnimator(new DefaultItemAnimator());
+                listingRecycler.setAdapter(adapter);
+                break;
         }
 
         return adapter;
