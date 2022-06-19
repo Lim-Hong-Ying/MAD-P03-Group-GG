@@ -99,7 +99,6 @@ public class wishListFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
-        Log.e("READ FROM SP", mode);
 
         switch (mode) {
             case "card":
@@ -119,12 +118,10 @@ public class wishListFragment extends Fragment {
 
                 if (b == false) {
                     editor.putString("view", "card");
-                    Log.e("VIEW CHANGED", "CARD");
                 }
 
                 else {
                     editor.putString("view", "grid");
-                    Log.e("VIEW CHANGED", "GRID");
                 }
 
                 editor.commit();
@@ -167,7 +164,6 @@ public class wishListFragment extends Fragment {
 
                             listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
                             data.add(listing);
-                            Log.e("listing", String.valueOf(data.size()));
                             adapter.notifyDataSetChanged();
                         }
                     });
@@ -188,7 +184,6 @@ public class wishListFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
-        Log.e("READ FROM SP", mode);
 
         switch (mode) {
             case "card":

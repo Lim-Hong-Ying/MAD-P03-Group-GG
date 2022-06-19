@@ -85,7 +85,6 @@ public class listingFragment extends Fragment {
         viewChanger(view, data);
 
         retrieveFromFirebase(view, data);
-        //data = testlistings(data);
         return view;
     }
 
@@ -113,26 +112,12 @@ public class listingFragment extends Fragment {
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                /*switch (mode) {
-                    case "grid":
-                        editor.putString("view", "card");
-                        Log.e("VIEW CHANGED", "CARD");
-                        break;
-
-                    case "card":
-                        editor.putString("view", "grid");
-                        Log.e("VIEW CHANGED", "GRID");
-                        break;
-                }*/
-
                 if (b == false) {
                     editor.putString("view", "card");
-                    Log.e("VIEW CHANGED", "CARD");
                 }
 
                 else {
                     editor.putString("view", "grid");
-                    Log.e("VIEW CHANGED", "GRID");
                 }
 
                 editor.commit();
@@ -160,7 +145,6 @@ public class listingFragment extends Fragment {
 
                     listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
                     data.add(listing);
-                    Log.e("listing", String.valueOf(data.size()));
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -179,7 +163,6 @@ public class listingFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
-        Log.e("READ FROM SP", mode);
 
         switch (mode) {
             case "card":
@@ -198,23 +181,5 @@ public class listingFragment extends Fragment {
         }
 
         return adapter;
-    }
-
-    private ArrayList<listingObject> testlistings(ArrayList<listingObject> data) {
-        String testthumbnail = "https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/listing-images%2Fi-am-not-a-degenerate-this-is-just-test.jpeg?alt=media&token=d3d97f7a-39ec-4014-ad29-cc9f2bf16368";
-        String testpfp = "https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/user-images%2Fdegeneracy.jpeg?alt=media&token=949a52bf-9c6c-4e27-abfc-3145524e81cd";
-        listingObject test1 = new listingObject("1", "test title 1", testthumbnail, "test seller id 1", testpfp, "New", "10", false);
-        listingObject test2 = new listingObject("2", "test title 2", testthumbnail, "test seller id 2", testpfp, "Used", "100", true);
-        listingObject test3 = new listingObject("3", "test title 3", testthumbnail, "test seller id 3", testpfp, "New", "200", false);
-        listingObject test4 = new listingObject("4", "test title 4", testthumbnail, "test seller id 4", testpfp, "Used", "300", false);
-        listingObject test5 = new listingObject("5", "test title 5", testthumbnail, "test seller id 5", testpfp, "New", "500", true);
-
-        data.add(test1);
-        data.add(test2);
-        data.add(test3);
-        data.add(test4);
-        data.add(test5);
-
-        return data;
     }
 }

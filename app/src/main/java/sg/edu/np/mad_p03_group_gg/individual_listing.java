@@ -156,7 +156,7 @@ public class individual_listing extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
+
                 }
                 else {
                     Log.d("firebase", String.valueOf(task.getResult()));
@@ -229,9 +229,6 @@ public class individual_listing extends AppCompatActivity {
                         deliverypriceholder.setVisibility(View.GONE);
                         deliverytimeholder.setVisibility(View.GONE);
                     }
-
-                    Log.e("sellerid", sellerid);
-                    Log.e("currentuID", currentuID);
 
                     if (sellerid.equals(currentuID)) {
                         ToggleButton likebutton = findViewById(R.id.button_like);
@@ -309,24 +306,14 @@ public class individual_listing extends AppCompatActivity {
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked").child(pID);
-        liked.setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Log.e("LIKE", "successful");
-            }
-        });
+        liked.setValue("");
     }
 
     private void unlikeFunction(String pID, String uID) {
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked");
-        liked.child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Log.e("UNLIKE", "successful");
-            }
-        });;
+        liked.child(pID).removeValue();
     }
 
     private class ImageDownloader extends AsyncTask<String, Void, Bitmap> {

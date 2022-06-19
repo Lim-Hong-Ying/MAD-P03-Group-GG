@@ -43,7 +43,6 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         SharedPreferences sharedPreferences = parent.getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
-        Log.e("mode", mode);
 
         if (mode == "card") {
             card = LayoutInflater.from(parent.getContext()).inflate(R.layout.listing_card, parent, false);
@@ -72,10 +71,8 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 DataSnapshot result = task.getResult();
-                Log.e("ss", String.valueOf(result));
                 String sid = String.valueOf(result.child("name").getValue(String.class));
                 String SPPU = String.valueOf(result.child("userprofilepic").getValue(String.class));
-                Log.e("sid", sid);
 
                 holder.seller_username.setText(sid);
                 if (!SPPU.isEmpty()) {

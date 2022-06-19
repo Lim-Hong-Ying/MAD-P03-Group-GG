@@ -50,14 +50,8 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity
-            android:name=".listings"
-            android:exported="true" />
-        <activity
             android:name=".individual_listing"
             android:exported="true" />
-        <activity
-            android:name=".LikedPage"
-            android:exported="false" />
         <activity
             android:name=".SplashPage"
             android:exported="true">
