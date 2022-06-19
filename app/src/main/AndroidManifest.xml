@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".successListPage"
+            android:exported="false" />
+        <activity
             android:name=".view.ui.SearchActivity"
             android:exported="false" />
         <activity
