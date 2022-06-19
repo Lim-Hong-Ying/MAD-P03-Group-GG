@@ -70,12 +70,12 @@ public class Chat extends AppCompatActivity {
 
         // Getting data from messages adapter class
         String getName = getIntent().getStringExtra("name");
-        String getProfilePic = getIntent().getStringExtra("profile_pic");
+        String getProfilePic = getIntent().getStringExtra("profilePic");
         chatKey = getIntent().getStringExtra("chatKey");
         String getid = getIntent().getStringExtra("id");
 
         // Set main user ID
-        mainUserid = mainUser.getPhonenumber();
+        mainUserid = mainUser.getId();
 
         // Set Name
         name.setText(getName);
@@ -149,6 +149,11 @@ public class Chat extends AppCompatActivity {
             public void onClick(View view) {
 
                 String getTextMessage = messageToSend.getText().toString();
+
+                // Prevent sending empty message
+                if (getTextMessage.isEmpty()){
+                    return;
+                }
 
                 // Get current time (added 28800000 milliseconds to convert to SGT)
                 String currentTime = String.valueOf(System.currentTimeMillis() + 28800000);
