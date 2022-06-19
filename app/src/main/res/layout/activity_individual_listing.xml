@@ -19,8 +19,6 @@
             android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_weight="0.5"
             android:background="#d0b4fc"
             app:srcCompat="@drawable/back_icon" />
@@ -46,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
                 android:adjustViewBounds="true"
-                tools:srcCompat="@drawable/default_image_icon" />
+                app:srcCompat="@drawable/default_image_icon" />
 
             <TextView
                 android:id="@+id/individual_title"
@@ -177,10 +175,11 @@
 
                 <ImageView
                     android:id="@+id/seller_pfp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_weight="0.5"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/profile_icon_160" />
 
                 <TextView
                     android:id="@+id/seller_name"
@@ -219,6 +218,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:background="#D0B4FC"
             android:text="Chat with seller" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

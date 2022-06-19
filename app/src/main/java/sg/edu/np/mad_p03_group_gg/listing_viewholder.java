@@ -4,11 +4,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
 public class listing_viewholder extends RecyclerView.ViewHolder {
+    CardView listing_card;
     ImageView listing_image;
     ImageView seller_image;
     TextView listing_title;
@@ -19,6 +21,7 @@ public class listing_viewholder extends RecyclerView.ViewHolder {
     public listing_viewholder(View itemView) {
         super(itemView);
 
+        listing_card = itemView.findViewById(R.id.listing_card);
         listing_image = itemView.findViewById(R.id.listing_image);
         seller_image = itemView.findViewById(R.id.seller_picture);
         listing_title = itemView.findViewById(R.id.listing_title);
