@@ -131,7 +131,6 @@ public class User_Profile_Fragment extends Fragment {
             TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
             TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
             ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
-            Button save_changes = (Button) view.findViewById(R.id.change_profile);
             Button log_out = (Button) view.findViewById(R.id.log_out);
 
 
