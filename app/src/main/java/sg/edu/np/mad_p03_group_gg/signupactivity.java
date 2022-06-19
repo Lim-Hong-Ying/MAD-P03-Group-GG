@@ -96,7 +96,7 @@ public class signupactivity extends AppCompatActivity {
         EditText Email = findViewById(R.id.emailaddr);
         EditText PhoneNumber = findViewById(R.id.phone_number);
         if (isEmpty(Name)) {
-            Name.setError("Last name is required!");
+            Name.setError("Username is required!");
             return false;
         }
         if (isEmail(Email) == false) {
