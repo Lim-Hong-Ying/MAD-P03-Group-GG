@@ -13,7 +13,7 @@ public class User implements Parcelable{
     private String id;
 
     private String userprofilepic;
-    private ArrayList<String> likedList;
+    private ArrayList<String> likinglst;
 
     // Parcelable (To pass objects from activity to activity)
     protected User(Parcel in) {
@@ -23,7 +23,7 @@ public class User implements Parcelable{
         phonenumber = in.readString();
         id = in.readString();
         userprofilepic=in.readString();
-        in.readStringList(likedList);
+        in.readStringList(likinglst);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -50,7 +50,7 @@ public class User implements Parcelable{
         parcel.writeString(phonenumber);
         parcel.writeString(id);
         parcel.writeString(userprofilepic);
-        parcel.writeStringList(likedList);
+        parcel.writeStringList(likinglst);
     }
 
     // End
@@ -97,11 +97,11 @@ public class User implements Parcelable{
     }
 
     public ArrayList<String> getLikinglst() {
-        return likedList;
+        return likinglst;
     }
 
-    public void setLikinglst(ArrayList<String> likedList) {
-        this.likedList = likedList;
+    public void setLikinglst(ArrayList<String> likinglst) {
+        this.likinglst = likinglst;
     }
 
     public User(){
@@ -122,7 +122,7 @@ public class User implements Parcelable{
         setUserprofilepic(up);
     }
 
-    public User(String n, String e, String p, String up, @NonNull String userID){
+    public User(String n, String e, String p, String up, String userID){
         setName(n);
         setEmail(e);
         setPhonenumber(p);

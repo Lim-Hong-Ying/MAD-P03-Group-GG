@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,7 @@ import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
+import sg.edu.np.mad_p03_group_gg.view.ui.SearchActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -133,7 +135,7 @@ public class HomepageFragment extends Fragment {
         ImageView chatButtonView = view.findViewById(R.id.chatButton);
 
         ImageView likedPageButton = view.findViewById(R.id.likedPageButton);
-        ImageView chatPageButton = view.findViewById(R.id.chatPageButton);
+        ImageView chatPageButton = view.findViewById(R.id.chatButton);
 
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
@@ -161,6 +163,27 @@ public class HomepageFragment extends Fragment {
             Intent chatPageIntent = new Intent(this.getContext(), Chat.class);
             startActivity(chatPageIntent);
         });
+
+        // When user submits search view query, will start search activity
+        SearchView searchView = view.findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Intent searchActivity = new Intent(getContext(), SearchActivity.class);
+
+                searchActivity.putExtra("query", s);
+                startActivity(searchActivity);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
         /**
          * TO-DO:
          *
