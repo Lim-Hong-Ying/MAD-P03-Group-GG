@@ -52,7 +52,7 @@ public class individual_listing extends AppCompatActivity {
         Bundle listinginfo = getIntent().getExtras();
         String pID = listinginfo.getString("lID");
         uID = null;
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); //Gets userID for logged in user
         if (user != null) {
             // User is signed in
             uID = String.valueOf(user.getUid());
@@ -60,7 +60,7 @@ public class individual_listing extends AppCompatActivity {
             // No user is signed in
         }
 
-        ImageButton back_button = findViewById(R.id.back_button);
+        ImageButton back_button = findViewById(R.id.back_button); //Enables back button function
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,15 +150,15 @@ public class individual_listing extends AppCompatActivity {
     }
 
     private void createObjectFromFB(String pid, String currentuID) {
-        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
         individualdb.getReference().child("individual-listing").child(pid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
 
                 }
-                else {
+                else { //Builds individualListingObject from data retrieved
                     Log.d("firebase", String.valueOf(task.getResult()));
                     individualListingObject listing = new individualListingObject();
                     DataSnapshot result = task.getResult();
@@ -218,8 +218,8 @@ public class individual_listing extends AppCompatActivity {
 
                     if (!listing.getDeliveryType().isEmpty()) {
                         deliveryoptionholder.setText("Delivery type: " + listing.getDeliveryType());
-                        deliverypriceholder.setText("Delivery price: " + listing.getDeliveryPrice());
-                        deliverytimeholder.setText("Estimated delivery time: " + listing.getDeliveryTime());
+                        deliverypriceholder.setText("Delivery price: $" + listing.getDeliveryPrice());
+                        deliverytimeholder.setText("Estimated delivery time: " + listing.getDeliveryTime() + " days");
                     }
 
                     else {
@@ -238,7 +238,7 @@ public class individual_listing extends AppCompatActivity {
                         chatbutton.setVisibility(View.GONE);
                     }
 
-
+                    //Retrieves seller's username and downloads image if available
                     individualdb.getReference().child("users").child(sellerid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -260,12 +260,12 @@ public class individual_listing extends AppCompatActivity {
         });
     }
 
-    private void initialCheckLiked(String pID, String uID) {
+    private void initialCheckLiked(String pID, String uID) { //Checks for like status to set like button on initial start
         ToggleButton like_button = findViewById(R.id.button_like);
 
-        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
-        DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked");
+        DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked"); //Points to correct child directory
         liked.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -285,7 +285,7 @@ public class individual_listing extends AppCompatActivity {
         });
     }
 
-    private void checkLiked(String pID, String uID) {
+    private void checkLiked(String pID, String uID) { //Changes like status and updates database
         ToggleButton like_button = findViewById(R.id.button_like);
 
         like_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -302,21 +302,21 @@ public class individual_listing extends AppCompatActivity {
         });
     }
 
-    private void likeFunction(String pID, String uID) {
+    private void likeFunction(String pID, String uID) { //Updates database when liking objects
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked").child(pID);
         liked.setValue("");
     }
 
-    private void unlikeFunction(String pID, String uID) {
+    private void unlikeFunction(String pID, String uID) { //Updates database when unliking objects
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked");
         liked.child(pID).removeValue();
     }
 
-    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> { //Method to download images
         ImageView bitmap;
 
         public ImageDownloader(ImageView bitmap) {
@@ -324,7 +324,7 @@ public class individual_listing extends AppCompatActivity {
         }
 
         @Override
-        protected Bitmap doInBackground(String... strings) {
+        protected Bitmap doInBackground(String... strings) { //Downloads image
             String url = strings[0];
             Bitmap image = null;
             try {
@@ -340,6 +340,6 @@ public class individual_listing extends AppCompatActivity {
 
         protected void onPostExecute(Bitmap result) {
             bitmap.setImageBitmap(result);
-        }
+        } //Sets image for bitmap holder
     }
 }

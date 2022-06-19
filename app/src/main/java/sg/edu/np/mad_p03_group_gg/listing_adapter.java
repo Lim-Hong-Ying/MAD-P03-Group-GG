@@ -37,7 +37,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
 
     @NonNull
     @Override
-    public listing_viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public listing_viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { //Creates viewholders, chooses between 2 view modes
         View card;
 
         SharedPreferences sharedPreferences = parent.getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
@@ -64,6 +64,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         holder.price.setText("$" + listing.getPrice());
         holder.itemcondition.setText(listing.getiC());
 
+        //Downloads information from Firebase Database
         String sid = "";
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
@@ -81,7 +82,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
             }
         });
 
-        holder.listing_card.setOnClickListener(new View.OnClickListener() {
+        holder.listing_card.setOnClickListener(new View.OnClickListener() { //Sets click target to enter individual listing object
             @Override
             public void onClick(View view) {
                 Bundle listinginfo = new Bundle();
@@ -98,12 +99,12 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         return data.size();
     }
 
-    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> { //Method to download images
         ImageView bitmap;
 
         public ImageDownloader(ImageView bitmap) {
             this.bitmap = bitmap;
-        }
+        } //Downloads image
 
         @Override
         protected Bitmap doInBackground(String... strings) {
@@ -122,7 +123,7 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
 
         protected void onPostExecute(Bitmap result) {
             bitmap.setImageBitmap(result);
-        }
+        } //Sets image for bitmap holder
     }
 }
 

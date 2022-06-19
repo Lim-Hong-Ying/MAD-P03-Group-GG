@@ -87,13 +87,13 @@ public class wishListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
         ArrayList<listingObject> data = new ArrayList<>();
 
-        viewChanger(view, data);
+        viewChanger(view, data); //Does check for view mode
 
-        retrieveFromFirebase(view, data);
+        retrieveFromFirebase(view, data); //Starts main downloading task
         return view;
     }
 
-    private void viewChanger(View view, ArrayList<listingObject> data) {
+    private void viewChanger(View view, ArrayList<listingObject> data) { //Changes view for listing
         ToggleButton viewMode = view.findViewById(R.id.view_mode);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
@@ -130,7 +130,7 @@ public class wishListFragment extends Fragment {
         });
     }
 
-    private void retrieveFromFirebase(View view, ArrayList<listingObject> data) {
+    private void retrieveFromFirebase(View view, ArrayList<listingObject> data) { //Retrieves data from Firebase
         String uID = null;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -177,7 +177,7 @@ public class wishListFragment extends Fragment {
         });
     }
 
-    private listing_adapter recyclerViewStarter(View view, ArrayList<listingObject> data) {
+    private listing_adapter recyclerViewStarter(View view, ArrayList<listingObject> data) { //Starts recyclerview
         RecyclerView listingRecycler = view.findViewById(R.id.listing_recycler);
         listing_adapter adapter = new listing_adapter(data);
 
