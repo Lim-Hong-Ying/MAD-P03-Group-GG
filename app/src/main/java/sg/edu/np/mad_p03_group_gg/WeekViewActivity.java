@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,6 +49,13 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         initWidgets();
         setWeekView();
         setOnClickListener();
+        ImageView closeBtn = findViewById(R.id.weeklyCloseButton);
+        // Removes activity from stack
+        closeBtn.setOnClickListener(view -> {
+            // Pass selected date to weekly calendar
+            WeekViewActivity.monthlyDate =  CalendarUtils.selectedDate;
+            finish();
+        });
     }
 
     // Initialise views and text

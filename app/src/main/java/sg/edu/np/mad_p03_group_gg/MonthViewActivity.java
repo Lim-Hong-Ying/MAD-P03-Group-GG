@@ -5,24 +5,15 @@ import static sg.edu.np.mad_p03_group_gg.CalendarUtils.monthYearFromDate;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MonthViewActivity extends AppCompatActivity implements CalendarAdapter.OnItemListener{
@@ -42,7 +33,7 @@ public class MonthViewActivity extends AppCompatActivity implements CalendarAdap
         initWidgets();
         setMonthView();
         // Initialise close button
-        ImageView closeBtn = findViewById(R.id.monthlyCloseButton);
+        ImageView closeBtn = findViewById(R.id.weeklyCloseButton);
         // Removes activity from stack
         closeBtn.setOnClickListener(view -> {
             // Pass selected date to weekly calendar
