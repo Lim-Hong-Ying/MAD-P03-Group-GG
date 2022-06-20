@@ -38,7 +38,7 @@ Join the Cashshope family now to enjoy great deals and benefits:
 |Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist|
 |Ooi Jun Heng Ryan|Meeting Planner page, WeekView and MonthView calendars, Event pages|
 |William Francis Siah|Chat function (Chat List, Chat page, MemoryData etc.), Linking Individual Listing to Chat page|
-|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions|
+|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations|
 
 ## Features
 ### Homepage
