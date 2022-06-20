@@ -32,11 +32,13 @@ Join the Cashshope family now to enjoy great deals and benefits:
 3) Wishlist: See something that you like, but don't need it for now? Just add it to your wishlist!
 
 ## Roles and Contributions
-Tan Kai Zhe: Homepage, MainActivity, Wishlist, Graphics </br>
-Lim Hong Ying | S10223298 : Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist </br>
-Ooi Jun Heng Ryan | S10223647 : Meeting Planner page, WeekView and MonthView calendars, Event pages </br>
-William Francis Siah | S10222938 : Chat function (Chat List, Chat page, MemoryData etc.), Linking Individual Listing to Chat page</br>
-Koh Han Jie Isaac | S10222275 : Splashpage, Login page, Signup page, Userprofile and setting permissions</br>
+|Member|Contributions|
+|---|---|
+|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations & PlayStore Management|
+|Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist|
+|Ooi Jun Heng Ryan|Meeting Planner page, WeekView and MonthView calendars, Event pages|
+|William Francis Siah|Chat function (Chat List, Chat page, MemoryData etc.), Linking Individual Listing to Chat page|
+|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions|
 
 ## Features
 ### Homepage
