@@ -1,9 +1,18 @@
 # Cashshope: Chat, Shop & Sell
-<p align="center">
-  <img src="https://img.shields.io/github/release-date/DancinComrade/electron-python-example?style=for-the-badge">
-</p>
 
 ![AdvertBanner](resources/advertbanner.png)
+
+<p align="center">
+  <img src="https://img.shields.io/github/v/release/NP-Lim-Hong-Ying/MAD-P03-Group-GG?style=for-the-badge">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/issues-pr-closed/NP-Lim-Hong-Ying/MAD-P03-Group-GG?color=dark-green&style=for-the-badge">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/release-date/NP-Lim-Hong-Ying/MAD-P03-Group-GG?style=for-the-badge">
+</p>
 
 ## Team Members
 Tan Kai Zhe | S10219390 </br>
@@ -36,7 +45,18 @@ William Francis Siah | S10222938 : Chat function (Chat List, Chat page, MemoryDa
 Koh Han Jie Isaac | S10222275 : Splashpage, Login page, Signup page, Userprofile and setting permissions</br>
 
 ## Features
+### Homepage
 
+![Homepage](resources/homepage.png)
+
+### Search
+![Search](resources/search.png)
+
+### Meeting Planner
+![MeetingPlanner](resources/meeting_planner.png)
+
+### Chat
+![Chat](resources/chat.png)
 
 ## User Guide
 
