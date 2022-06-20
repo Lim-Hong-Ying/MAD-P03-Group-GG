@@ -1,6 +1,6 @@
 # Cashshope: Chat, Shop & Sell
 
-![AdvertBanner](https://ibb.co/X8CBkP0)
+![AdvertBanner](resources/cashshope.jpg)
 
 <p align="center">
   <img src="https://img.shields.io/github/v/release/NP-Lim-Hong-Ying/MAD-P03-Group-GG?style=for-the-badge">
