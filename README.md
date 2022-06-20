@@ -1,16 +1,10 @@
 # Cashshope: Chat, Shop & Sell
 
-![AdvertBanner](resources/advertbanner.png)
+![AdvertBanner](https://ibb.co/X8CBkP0)
 
 <p align="center">
   <img src="https://img.shields.io/github/v/release/NP-Lim-Hong-Ying/MAD-P03-Group-GG?style=for-the-badge">
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/github/issues-pr-closed/NP-Lim-Hong-Ying/MAD-P03-Group-GG?color=dark-green&style=for-the-badge">
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/github/release-date/NP-Lim-Hong-Ying/MAD-P03-Group-GG?style=for-the-badge">
 </p>
 
