@@ -53,5 +53,3 @@ Koh Han Jie Isaac | S10222275 : Splashpage, Login page, Signup page, Userprofile
 ![Chat](resources/chat.png)
 
 ## User Guide
-
-## Screenshots
