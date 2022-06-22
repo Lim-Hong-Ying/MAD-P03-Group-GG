@@ -39,6 +39,7 @@ public class EventEditActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_edit);
         initWidgets();
+        userId = HomepageFragment.userId;
         eventDateTV.setText(CalendarUtils.formattedDate(CalendarUtils.selectedDate));
         Intent previousIntent = getIntent();
         // Get eventId of selected event if intent is called

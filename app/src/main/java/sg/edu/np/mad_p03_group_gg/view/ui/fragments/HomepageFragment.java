@@ -85,8 +85,7 @@ public class HomepageFragment extends Fragment {
 
     // Initialises event details for meeting planner
     private String name, location, time, date;
-    private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    public static String userId = user.getUid();
+    public static String userId;
 
     public HomepageFragment() {
         // Required empty public constructor
@@ -118,9 +117,12 @@ public class HomepageFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         // Only read event details from Firebase once (Meeting Planner)
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
         if (Event.eventsList.size() == 0){
             readFromFireBase(userId);
         }
+        Log.d("EventList", String.valueOf(Event.eventsList.size()));
     }
 
     @Override

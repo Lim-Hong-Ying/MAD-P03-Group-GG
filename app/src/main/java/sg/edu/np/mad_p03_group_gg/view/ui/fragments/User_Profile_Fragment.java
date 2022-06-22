@@ -54,6 +54,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import sg.edu.np.mad_p03_group_gg.Event;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.loginpage;
@@ -188,6 +189,7 @@ public class User_Profile_Fragment extends Fragment {
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Event.eventsList.clear();
                 Intent intent = new Intent(getActivity(), loginpage.class);
                 startActivity(intent);
                 getActivity().finish();
