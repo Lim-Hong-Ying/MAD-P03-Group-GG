@@ -97,15 +97,17 @@ public class SearchActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     DataSnapshot result = task.getResult();
                     String sellerName = String.valueOf(result.child("name").getValue(String.class));
+                    String sellerProfileUrl = String.valueOf(result.child("userprofilepic").getValue(String.class));
 
                     usernameView.setText(sellerName);
+                    Glide.with(getApplicationContext()).load(sellerProfileUrl).into(sellerProfilePic);
+
                 }
             });
 
             listingNameView.setText(model.getTitle());
             listingPriceView.setText("$" + model.getPrice());
             listingItemConditionView.setText(model.getiC());
-            Glide.with(getApplicationContext()).load(model.getSPPU()).into(sellerProfilePic);
             Glide.with(getApplicationContext()).load(model.gettURL()).into(listingImageView);
         }
     }

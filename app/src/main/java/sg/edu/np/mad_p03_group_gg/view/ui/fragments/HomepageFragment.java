@@ -218,9 +218,6 @@ public class HomepageFragment extends Fragment {
         newListingsRecycler.setNestedScrollingEnabled(false);
         firebaseNewListing();
 
-        String userID = FirebaseTools.getCurrentAuthenticatedUser();
-        Log.d("Current Authenticated User in Liked Page", userID);
-
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
         return view;
     }
@@ -272,7 +269,7 @@ public class HomepageFragment extends Fragment {
                                     outputDirectory.mkdirs();
                                 }
 
-                                File localFile = File.createTempFile("advert", ".jpg", outputDirectory);
+                                File localFile = File.createTempFile(folder, ".jpg", outputDirectory);
                                 fileRef.getFile(localFile).addOnSuccessListener(
                                         new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
@@ -427,8 +424,10 @@ public class HomepageFragment extends Fragment {
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     DataSnapshot result = task.getResult();
                     String sellerName = String.valueOf(result.child("name").getValue(String.class));
+                    String sellerProfileUrl = String.valueOf(result.child("userprofilepic").getValue(String.class));
 
                     usernameView.setText(sellerName);
+                    Glide.with(getActivity().getApplicationContext()).load(sellerProfileUrl).into(sellerProfilePic);
                 }
             });
 
@@ -437,7 +436,6 @@ public class HomepageFragment extends Fragment {
             listingItemConditionView.setText(model.getiC());
 
             // The Glide library is used for easy application of images into their respective views.
-            Glide.with(getActivity().getApplicationContext()).load(model.getSPPU()).into(sellerProfilePic);
             Glide.with(getActivity().getApplicationContext()).load(model.gettURL()).into(listingImageView);
         }
     }
