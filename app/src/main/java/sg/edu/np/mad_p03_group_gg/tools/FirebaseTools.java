@@ -12,6 +12,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -33,11 +34,12 @@ import sg.edu.np.mad_p03_group_gg.listingObject;
 
 public  class FirebaseTools {
 
+    private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private static DatabaseReference databaseReference = database.getReference();
+
     public static @Nullable String getCurrentAuthenticatedUser() {
         // Retrive user data using the current authenticated session
         String userID;
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference databaseReference = database.getReference();
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -51,37 +53,5 @@ public  class FirebaseTools {
             Log.d("Error:", "Something went wrong, there is no authenticated user.");
             return null;
         }
-    }
-
-    /**
-     * Retrive individual listing object from database
-     * Credit: Hong Ying
-     */
-    private static void retrieveFromFirebase(ArrayList<listingObject> data) {
-        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
-        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot datasnap : snapshot.getChildren()) {
-                    String listingid = datasnap.getKey();
-                    String titles = datasnap.child("title").getValue(String.class);
-                    String thumbnailurl = datasnap.child("tURL").getValue(String.class);
-                    String sellerid = datasnap.child("sid").getValue(String.class);
-                    String sellerprofilepicurl = datasnap.child("sppu").getValue(String.class);
-                    String itemcondition = datasnap.child("iC").getValue(String.class);
-                    String price = datasnap.child("price").getValue(String.class);
-                    Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
-
-                    listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
-                    data.add(listing);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 }
