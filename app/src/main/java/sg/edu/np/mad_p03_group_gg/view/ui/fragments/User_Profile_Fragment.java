@@ -56,11 +56,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.Event;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.User;
+import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
 import sg.edu.np.mad_p03_group_gg.loginpage;
 
 /**
@@ -250,7 +254,19 @@ public class User_Profile_Fragment extends Fragment {
 
             }
         });
-//        numberOfevents(user,view);
+
+        CardView eventcard = (CardView)view.findViewById(R.id.event_card);
+        TextView noevents = (TextView)view.findViewById(R.id.num_ofevents);
+        int noofevents = numberOfevents(user);
+        noevents.setText(Integer.toString(noofevents));
+        eventcard.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent toCalender = new Intent(getActivity(), WeekViewActivity.class);
+                startActivity(toCalender);
+            }
+        });
         return view;
 
     }
@@ -368,66 +384,29 @@ public class User_Profile_Fragment extends Fragment {
 
         });
     }
-    // Get the number of events
-//    private int numberOfevents(User u,View v){
-//        //Get views
-//        CardView eventcard = (CardView)v.findViewById(R.id.event_card);
-//        TextView noevents = (TextView)v.findViewById(R.id.num_ofevents);
-//        //Get references
-//        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-//        DatabaseReference myRef = database.getReference("Planner");
-//        DatabaseReference user = myRef.child(u.getId());
-//        DatabaseReference eventId = user.child("" + id);
-//        DatabaseReference userName = eventId.child("name");
-//        userName.setValue(name);
-//        DatabaseReference userLocation = eventId.child("location");
-//        userLocation.setValue(location);
-//        DatabaseReference userTime = eventId.child("time");
-//        userTime.setValue(time);
-//        DatabaseReference userDate = eventId.child("date");
-//        userDate.setValue(date);
-//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                auth = FirebaseAuth.getInstance();
-//                FirebaseUser fbUser = auth.getCurrentUser();
-//                String uid = fbUser.getUid();
-//                String email = fbUser.getEmail();
-//
-//
-//
-//                for (DataSnapshot dataSnapshot : snapshot.child(uid).getChildren()) {
-//
-//                    for(DataSnapshot ds : dataSnapshot.child(id))
-//                    {
-//
-//
-//
-//                    }
-//
-//
-//
-//                        Event events = dataSnapshot.getValue(Event.class);
-//
-//
-//
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//
-//
-//        return 1;
-//
-//    }
+     //Get the number of events
+    private int numberOfevents(User u){
+
+        //Get references
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference myRef = database.getReference("Planner");
+        //TO DO GET ITEMS
+        Event[] evenet =Event.eventsList.toArray(new Event[0]);
+        int numofevent =0;
+
+        for (Event event:evenet){
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDateTime now = LocalDateTime.now();
+            LocalDate date = event.getDate();
+            if(now.equals(date)){
+
+                numofevent+=1;
+            }
+        }
+        Log.e("Numofevents",Integer.toString(numofevent));
+        return numofevent;
+
+    }
     //Downloads Images
     private class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
         ImageView bitmap;

@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="#FBFBFB"
     tools:context=".view.ui.MainActivity"
-    android:background="#B9E8FF"
 
     >
 
