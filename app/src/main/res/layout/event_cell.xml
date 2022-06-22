@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="160dp"
     android:orientation="vertical"
-    android:paddingLeft="20sp">
+    android:paddingLeft="20sp"
+    android:background="@color/light_grey"
+    >
 
     <TextView
         android:id="@+id/name"
@@ -13,6 +15,7 @@
         android:maxLines="1"
         android:padding="5sp"
         android:text="Name"
+
         android:textColor="@color/black"
         android:textSize="26sp"
         android:textStyle="bold" />

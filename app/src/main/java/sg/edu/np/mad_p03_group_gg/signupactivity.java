@@ -99,18 +99,21 @@ public class signupactivity extends AppCompatActivity {
             Name.setError("Username is required!");
             return false;
         }
-        if (isEmail(Email) == false) {
-            Email.setError("Enter valid email!");
-            return false;
-        }
         if (isEmpty(Password)) {
             Password.setError("Password is required!");
+            return false;
+        }
+
+        if (isEmail(Email) == false) {
+            Email.setError("Enter valid email!");
             return false;
         }
         if (isEmpty(PhoneNumber)) {
             PhoneNumber.setError("Enter a valid number");
             return false;
         }
+
+
         return true;
     }
     public User Register(View v){
@@ -139,6 +142,7 @@ public class signupactivity extends AppCompatActivity {
                         Intent Homepage = new Intent(signupactivity.this,
                                 MainActivity.class);
                         startActivity(Homepage);
+                        signupactivity.this.finish();
                     }
                 }
 

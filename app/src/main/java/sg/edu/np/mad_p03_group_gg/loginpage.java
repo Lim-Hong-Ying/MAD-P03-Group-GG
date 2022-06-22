@@ -101,6 +101,7 @@ public class loginpage extends AppCompatActivity {
                         Intent mainActivity = new Intent(loginpage.this, MainActivity.class);
 
                         startActivity(mainActivity); //Starts up main activity
+                        loginpage.this.finish();
                     } else {
                         TextView error = findViewById(R.id.siginerror);
                         error.setVisibility(View.VISIBLE);

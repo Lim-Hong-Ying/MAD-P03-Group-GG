@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ui.fragments.HomepageFragment">
+    tools:context=".view.ui.fragments.HomepageFragment"
+    android:background="@color/light_grey"
+    >
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

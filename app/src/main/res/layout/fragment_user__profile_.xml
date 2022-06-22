@@ -6,151 +6,299 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.ui.fragments.User_Profile_Fragment"
-    android:background="@drawable/inpu_text"
+    android:background="@color/light_grey"
+
+
+
     >
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-
+<!--    <ImageView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:src="@drawable/img"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        ></ImageView>-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent">
 
-        >
-
-
-        <TextView
-            android:id="@+id/user_profile_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/uprofilepic"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="405dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/uprofilepic">
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/uprofilepic"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="40dp"
+                    android:src="@drawable/profile_icon" />
+
+                <TextView
+                    android:id="@+id/user_profile_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+
+                    android:textSize="30sp"></TextView>
+            </LinearLayout>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/shadowContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent">
+                android:id="@+id/event_card"
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="270dp">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="548dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+                <TextView
+                    android:id="@+id/num_ofevents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:text="1"
+                    android:textSize="50sp"
+                    android:textColor="@color/black"
+
+                    >
+
+                </TextView>
 
                     <TextView
-                        android:id="@+id/textView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="40dp"
-                        android:text="Email"
+                        android:layout_gravity="center_horizontal"
                         android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.036"
-                        app:layout_constraintStart_toEndOf="@+id/imageView2"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:text="event">
 
-                    <EditText
-                        android:id="@+id/user_profile_email"
-                        android:layout_width="253dp"
-                        android:layout_height="66dp"
-                        android:layout_marginStart="116dp"
-                        android:layout_marginTop="28dp"
-                        android:textSize="17sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-                    <EditText
-                        android:id="@+id/User_Profile_phonenumber"
-                        android:layout_width="197dp"
-                        android:layout_height="53dp"
-                        android:layout_marginStart="116dp"
-                        android:layout_marginTop="20dp"
-                        android:textSize="17sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="71dp"
-                        android:layout_height="43dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="40dp"
-                        android:src="@android:drawable/ic_dialog_email"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="36dp"
-                        android:layout_marginTop="44dp"
-                        android:text="Phone number"
-                        android:textSize="20sp"
-                        app:layout_constraintStart_toEndOf="@+id/imageView3"
-                        app:layout_constraintTop_toBottomOf="@+id/user_profile_email" />
-
-                    <ImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="62dp"
-                        android:layout_height="57dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="112dp"
-                        android:src="@android:drawable/ic_menu_call"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-                    <Button
-                        android:id="@+id/log_out"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-
-                        android:layout_marginStart="61dp"
-                        android:layout_marginEnd="61dp"
-                        android:background="@drawable/sign_in_button"
-                        android:text="Log out"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/User_Profile_phonenumber"></Button>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    </TextView>
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/uprofilepic"
-            android:layout_width="210dp"
-            android:layout_height="117dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="40dp"
-            android:src="@drawable/profile_icon"
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="360dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/light_grey"
+
+
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
+
+            <LinearLayout
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="40dp"
+                    android:src="@android:drawable/ic_dialog_email"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/user_profile_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:paddingTop="50dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="40dp"
+
+                    android:src="@android:drawable/ic_menu_call" />
+
+                <EditText
+                    android:id="@+id/User_Profile_phonenumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:paddingTop="50dp"
+
+                    android:textSize="17sp" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/log_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:layout_marginTop="40px"
+
+
+                android:background="@drawable/sign_in_button"
+                android:text="Log out"></Button>
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+
+
+    <!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+
+<!--        >-->
+
+
+<!--        -->
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/relativeLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            >-->
+
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:id="@+id/shadowContainer"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:cardBackgroundColor="#FFFFFF"-->
+<!--                app:cardCornerRadius="16dp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.0"-->
+<!--                app:layout_constraintStart_toStartOf="parent">-->
+
+<!--                <RelativeLayout-->
+<!--                    android:layout_width="624dp"-->
+<!--                    android:layout_height="610dp">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView9"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="20dp"-->
+<!--                        android:layout_marginTop="40dp"-->
+<!--                        android:text="Email"-->
+<!--                        android:textSize="20sp"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintHorizontal_bias="0.036"-->
+<!--                        app:layout_constraintStart_toEndOf="@+id/imageView2"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/User_Profile_phonenumber"-->
+<!--                        android:layout_width="167dp"-->
+<!--                        android:layout_height="4dp"-->
+<!--                        android:layout_marginStart="116dp"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:textSize="17sp"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/textView10" />-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/imageView2"-->
+<!--                        android:layout_width="71dp"-->
+<!--                        android:layout_height="43dp"-->
+<!--                        android:layout_marginStart="20dp"-->
+<!--                        android:layout_marginTop="40dp"-->
+<!--                        android:src="@android:drawable/ic_dialog_email"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView10"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="36dp"-->
+<!--                        android:layout_marginTop="44dp"-->
+<!--                        android:text="Phone number"-->
+<!--                        android:textSize="20sp"-->
+<!--                        app:layout_constraintStart_toEndOf="@+id/imageView3"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/user_profile_email" />-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/imageView3"-->
+<!--                        android:layout_width="62dp"-->
+<!--                        android:layout_height="57dp"-->
+<!--                        android:layout_marginStart="20dp"-->
+<!--                        android:layout_marginTop="112dp"-->
+<!--                        android:src="@android:drawable/ic_menu_call"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/imageView2" />-->
+
+<!--                    <Button-->
+<!--                        android:id="@+id/log_out"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+
+<!--                        android:layout_marginStart="61dp"-->
+<!--                        android:layout_marginEnd="61dp"-->
+<!--                        android:background="@drawable/sign_in_button"-->
+<!--                        android:text="Log out"></Button>-->
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/user_profile_email"-->
+<!--                        android:layout_width="253dp"-->
+<!--                        android:layout_height="66dp"-->
+<!--                        android:layout_marginStart="116dp"-->
+<!--                        android:layout_marginTop="28dp"-->
+<!--                        android:textSize="17sp"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/textView9" />-->
+
+<!--                </RelativeLayout>-->
+
+<!--            </androidx.cardview.widget.CardView>-->
+<!--        </RelativeLayout>-->
+
+
+
+<!--    </RelativeLayout>-->
+
+
+
 </FrameLayout>

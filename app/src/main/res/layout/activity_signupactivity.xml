@@ -5,7 +5,9 @@
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".signupactivity">
+    tools:context=".signupactivity"
+    android:color="@color/light_grey"
+    >
 
 
   <TextView
