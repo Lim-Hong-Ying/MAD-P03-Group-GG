@@ -3,49 +3,38 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.149" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/back_button.xml" value="0.152" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/back_icon.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/background_image.xml" value="0.126" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/background_image_background.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/background_shape_half_circle_half_rectengle.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_baseline_add_box_24.xml" value="0.1035" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_baseline_clear_48.xml" value="0.276" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.149" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.2575" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2575" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_wave_1_.xml" value="0.195" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/inpu_text.xml" value="0.1035" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/msg_incoming.xml" value="0.2575" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/msg_outgoing.xml" value="0.2575" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/profile_icon.xml" value="0.2575" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/profile_icon_160.xml" value="0.1035" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/round_button_background_1000.xml" value="0.2575" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/round_text_background_10.xml" value="0.2575" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/round_text_background_1000.xml" value="0.2575" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/searchbar_outline.xml" value="0.144" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/sign_in_button.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/successcheck.xml" value="0.144" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/font/roboto.xml" value="0.18489583333333334" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/font/roboto_bold.xml" value="0.18489583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_animatedlandingpage.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_chat.xml" value="0.19067028985507245" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_chat_list.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_chat_list.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_event_edit.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_forget_password_activitiy.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_homepage.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_individual_listing.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_individual_listing.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_likedpage.xml" value="0.13903985507246377" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_listings.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_loginpage.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_loginpage.xml" value="0.10666666666666667" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_month_view.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_newlisting.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_reauthentication.xml" value="0.2520833333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_search.xml" value="0.13903985507246377" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_signupactivity.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_signupactivity.xml" value="0.22" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_splash_page.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_success_list_page.xml" value="0.17119565217391305" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_week_view.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/calendar_cell.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/chat_layout.xml" value="0.19067028985507245" />
@@ -53,8 +42,7 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/event_cell.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_homepage.xml" value="0.1082427536231884" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_listing.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_user__profile_.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_wish_list.xml" value="0.17119565217391305" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_user__profile_.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/liked_item.xml" value="0.23278985507246377" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/listing_card.xml" value="0.22" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/listing_grid.xml" value="0.1082427536231884" />
@@ -62,8 +50,12 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/slideintext.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/mipmap-anydpi-v26/background_image.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/mipmap-anydpi-v26/background_image_round.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.152" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/xml/activity_search.xml" value="0.12013681060282172" />
+        <entry key="..\:/Users/kaizh/Downloads/test/MAD-P03-Group-GG/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/kaizh/Downloads/test/MAD-P03-Group-GG/app/src/main/res/drawable/searchbar_bottom_outline.xml" value="0.181" />
+        <entry key="..\:/Users/kaizh/Downloads/test/MAD-P03-Group-GG/app/src/main/res/drawable/searchbar_outline.xml" value="0.181" />
+        <entry key="..\:/Users/kaizh/Downloads/test/MAD-P03-Group-GG/app/src/main/res/layout/fragment_homepage.xml" value="0.33" />
+        <entry key="..\:/Users/kaizh/Downloads/test/MAD-P03-Group-GG/app/src/main/res/layout/liked_item.xml" value="0.3625" />
+        <entry key="..\:/Users/kaizh/Downloads/test/MAD-P03-Group-GG/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_shape_half_circle_half_rectengle.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />

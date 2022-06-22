@@ -218,9 +218,6 @@ public class HomepageFragment extends Fragment {
         newListingsRecycler.setNestedScrollingEnabled(false);
         firebaseNewListing();
 
-        String userID = FirebaseTools.getCurrentAuthenticatedUser();
-        Log.d("Current Authenticated User in Liked Page", userID);
-
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
         return view;
     }
@@ -272,7 +269,7 @@ public class HomepageFragment extends Fragment {
                                     outputDirectory.mkdirs();
                                 }
 
-                                File localFile = File.createTempFile("advert", ".jpg", outputDirectory);
+                                File localFile = File.createTempFile(folder, ".jpg", outputDirectory);
                                 fileRef.getFile(localFile).addOnSuccessListener(
                                         new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
