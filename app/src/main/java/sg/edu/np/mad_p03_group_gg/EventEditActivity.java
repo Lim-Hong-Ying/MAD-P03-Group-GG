@@ -93,14 +93,14 @@ public class EventEditActivity extends AppCompatActivity
         String am_Pm = "AM";
         String sHour = String.valueOf(hour);
         String sMin = String.valueOf(min);
-        // If time is above 12:00 it is PM
+        // If time is after 12:00 it is PM
         if (hour >= 12){
             if (hour != 12){
                 hour -= 12;
             }
             am_Pm = "PM";
         }
-        // If time is below 12:00 it is AM
+        // If time is before 12:00 it is AM
         else{
             // 00:00 = 12:00 AM
             if (hour == 0){
