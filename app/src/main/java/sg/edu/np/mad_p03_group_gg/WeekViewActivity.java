@@ -124,7 +124,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         eventListView.setAdapter(eventAdapter);
     }
 
-    // Direct to EventEditActivity
+    // Direct to EventEdit activity for creation of event
     public void newEventAction(View view)
     {
         startActivity(new Intent(this, EventEditActivity.class));
@@ -136,7 +136,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         startActivity(new Intent(this, MonthViewActivity.class));
     }
 
-    // Direct to Event edit activity when event is clicked
+    // Direct to Event edit activity when editing event
     private void setOnClickListener(){
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

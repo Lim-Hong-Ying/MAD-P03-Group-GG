@@ -39,7 +39,9 @@ public class EventEditActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_edit);
         initWidgets();
+        // Get current userId from homepage
         userId = HomepageFragment.userId;
+        // Show selected date
         eventDateTV.setText(CalendarUtils.formattedDate(CalendarUtils.selectedDate));
         Intent previousIntent = getIntent();
         // Get eventId of selected event if intent is called
@@ -47,7 +49,8 @@ public class EventEditActivity extends AppCompatActivity
         // Get selected event
         selectedEvent = Event.getEventForID(passedEventID);
         // Initialise event details for editing / deleting events
-        if (selectedEvent != null){
+        if (selectedEvent != null){ // Selected event not null means deleting/editing events
+            // Initialise event details when previously created event is clicked
             eventNameET.setText(selectedEvent.getName());
             locationNameET.setText(selectedEvent.getLocation());
             timeBtn = findViewById(R.id.timeBtn);
@@ -71,7 +74,7 @@ public class EventEditActivity extends AppCompatActivity
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMin) {
                 hour = selectedHour;
                 min = selectedMin;
-                Log.d("Hour", String.valueOf(hour));
+                // Display time in 12 hour format on time button
                 checkAmOrPm(hour, min);
             }
         };
@@ -80,26 +83,31 @@ public class EventEditActivity extends AppCompatActivity
         timePickerDialog.show();
     }
 
-    // Save or edit event into Firebase
+    // Save or edit event into Firebase when save button is clicked
     public void saveEventAction(View view)
     {
         // Format event details into strings to store into Firebase
         String eventName = eventNameET.getText().toString();
         String location = locationNameET.getText().toString();
+        // Change time to 12 hour format before storing into firebase
         String am_Pm = "AM";
         String sHour = String.valueOf(hour);
         String sMin = String.valueOf(min);
+        // If time is above 12:00 it is PM
         if (hour >= 12){
             if (hour != 12){
                 hour -= 12;
             }
             am_Pm = "PM";
         }
+        // If time is below 12:00 it is AM
         else{
+            // 00:00 = 12:00 AM
             if (hour == 0){
                 hour = 12;
             }
         }
+        // Converting time to string
         if (hour >= 10){
             time = sHour.format("%02d", hour) + ":" + sMin.format("%02d", min) + " " + am_Pm;
         }
@@ -109,9 +117,11 @@ public class EventEditActivity extends AppCompatActivity
 
         // Get eventId for events
         int eventId;
+        // Set eventId to 1 if it is the first event created by the user
         if (Event.eventsList.size() == 0){
             eventId = 1;
         }
+        // Find previous event to obtain the next eventId
         else{
             Event previousEvent = Event.eventsList.get(Event.eventsList.size() - 1);
             eventId = previousEvent.getID() + 1;
@@ -129,13 +139,18 @@ public class EventEditActivity extends AppCompatActivity
 
         // Add new event into Firebase
         if (selectedEvent == null){
+            // Initisalise new event
             Event newEvent = new Event(eventId, eventName, location, CalendarUtils.selectedDate, time);
+            // Add to list of events
             Event.eventsList.add(newEvent);
+            // Add to firebase
             addDataToFireBase(userId, eventId, eventName, location, time, CalendarUtils.selectedDate.toString());
         }
         // Edit event details and saving it into Firebase
         else{
+            // Remove event from firebase before adding the edited version
             removeDataFromFireBase(userId, selectedEvent.getID());
+            // Initialising the edited event details
             selectedEvent.setName(eventName);
             selectedEvent.setLocation(location);
             selectedEvent.setTime(time);
@@ -150,12 +165,14 @@ public class EventEditActivity extends AppCompatActivity
             removeDataFromFireBase(userId, selectedEvent.getID());
             Event.eventsList.remove(selectedEvent);
         }
+        // Shows toast message if user tries to delete event before creating one
         catch(Exception e){
             Toast.makeText(getApplicationContext(), "Unable to delete event", Toast.LENGTH_SHORT).show();
         }
         finish();
     }
 
+    // Setting time button to 12 hour format
     public void checkAmOrPm(int hour, int min){
         String am_Pm;
         if (hour > 11) {

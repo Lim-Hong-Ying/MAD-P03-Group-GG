@@ -12,6 +12,7 @@ public class Event
     private String time;
     public static ArrayList<Event> eventsList = new ArrayList<>();
 
+    // Get events for each date
     public static ArrayList<Event> eventsForDate(LocalDate date)
     {
         ArrayList<Event> events = new ArrayList<>();
@@ -32,6 +33,7 @@ public class Event
         this.time = time;
     }
 
+    // Get selected event when editing an event
     public static Event getEventForID(int passedEventID) {
         for (Event event : eventsList){
             if (event.getID() == passedEventID){
