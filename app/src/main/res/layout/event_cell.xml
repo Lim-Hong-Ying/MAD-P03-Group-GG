@@ -4,15 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="160dp"
     android:orientation="vertical"
-    android:paddingLeft="20sp">
+    android:paddingLeft="20sp"
+    android:background="@color/white"
+    >
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:padding="5sp"
+        android:paddingLeft="5sp"
+        android:paddingTop="10sp"
+        android:paddingRight="5sp"
+        android:paddingBottom="5sp"
         android:text="Name"
+
         android:textColor="@color/black"
         android:textSize="26sp"
         android:textStyle="bold" />
