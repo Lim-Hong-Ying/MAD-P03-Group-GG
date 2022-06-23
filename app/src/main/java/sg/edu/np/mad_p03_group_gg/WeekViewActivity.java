@@ -50,9 +50,9 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         setWeekView();
         setOnClickListener();
         ImageView closeBtn = findViewById(R.id.weeklyCloseButton);
-        // Removes activity from stack
+        // Removes activity from stack when button is clicked
         closeBtn.setOnClickListener(view -> {
-            // Pass selected date to weekly calendar
+            // Pass selected date to weekly calendar before it is removed
             WeekViewActivity.monthlyDate =  CalendarUtils.selectedDate;
             finish();
         });
@@ -71,8 +71,10 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     {
         // Display month and year
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
+        // Get days in week from CalendarUtils
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
+        // 7 columns in recycler view as there are 7 days in a week
         CalendarAdapter calendarAdapter = new CalendarAdapter(days, this);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
@@ -124,7 +126,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         eventListView.setAdapter(eventAdapter);
     }
 
-    // Direct to EventEditActivity
+    // Direct to EventEdit activity for creation of event
     public void newEventAction(View view)
     {
         startActivity(new Intent(this, EventEditActivity.class));
@@ -136,7 +138,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         startActivity(new Intent(this, MonthViewActivity.class));
     }
 
-    // Direct to Event edit activity when event is clicked
+    // Direct to Event edit activity when editing event
     private void setOnClickListener(){
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

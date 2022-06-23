@@ -6,7 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".WeekViewActivity">
+    tools:context=".WeekViewActivity"
+
+
+    >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -26,7 +29,7 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_width="411dp"
+                android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:background="@color/theme_light_blue"
                 android:elevation="0dp"
@@ -41,10 +44,10 @@
 
             <ImageView
                 android:id="@+id/weeklyCloseButton"
-                android:layout_width="52dp"
-                android:layout_height="38dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginEnd="340dp"
+                android:layout_marginEnd="350dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="parent"
@@ -67,10 +70,11 @@
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="52dp"
-                android:layout_height="38dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_marginStart="320dp"
                 android:onClick="monthlyAction"
+                android:padding="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -87,7 +91,9 @@
         android:layout_marginTop="00dp"
         android:layout_marginBottom="20dp"
         android:orientation="horizontal"
-        android:paddingTop="10sp">
+        android:paddingTop="10sp"
+        android:background="@color/white"
+        >
 
         <Button
             android:layout_width="0dp"
@@ -127,7 +133,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white"
+        >
 
         <TextView
             android:layout_width="0dp"
@@ -200,7 +208,9 @@
         android:id="@+id/calendarRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="@color/white"
+        />
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
@@ -209,7 +219,7 @@
         android:background="#F6CC9A"
         android:onClick="newEventAction"
         android:text="New Event"
-        android:textColor="#135995"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -217,7 +227,9 @@
         android:id="@+id/eventListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5" />
+        android:layout_weight="5"
+        android:background="@color/white"
+        />
 
 
 </LinearLayout>
