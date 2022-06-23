@@ -29,7 +29,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="411dp"
                 android:layout_height="70dp"
-                android:background="@color/theme_light_blue"
                 android:elevation="0dp"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
