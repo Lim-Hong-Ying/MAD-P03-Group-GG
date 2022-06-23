@@ -91,7 +91,7 @@
         android:layout_marginBottom="20dp"
         android:orientation="horizontal"
         android:paddingTop="10sp"
-        android:background="@color/light_grey"
+        android:background="@color/white"
         >
 
         <Button
@@ -133,7 +133,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/light_grey"
+        android:background="@color/white"
         >
 
         <TextView
@@ -208,7 +208,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/light_grey"
+        android:background="@color/white"
         />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -227,7 +227,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:background="@color/light_grey"
+        android:background="@color/white"
         />
 
 

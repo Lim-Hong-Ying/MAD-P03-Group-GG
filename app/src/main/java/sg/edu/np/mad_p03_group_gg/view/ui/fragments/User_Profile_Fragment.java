@@ -134,7 +134,7 @@ public class User_Profile_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Get storage reference
+
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
@@ -144,22 +144,22 @@ public class User_Profile_Fragment extends Fragment {
         TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
         TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
         ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
-
         Button log_out = (Button) view.findViewById(R.id.log_out);
-
-
+        //Get References
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         mDataref = database.getReference();
         storage = FirebaseStorage.getInstance().getReference("user-images");
-
+        //Retrive and display profile picture
         retrieveUserAndDisplayImage(view);
         // Get user data from database by in the form of a class.
         mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //Get authenticated user from an instance
                 auth = FirebaseAuth.getInstance();
                 FirebaseUser fbUser = auth.getCurrentUser();
+                //Get parameters
                 String uid = fbUser.getUid();
                 String email = fbUser.getEmail();
 
@@ -178,22 +178,13 @@ public class User_Profile_Fragment extends Fragment {
 
                 }
                 //Get profilepic url and store it in profilePicurl variable
-
-
                 profilePicurl = user.getUserprofilepic();
                 //Set text in the user profile page
                 Email.setText(user.getEmail().toString());
                 Phonenumber.setText(user.getPhonenumber().toString());
                 Username.setText(user.getName().toString());
                 Log.e("test","test");
-
-
-
-
             }
-
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -202,35 +193,36 @@ public class User_Profile_Fragment extends Fragment {
         });
 
 
-        //When logged out, will send user back to log-in page and finish the activtiy
+        //When logged out, will send user back to log-in page and finish the activtiy and sign out from current authenticated instance
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), loginpage.class);
                 startActivity(intent);
+                //Sign out authenticated user
+                auth.signOut();
+                //Finish activity
                 getActivity().finish();
             }
         });
 
-
+        //
         ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
             @Override
             public void onActivityResult(Uri result) {
-
+                //Set profilepic from selected image in gallery
                 uprofilepic.setImageURI(result);
+                //Set result url to Imageuri variable
                 ImageUri = result;
 
-                // write to firebase
+
                 //Prevent user from uploading duplicate images when image is in process of loading
                 if (muploadtask != null && muploadtask.isInProgress()) {
                     Toast.makeText(getContext(), "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
-
-
+                    //Starts method to upload image to database
                     onupload();
                 }
-
-
             }
         });
 
@@ -248,16 +240,18 @@ public class User_Profile_Fragment extends Fragment {
 
                 }
                 else{
-                    launcher.launch("image/*");//get image from gallery
+                    launcher.launch("image/*");//get image from gallery and display it
                 }
 
 
             }
         });
 
+        // Get views
         CardView eventcard = (CardView)view.findViewById(R.id.event_card);
         TextView noevents = (TextView)view.findViewById(R.id.num_ofevents);
         int noofevents = numberOfevents(user);
+        //Set number of events
         noevents.setText(Integer.toString(noofevents));
         eventcard.setOnClickListener(new View.OnClickListener(){
 
@@ -274,8 +268,9 @@ public class User_Profile_Fragment extends Fragment {
     private void retrieveUserAndDisplayImage(View view) {
         String sid = "";
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        //Get profile picture view
         CircleImageView userPFP = view.findViewById(R.id.uprofilepic);
-
+        //Get authenticated user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
@@ -289,6 +284,7 @@ public class User_Profile_Fragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 DataSnapshot result = task.getResult();
+                //get url link from firebase for image
                 String spfp = String.valueOf(result.child("userprofilepic").getValue(String.class));
 
                 if(!TextUtils.isEmpty(spfp)) {//if image is present, image is changed to the appropriate image profile picture, else profile image will remain as default
@@ -335,13 +331,17 @@ public class User_Profile_Fragment extends Fragment {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 if (taskSnapshot.getMetadata() != null) {
                     if (taskSnapshot.getMetadata().getReference() != null) {
+                        //Get downloable Url
                         Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                         result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                //Make toast message when sucessful
                                 Toast.makeText(getContext(), "Successful.", Toast.LENGTH_SHORT).show();
+                                //Set profilepic uri to instance of user
                                 user.setUserprofilepic(uri.toString());
-                                mDataref.child("users").child(user.getId()).setValue(user);// upload to database
+                                //upload image url to database
+                                mDataref.child("users").child(user.getId()).setValue(user);
                             }
 
                         });
@@ -351,54 +351,30 @@ public class User_Profile_Fragment extends Fragment {
 
 
             // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
-
-
-            boolean isEmpty(EditText text) {
-                CharSequence str = text.getText().toString();
-                return TextUtils.isEmpty(str);
-            }
-
-            boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
-                CharSequence email = text.getText().toString();
-                return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
-            }
-
-            public boolean checkDataEntered(View v) {  // returns true when all input fields are correct, return false when not correct
-
-                EditText Phonenumber = (EditText) v.findViewById(R.id.User_Profile_phonenumber);
-                EditText Email = (EditText) v.findViewById(R.id.user_profile_email);
-
-
-                if (isEmail(Email) == false) {
-                    Email.setError("Enter valid email!");
-                    return false;
-                }
-
-                if (isEmpty(Phonenumber)) {
-                    Phonenumber.setError("Last name is required!");
-                    return false;
-                }
-                return true;
-            }
-
-
         });
     }
      //Get the number of events
     private int numberOfevents(User u){
 
-        //Get references
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("Planner");
-        //TO DO GET ITEMS
-        Event[] evenet =Event.eventsList.toArray(new Event[0]);
+
+
+
+        Event[] evenet =Event.eventsList.toArray(new Event[0]);//Get list of events
         int numofevent =0;
+        //For every event in list
 
         for (Event event:evenet){
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-            LocalDateTime now = LocalDateTime.now();
-            LocalDate date = event.getDate();
+            //Formater to formate date into yyyy-mm-dd
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            //Format system date to yyyy-mm-dd
+            String now = dtf.format(LocalDateTime.now());
+            //Get date from list
+            String date = event.getDate().toString();
+            Log.e("Date:",date.toString());
+            Log.e("Current Date", now.toString());
+            //If current date equals to event date, increase numof event by one
             if(now.equals(date)){
+
 
                 numofevent+=1;
             }

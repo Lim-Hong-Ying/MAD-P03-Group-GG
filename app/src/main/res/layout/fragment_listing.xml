@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.ui.fragments.listingFragment"
-    android:background="@color/light_grey"
+    android:background="@color/white"
     >
 
     <LinearLayout

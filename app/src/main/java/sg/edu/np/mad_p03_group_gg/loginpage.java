@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -35,18 +36,16 @@ import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 
 public class loginpage extends AppCompatActivity {
     FirebaseAuth auth;
+    //Set storage code for getting external storage permission
     private int EXTERNAL_STORAGE_PERMISSION_CODE = 23;
-    private SignInClient oneTapClient;
-    private BeginSignInRequest signInRequest;
-    private static final int REQ_ONE_TAP = 2;  // Can be any integer unique to the Activity.
-    private boolean showOneTapUI = true;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginpage);
+        //Get current authenticated instance
         auth = FirebaseAuth.getInstance(); // singleton
+        //Check for permissions and ask permissions
         if (ContextCompat.checkSelfPermission(loginpage.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -59,6 +58,7 @@ public class loginpage extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.fgt_pswrd_btn);
         TextView signup = findViewById(R.id.Sign_up);
         TextView fgtpassword = findViewById(R.id.forgetpsswrdbtn);
+        //On click listener to bring user to forget password activity when clicked
         fgtpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,15 +67,16 @@ public class loginpage extends AppCompatActivity {
                 startActivity(fgtpassword);
             }
         });
-        //On click of sign in button
+        // On click for sigin button
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Sign in
                 Log_in(view);
 
             }
         });
-        //on click listner for sign up button
+        //On click, bring user to signup activity
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,30 +87,36 @@ public class loginpage extends AppCompatActivity {
         });
 
         //Authenticate users
-        auth = FirebaseAuth.getInstance();
+
+    }
+    boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
+        CharSequence email = text.getText().toString();
+        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
 
+
     public void Log_in(View v){
+        TextView error = findViewById(R.id.siginerror);
         EditText Email = (EditText) findViewById(R.id.fgtemail);
         EditText password = (EditText) findViewById(R.id.password_toggle);
-        String email = Email.getText().toString();
+        String email = Email.getText().toString().trim();
         String Password = password.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            Email.setError("Missing email");
+        error.setVisibility(View.INVISIBLE);
+        //If email is missing, set error
+        if (!isEmail(Email)) {
+            Email.setError("Invalid email");
             return;
 
         }
+        // If password is missing, set error message
         if(TextUtils.isEmpty(Password)){
             password.setError("Missing Password");
             return;
 
         }
-        // If email is not a  email address
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Email.setError("Invalid Email Address");
-            return;
-        }
+
+        //Get auth user from firebase
             auth.signInWithEmailAndPassword(email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -118,9 +125,11 @@ public class loginpage extends AppCompatActivity {
                         Intent mainActivity = new Intent(loginpage.this, MainActivity.class);
 
                         startActivity(mainActivity); //Starts up main activity
+                        //Finish current activity
                         loginpage.this.finish();
                     } else {
-                        TextView error = findViewById(R.id.siginerror);
+                        //If email/Password is wrong, set error message visible
+
                         error.setVisibility(View.VISIBLE);
                     }
                 }
@@ -132,7 +141,5 @@ public class loginpage extends AppCompatActivity {
         // Requesting Permission to access External Storage
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 EXTERNAL_STORAGE_PERMISSION_CODE);
-
-
     }
 }

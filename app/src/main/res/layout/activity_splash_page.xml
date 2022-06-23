@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="#FBFBFB"
+
     tools:context=".view.ui.MainActivity"
+
 
     >
 
@@ -40,10 +42,10 @@
 
     <ImageView
         android:id="@+id/splash_screen_img"
-        android:layout_width="355dp"
-        android:layout_height="423dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/woman_shopping_cart" />
+        app:srcCompat="@drawable/finallogo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

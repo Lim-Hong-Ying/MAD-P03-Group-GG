@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MonthViewActivity"
-    android:color="@color/light_grey"
     >
 
     <com.google.android.material.appbar.AppBarLayout
