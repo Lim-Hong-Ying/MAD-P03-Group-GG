@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -95,7 +96,7 @@ public class loginpage extends AppCompatActivity {
 
 
 
-    public void Log_in(View v){
+    public void Log_in(View v) {
         TextView error = findViewById(R.id.siginerror);
         EditText Email = (EditText) findViewById(R.id.fgtemail);
         EditText password = (EditText) findViewById(R.id.password_toggle);
@@ -110,33 +111,35 @@ public class loginpage extends AppCompatActivity {
 
         }
         // If password is missing, set error message
-        if(TextUtils.isEmpty(Password)){
+        if (TextUtils.isEmpty(Password)) {
             password.setError("Missing Password");
             return;
 
         }
 
         //Get auth user from firebase
-            auth.signInWithEmailAndPassword(email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        //When user's sign in is sucessful, it will automatically go to the next page
-                        Intent mainActivity = new Intent(loginpage.this, MainActivity.class);
-                        Toast.makeText(loginpage.this,"Signed-In!",Toast.LENGTH_SHORT).show();
+        auth.signInWithEmailAndPassword(email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    //When user's sign in is sucessful, it will automatically go to the next page
+                    Intent mainActivity = new Intent(loginpage.this, MainActivity.class);
+                    Toast.makeText(loginpage.this, "Signed-In!", Toast.LENGTH_SHORT).show();
 
-                        startActivity(mainActivity); //Starts up main activity
-                        //Finish current activity
-                        loginpage.this.finish();
-                    } else {
-
-
-                            error.setVisibility(View.VISIBLE);
-                    }
+                    startActivity(mainActivity); //Starts up main activity
+                    //Finish current activity
+                    loginpage.this.finish();
                 }
-            });
+            }
 
+        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(loginpage.this, "Something went wrong, check your internet connection or your email and password", Toast.LENGTH_SHORT).show();
+                                    }
 
+                                }
+        );
     }
     public void request(View view) {
         // Requesting Permission to access External Storage
