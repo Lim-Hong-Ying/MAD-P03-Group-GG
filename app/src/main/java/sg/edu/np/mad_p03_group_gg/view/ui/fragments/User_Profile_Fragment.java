@@ -120,6 +120,8 @@ public class User_Profile_Fragment extends Fragment {
     }
 
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,13 +129,17 @@ public class User_Profile_Fragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        getParentFragmentManager().beginTransaction().detach(this).attach(this).commit();
+
 
     }
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
 
         // Inflate the layout for this fragment
@@ -227,6 +233,7 @@ public class User_Profile_Fragment extends Fragment {
             }
         });
 
+
         uprofilepic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -265,7 +272,19 @@ public class User_Profile_Fragment extends Fragment {
         return view;
 
     }
-// Get User image from database
+    @Override
+    public void onResume() {
+        super.onResume();
+        // On resume, or when user changes back from calender, updated data is displayed
+        int noofevents = numberOfevents(user);
+        TextView noevents = (TextView)getActivity().findViewById(R.id.num_ofevents);
+        noevents.setText(Integer.toString(noofevents));
+
+
+    }
+
+
+    // Get User image from database
     private void retrieveUserAndDisplayImage(View view) {
         String sid = "";
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -306,6 +325,10 @@ public class User_Profile_Fragment extends Fragment {
     private void onupload() {
         //Get Imageview
         ImageView imageView = (ImageView) getActivity().findViewById(R.id.uprofilepic);
+        if(ImageUri==null){
+            Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //Get filepath & references
         Filepath = System.currentTimeMillis() + "." + getfileextension(ImageUri);
         StorageReference storageReference = storage.child(Filepath);
@@ -411,6 +434,8 @@ public class User_Profile_Fragment extends Fragment {
             bitmap.setImageBitmap(result);
         }
     }
+
+
 }
 
 

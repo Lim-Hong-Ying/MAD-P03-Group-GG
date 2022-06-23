@@ -18,17 +18,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.Identity;
-import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.identity.SignInCredential;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.database.annotations.Nullable;
 
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
@@ -102,6 +101,7 @@ public class loginpage extends AppCompatActivity {
         EditText password = (EditText) findViewById(R.id.password_toggle);
         String email = Email.getText().toString().trim();
         String Password = password.getText().toString();
+        //Set error back to invisible
         error.setVisibility(View.INVISIBLE);
         //If email is missing, set error
         if (!isEmail(Email)) {
@@ -123,14 +123,15 @@ public class loginpage extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         //When user's sign in is sucessful, it will automatically go to the next page
                         Intent mainActivity = new Intent(loginpage.this, MainActivity.class);
+                        Toast.makeText(loginpage.this,"Signed-In!",Toast.LENGTH_SHORT).show();
 
                         startActivity(mainActivity); //Starts up main activity
                         //Finish current activity
                         loginpage.this.finish();
                     } else {
-                        //If email/Password is wrong, set error message visible
 
-                        error.setVisibility(View.VISIBLE);
+
+                            error.setVisibility(View.VISIBLE);
                     }
                 }
             });

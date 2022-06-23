@@ -133,6 +133,7 @@ public class signupactivity extends AppCompatActivity {
         return true;
     }
     public User Register(View v){
+        //Get Views
         EditText name = findViewById(R.id.setusername);
         EditText Password = findViewById(R.id.enterpassword);
         EditText Email = findViewById(R.id.emailaddr);
