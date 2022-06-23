@@ -49,7 +49,7 @@ Looking for something specific? Just tap on the magnifying glass and search it u
 ### Wishlist
 You can now save your favourite listings for future reference.
 
-![Wishlist](resources/wishlist.png)
+![Wishlist](resources/wishlist-page.png)
 
 ### Chat
 You can also chat with other Cashshopers!
