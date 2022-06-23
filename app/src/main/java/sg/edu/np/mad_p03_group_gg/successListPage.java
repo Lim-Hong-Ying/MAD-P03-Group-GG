@@ -21,6 +21,7 @@ public class successListPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent returnhome = new Intent(view.getContext(), MainActivity.class);
+                finish();
                 view.getContext().startActivity(returnhome);
             }
         });

@@ -6,24 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".individual_listing">
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:background="@color/theme_light_blue"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="163dp"
+            android:layout_height="46dp"
+            android:layout_marginEnd="25dp"
+
+            android:gravity="center"
+            android:text="View listing"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.511"
+            app:layout_constraintStart_toEndOf="@+id/back_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageButton
             android:id="@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_weight="0.5"
-            android:background="#d0b4fc"
-            app:srcCompat="@drawable/back_icon" />
-
-    </LinearLayout>
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@color/theme_light_blue"
+            android:paddingStart="12sp"
+            android:paddingEnd="2dp"
+            android:src="@drawable/back_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -32,7 +56,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
         <LinearLayout
             android:layout_width="match_parent"

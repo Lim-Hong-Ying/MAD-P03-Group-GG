@@ -5,18 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="#FBFBFB"
+
     tools:context=".view.ui.MainActivity"
-    android:background="#B9E8FF"
+
 
     >
-
 
     <TextView
         android:id="@+id/appname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:fontFamily="casual"
+        android:fontFamily="@font/roboto_bold"
         android:text="Cashshope"
         android:textAlignment="center"
         android:textColor="@color/black"
@@ -30,7 +31,7 @@
         android:id="@+id/slogan"
         android:layout_width="229dp"
         android:layout_height="86dp"
-        android:fontFamily="casual"
+        android:fontFamily="@font/roboto"
         android:text="Your most trusted shopping companion"
         android:textAlignment="center"
         android:textSize="22sp"
@@ -40,10 +41,12 @@
 
     <ImageView
         android:id="@+id/splash_screen_img"
-        android:layout_width="355dp"
-        android:layout_height="423dp"
+        android:layout_width="358dp"
+        android:layout_height="400dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/woman_shopping_cart" />
+        app:srcCompat="@drawable/finallogo" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,15 +2,12 @@ package sg.edu.np.mad_p03_group_gg.view;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Advanceable;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;

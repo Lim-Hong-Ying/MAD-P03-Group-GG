@@ -85,8 +85,7 @@ public class HomepageFragment extends Fragment {
 
     // Initialises event details for meeting planner
     private String name, location, time, date;
-    private static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    public static String userId = user.getUid();
+    public static String userId;
 
     public HomepageFragment() {
         // Required empty public constructor
@@ -118,9 +117,12 @@ public class HomepageFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         // Only read event details from Firebase once (Meeting Planner)
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
         if (Event.eventsList.size() == 0){
             readFromFireBase(userId);
         }
+        Log.d("EventList", String.valueOf(Event.eventsList.size()));
     }
 
     @Override
@@ -134,19 +136,15 @@ public class HomepageFragment extends Fragment {
 
         // Check for advertisement directory (for storage of ad images)
         if (dir.exists()) {
-            if (dir.listFiles().length == 0) {
-                // If directory exists, but empty, will download files
-                downloadFiles("advertisement");
-            }
             for (File f : dir.listFiles()) {
                 // Add path to the filePaths array list (later used for RecyclerView Adapter)
                 filePaths.add(f.getAbsolutePath());
             }
         }
         else {
-            // If directory specified does not exist, call downloadFiles() which will also
-            // create a new directory
-            downloadFiles("advertisement");
+            Toast.makeText(getActivity(),
+                    "Uh oh, unable to download images.",
+                    Toast.LENGTH_SHORT).show();
         }
 
         ArrayList<AdBannerImage> adBannerImages = new ArrayList<>();
@@ -218,9 +216,6 @@ public class HomepageFragment extends Fragment {
         newListingsRecycler.setNestedScrollingEnabled(false);
         firebaseNewListing();
 
-        String userID = FirebaseTools.getCurrentAuthenticatedUser();
-        Log.d("Current Authenticated User in Liked Page", userID);
-
         // Inflate the layout for this fragment (finalized the changes, otherwise will not apply)
         return view;
     }
@@ -234,73 +229,6 @@ public class HomepageFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit(); // To apply changes
-    }
-
-    /**
-     * Download ALL files in a certain directory (specified with the parameter, folder) from
-     * the Firebase Storage and store them into a folder located within the cache (named after
-     * the parameter)
-     *
-     * eg. downloadFiles("advertisement"), expect to find your files in the cache directory of
-     * /advertisement
-     *
-     * @param folder
-     */
-    private void downloadFiles(String folder) {
-        // Init Firebase Storage instance
-        FirebaseStorage storage = FirebaseStorage.getInstance("gs://cashoppe-179d4.appspot.com/");
-
-        // Create a storage reference, basically a pointer to a file in the Firebase cloud
-        StorageReference storageRef = storage.getReference();
-
-        // Create a child reference
-        // imagesRef now points to "images"
-        StorageReference filesRef = storageRef.child(folder);
-
-        // List all images in /<folder> eg. can be /advertisement
-        filesRef.listAll()
-                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                    @Override
-                    public void onSuccess(ListResult listResult) {
-                        for (StorageReference fileRef : listResult.getItems()) {
-                            // TODO: Download the file using its reference (fileRef)
-
-                            // Download files from the folder, eg. images from /advertisement
-                            try {
-                                File outputDirectory = new File(getContext().getCacheDir(), folder);
-                                if (!outputDirectory.exists()) {
-                                    outputDirectory.mkdirs();
-                                }
-
-                                File localFile = File.createTempFile("advert", ".jpg", outputDirectory);
-                                fileRef.getFile(localFile).addOnSuccessListener(
-                                        new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle any errors
-                                    }
-                                });
-                            }
-                            catch (Exception e) {
-                                Log.e("Unable to download image", String.valueOf(e));
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Uh-oh, an error occurred!
-                        Toast.makeText(getActivity(),
-                                "An Error Occured: Unable to List Items from Firebase",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     /**
@@ -427,8 +355,10 @@ public class HomepageFragment extends Fragment {
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     DataSnapshot result = task.getResult();
                     String sellerName = String.valueOf(result.child("name").getValue(String.class));
+                    String sellerProfileUrl = String.valueOf(result.child("userprofilepic").getValue(String.class));
 
                     usernameView.setText(sellerName);
+                    Glide.with(getActivity().getApplicationContext()).load(sellerProfileUrl).into(sellerProfilePic);
                 }
             });
 
@@ -437,7 +367,6 @@ public class HomepageFragment extends Fragment {
             listingItemConditionView.setText(model.getiC());
 
             // The Glide library is used for easy application of images into their respective views.
-            Glide.with(getActivity().getApplicationContext()).load(model.getSPPU()).into(sellerProfilePic);
             Glide.with(getActivity().getApplicationContext()).load(model.gettURL()).into(listingImageView);
         }
     }
