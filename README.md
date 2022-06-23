@@ -34,7 +34,7 @@ Join the Cashshope family now to enjoy great deals and benefits:
 ## Roles and Contributions
 |Member|Contributions|
 |---|---|
-|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations & PlayStore Management|
+|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc)|
 |Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist|
 |Ooi Jun Heng Ryan|Meeting Planner page, WeekView and MonthView calendars, Event pages|
 |William Francis Siah|Chat function (Chat List, Chat page, MemoryData etc.), Linking Individual Listing to Chat page|
