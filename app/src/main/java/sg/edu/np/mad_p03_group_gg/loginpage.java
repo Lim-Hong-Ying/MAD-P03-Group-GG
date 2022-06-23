@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.database.annotations.Nullable;
 
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
@@ -100,6 +101,7 @@ public class loginpage extends AppCompatActivity {
         EditText password = (EditText) findViewById(R.id.password_toggle);
         String email = Email.getText().toString().trim();
         String Password = password.getText().toString();
+        //Set error back to invisible
         error.setVisibility(View.INVISIBLE);
         //If email is missing, set error
         if (!isEmail(Email)) {
@@ -127,10 +129,9 @@ public class loginpage extends AppCompatActivity {
                         //Finish current activity
                         loginpage.this.finish();
                     } else {
-                        Toast.makeText(loginpage.this,"Unsuccessful, Please try again",Toast.LENGTH_SHORT).show();
-                        //If email/Password is wrong, set error message visible
 
-                        error.setVisibility(View.VISIBLE);
+
+                            error.setVisibility(View.VISIBLE);
                     }
                 }
             });

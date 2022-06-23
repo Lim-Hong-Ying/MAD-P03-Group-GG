@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.ui.fragments.User_Profile_Fragment"
-    android:background="@color/light_grey"
+    android:background="@drawable/img2"
 
     >
 <!--    <ImageView-->
@@ -27,7 +27,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/img2">
+                >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout2"
@@ -43,9 +43,10 @@
                         android:layout_height="350dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
-                        android:background="@color/white"
+                        android:layout_marginEnd="0dp"
                         android:orientation="vertical">
 
                         <de.hdodenhof.circleimageview.CircleImageView
@@ -56,6 +57,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginStart="4dp"
                             android:layout_marginTop="40dp"
+
                             android:src="@drawable/profile_icon" />
 
                         <TextView
@@ -65,6 +67,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"
                             android:textColor="@color/black"
+
 
                             android:textSize="30sp"></TextView>
                     </LinearLayout>
@@ -180,11 +183,14 @@
 
                     <Button
                         android:id="@+id/log_out"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+
 
                         android:layout_gravity="center"
                         android:layout_marginTop="40px"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+
 
 
                         android:background="@drawable/sign_in_button"
