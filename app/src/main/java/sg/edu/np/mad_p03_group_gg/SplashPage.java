@@ -11,6 +11,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
+
 public class SplashPage extends AppCompatActivity {
 
     @Override
@@ -29,6 +31,9 @@ public class SplashPage extends AppCompatActivity {
         image.setAnimation(Animationtop);
         slogan.setAnimation(bottomAniamtion);
         name.setAnimation(Animationtop);
+
+        FirebaseTools.downloadFiles("advertisement", getApplicationContext(), this);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
