@@ -55,3 +55,14 @@ Join the Cashshope family now to enjoy great deals and benefits:
 ![Chat](resources/chat.png)
 
 ## User Guide
+1. Sign up a new account or log in with the credentails (email address and password) of an existing user account to access Cashshope.
+2. Grant Cashshope with the permissions that it needs to function properly. This includes access to the device's storage and internet.
+3. The hompage is an overview of all the functions in the app, as well as to view the newest listings:
+   - Press the 🔍 button to search for a listing.
+   - Press the 🛒 button to view your wishlist.
+   - Press the 💬 button to access the chat feature.
+   - Press the "Listings" button to access all the listings on Cashshope.
+   - Press the "Meeting Planner" button to view the meeting planner feature.
+   - Press the "+" button to create a new listing.
+   - Press the 👤 button to access your user account profile.
+   - Click on any of the listing cards to view detailed information on the listing.
