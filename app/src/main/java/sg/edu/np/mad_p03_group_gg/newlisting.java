@@ -71,6 +71,7 @@ public class newlisting extends AppCompatActivity {
                 writeToDatabaseAndFirebase();
 
                 Intent returnhome = new Intent(view.getContext(), successListPage.class);
+                finish();
                 view.getContext().startActivity(returnhome);
             }
         });

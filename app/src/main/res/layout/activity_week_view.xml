@@ -31,7 +31,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@color/theme_light_blue"
                 android:elevation="0dp"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
@@ -44,27 +43,25 @@
 
             <ImageView
                 android:id="@+id/weeklyCloseButton"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="350dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="25dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.464"
                 app:srcCompat="@drawable/back_icon" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="140dp"
                 android:background="#00FFFFFF"
                 android:text="Weekly"
                 android:textColor="#135995"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
@@ -72,11 +69,11 @@
                 android:id="@+id/imageView5"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:layout_marginStart="320dp"
+                android:layout_marginEnd="25dp"
                 android:onClick="monthlyAction"
                 android:padding="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_calendar_today_24"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
@@ -219,7 +216,7 @@
         android:background="#F6CC9A"
         android:onClick="newEventAction"
         android:text="New Event"
-        android:textColor="@color/white"
+        android:textColor="#135995"
         android:textSize="20sp"
         android:textStyle="bold" />
 
