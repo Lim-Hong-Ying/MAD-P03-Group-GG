@@ -41,10 +41,10 @@
 
             <ImageView
                 android:id="@+id/weeklyCloseButton"
-                android:layout_width="52dp"
-                android:layout_height="38dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginEnd="340dp"
+                android:layout_marginEnd="350dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="parent"
@@ -67,10 +67,11 @@
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="52dp"
-                android:layout_height="38dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_marginStart="320dp"
                 android:onClick="monthlyAction"
+                android:padding="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -208,7 +209,7 @@
         android:layout_gravity="center"
         android:background="#F6CC9A"
         android:onClick="newEventAction"
-        android:text="New Event"
+        android:text="Add Event"
         android:textColor="#135995"
         android:textSize="20sp"
         android:textStyle="bold" />
