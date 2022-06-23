@@ -65,6 +65,8 @@ public class loginpage extends AppCompatActivity {
                 Intent fgtpassword = new Intent(loginpage.this, forget_password_activitiy.class);
 
                 startActivity(fgtpassword);
+                //Pause current activity, enable user to return to this activity when needed
+                loginpage.this.onPause();
             }
         });
         // On click for sigin button
@@ -83,6 +85,8 @@ public class loginpage extends AppCompatActivity {
                 Intent signup = new Intent(loginpage.this,
                         signupactivity.class);
                 startActivity(signup);//Starts sign up activity
+                //Pause current activity, enable user to retun to loginactivity if needed
+                loginpage.this.onPause();
             }
         });
 
@@ -97,6 +101,7 @@ public class loginpage extends AppCompatActivity {
 
 
     public void Log_in(View v) {
+        //Find view
         TextView error = findViewById(R.id.siginerror);
         EditText Email = (EditText) findViewById(R.id.fgtemail);
         EditText password = (EditText) findViewById(R.id.password_toggle);
@@ -135,7 +140,8 @@ public class loginpage extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(loginpage.this, "Something went wrong, check your internet connection or your email and password", Toast.LENGTH_SHORT).show();
+                                        // On failure, show this toast message
+                                        Toast.makeText(loginpage.this, "Check your internet connection or your email and password", Toast.LENGTH_SHORT).show();
                                     }
 
                                 }

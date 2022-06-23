@@ -35,20 +35,19 @@ public class forget_password_activitiy extends AppCompatActivity {
                 passwordStatus.setText("");
 
                 if (isEmail(fgtEmail)) {
-                    Log.e("Hi",Boolean.toString(isEmail(fgtEmail)));
 
 
+                // Get email from Text field
                 String ForgetEmail = fgtEmail.getText().toString().trim();
 
                 FirebaseAuth.getInstance().sendPasswordResetEmail(ForgetEmail)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                    passwordStatus.setText("An email has been sent to your email address");
+                                // Tell user that an email has been send to his address
+                                    passwordStatus.setText("Check your email to find verfication code.");
                             }
                         });
-
-
                 }
                 else{
                     fgtEmail.setError("Invalid Email");
