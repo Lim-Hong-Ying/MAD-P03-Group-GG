@@ -37,17 +37,51 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 
 ## Features
 ### Homepage
+Provides an overview of all the features of Cashshope, as well as the latest listings that have been posted.
 
 ![Homepage](resources/homepage.png)
 
 ### Search
+Looking for something specific? Just tap on the magnifying glass and search it up!
+
 ![Search](resources/search.png)
 
-### Meeting Planner
-![MeetingPlanner](resources/meeting_planner.png)
+### Wishlist
+You can now save your favourite listings for future reference.
+
+![Wishlist](resources/wishlist.png)
 
 ### Chat
+You can also chat with other Cashshopers!
+
 ![Chat](resources/chat.png)
+
+
+### Meeting Planner
+Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to see your schedule!
+
+![MeetingPlanner](resources/meeting.png)
+
+### Listing
+View all the listings on Cashshope!
+
+![Listing](resources/listing.png)
+
+Tap on the item that you like to see even more details!
+
+![ListingDetails](resources/listing-details.png)
+
+### Create Listing
+Don't need something anymore? Put it up for sale! Not only are you getting back some cash in return, you are also doing something good for
+the environment by promoting reusability.
+
+![NewListing](resources/newlisting.png)
+
+### User Profile
+Feeling fancy today? Customize your profile!
+
+![User](resources/profile.png)
+
 
 ## User Guide
 1. Sign up a new account or log in with the credentails (email address and password) of an existing user account to access Cashshope.
