@@ -197,6 +197,7 @@ public class User_Profile_Fragment extends Fragment {
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Event.eventsList.clear();
                 Intent intent = new Intent(getActivity(), loginpage.class);
                 startActivity(intent);
                 //Sign out authenticated user

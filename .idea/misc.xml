@@ -70,6 +70,7 @@
         <entry key="app/src/main/res/drawable/inpu_text.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/sign_in_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_displaysettings.xml" value="0.1734375" />
+        <entry key="app/src/main/res/layout/activity_event_edit.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/layout/activity_forget_password_activitiy.xml" value="0.15534420289855072" />
         <entry key="app/src/main/res/layout/activity_homepage.xml" value="0.3458333333333333" />
         <entry key="app/src/main/res/layout/activity_individual_listing.xml" value="0.3458333333333333" />
@@ -77,9 +78,13 @@
         <entry key="app/src/main/res/layout/activity_listings2.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/activity_loginpage.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3458333333333333" />
+        <entry key="app/src/main/res/layout/activity_month_view.xml" value="0.31762917933130697" />
         <entry key="app/src/main/res/layout/activity_newlisting.xml" value="0.34270833333333334" />
         <entry key="app/src/main/res/layout/activity_signupactivity.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_splash_page.xml" value="0.13333333333333333" />
+        <entry key="app/src/main/res/layout/activity_week_view.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/event_cell.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/fragment_user__profile_.xml" value="0.31762917933130697" />
         <entry key="app/src/main/res/layout/listing_card.xml" value="0.264" />
         <entry key="app/src/main/res/layout/slideintext.xml" value="0.3333333333333333" />
       </map>

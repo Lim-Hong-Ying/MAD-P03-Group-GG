@@ -30,14 +30,14 @@ public class CalendarUtils
         YearMonth yearMonth = YearMonth.from(date);
 
         int daysInMonth = yearMonth.lengthOfMonth();
-        // First day of month
+        // First day of week
         LocalDate firstOfMonth = CalendarUtils.selectedDate.withDayOfMonth(1);
         int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
 
-        // i <= 42 as there are 35 squares in monthly calendar + 7 days in a week
+        // i <= 42 as there are 42 squares in monthly calendar (7 squares in a row * 6 rows)
         for(int i = 1; i <= 42; i++)
         {
-            // If its before the first or last day of month, add a blank square
+            // If its before the first or last day of month, add a blank square (only show current month)
             if(i <= dayOfWeek || i > daysInMonth + dayOfWeek)
                 daysInMonthArray.add(null);
             else
@@ -50,9 +50,10 @@ public class CalendarUtils
     public static ArrayList<LocalDate> daysInWeekArray(LocalDate selectedDate)
     {
         ArrayList<LocalDate> days = new ArrayList<>();
+        // First date should be Sunday
         LocalDate current = sundayForDate(selectedDate);
         LocalDate endDate = current.plusWeeks(1);
-
+        // Add week into list
         while (current.isBefore(endDate))
         {
             days.add(current);
@@ -64,7 +65,9 @@ public class CalendarUtils
     // Search for Sunday as first day in weekly calendar is Sunday
     private static LocalDate sundayForDate(LocalDate current)
     {
+        // Get one week before current date
         LocalDate oneWeekAgo = current.minusWeeks(1);
+        // Find Sunday that is closest to current date
         while (current.isAfter(oneWeekAgo))
         {
             if(current.getDayOfWeek() == DayOfWeek.SUNDAY)
