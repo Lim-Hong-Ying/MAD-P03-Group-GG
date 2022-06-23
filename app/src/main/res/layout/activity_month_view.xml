@@ -44,10 +44,10 @@
                 android:id="@+id/weeklyCloseButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginEnd="350dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.464"
                 app:srcCompat="@drawable/back_icon" />
@@ -56,13 +56,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="130dp"
                 android:background="#00FFFFFF"
                 android:text="Monthly"
                 android:textColor="#135995"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
