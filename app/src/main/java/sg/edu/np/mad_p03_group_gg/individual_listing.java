@@ -15,12 +15,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -68,9 +70,26 @@ public class individual_listing extends AppCompatActivity {
             }
         });
 
-        initialCheckLiked(pID, uID);
-        createObjectFromFB(pID, uID);
-        checkLiked(pID, uID);
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    initialCheckLiked(pID, uID);
+                    createObjectFromFB(pID, uID);
+                    checkLiked(pID, uID);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //############## WILLIAM CHAT SECTION ##################
 
@@ -156,7 +175,7 @@ public class individual_listing extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-
+                    Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
                 }
                 else { //Builds individualListingObject from data retrieved
                     Log.d("firebase", String.valueOf(task.getResult()));
@@ -253,6 +272,11 @@ public class individual_listing extends AppCompatActivity {
                             if (!SPPU.isEmpty()) {
                                 new ImageDownloader(sellerpfp).execute(SPPU);
                             }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

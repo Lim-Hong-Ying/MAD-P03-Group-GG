@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -30,8 +31,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -46,33 +50,50 @@ public class newlisting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newlisting);
 
-        activeChecker();
-
-        ImageView selectimage = findViewById(R.id.choose_image);
-        selectimage.setOnClickListener(new View.OnClickListener() {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                chooseImage();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    activeChecker();
+
+                    ImageView selectimage = findViewById(R.id.choose_image);
+                    selectimage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            chooseImage();
+                        }
+                    });
+
+                    ImageButton back_button = findViewById(R.id.back_button);
+                    back_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            finish();
+                        }
+                    });
+
+                    Button createlisting = findViewById(R.id.create_listing);
+                    createlisting.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            writeToDatabaseAndFirebase();
+
+                            Intent returnhome = new Intent(view.getContext(), successListPage.class);
+                            finish();
+                            view.getContext().startActivity(returnhome);
+                        }
+                    });
+                } else {
+                    Toast.makeText(getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
-        });
 
-        ImageButton back_button = findViewById(R.id.back_button);
-        back_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        Button createlisting = findViewById(R.id.create_listing);
-        createlisting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                writeToDatabaseAndFirebase();
-
-                Intent returnhome = new Intent(view.getContext(), successListPage.class);
-                finish();
-                view.getContext().startActivity(returnhome);
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
     }
