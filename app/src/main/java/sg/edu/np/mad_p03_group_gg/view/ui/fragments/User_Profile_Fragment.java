@@ -306,6 +306,10 @@ public class User_Profile_Fragment extends Fragment {
     private void onupload() {
         //Get Imageview
         ImageView imageView = (ImageView) getActivity().findViewById(R.id.uprofilepic);
+        if(ImageUri==null){
+            Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //Get filepath & references
         Filepath = System.currentTimeMillis() + "." + getfileextension(ImageUri);
         StorageReference storageReference = storage.child(Filepath);
