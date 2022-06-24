@@ -105,7 +105,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:text="event"
+                                android:text="Event(s) today"
                                 android:textSize="20sp">
 
                             </TextView>
@@ -177,6 +177,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="20dp"
                             android:paddingTop="50dp"
+                            android:textStyle="bold"
 
                             android:textSize="17sp" />
 
