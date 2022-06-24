@@ -57,7 +57,7 @@ public class SearchActivity extends AppCompatActivity {
         searchField.setText(searchViewQuery);
 
         searchPageCloseButton.setOnClickListener(v -> {
-            // Termintate the LikedPage activity
+            // Termintate the activity
             finish();
         });
 
