@@ -62,13 +62,20 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         searchResultsView = findViewById(R.id.searchResultsView);
-        searchResultsView.setLayoutManager(new LinearLayoutManager(this));
+        searchResultsView.setLayoutManager(new LinearLayoutManager(this)); // Vertical scroll
+        // When adapter content changed, the height and width of recycler adapter remains fixed
         searchResultsView.setHasFixedSize(true);
 
-        firebaseListingSearch(searchField.getText().toString());
+        firebaseListingSearch(searchField.getText().toString()); // Get query from searchField
     }
 
-    // View Holder
+    /**
+     * View Holder class for Recycler View
+     *
+     * setListingResultDetails() will require an object of the listingObject class and thus, set
+     * the respective view objects such as TextView and ImageView with their relevant information
+     * from the listingObject.
+     */
     public class SearchResultsViewHolder extends RecyclerView.ViewHolder {
         View searchView;
 
@@ -92,6 +99,7 @@ public class SearchActivity extends AppCompatActivity {
                     getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").
                     getReference().child("users");
 
+            // Get and set the username of the listing seller as well as the seller's profile image
             dbReferenceUser.child(model.getSID()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -112,8 +120,20 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Get query, searchText, and uses it to build a FirebaseRecyclerOption object, which is then
+     * passed to a FirebaseRecyclerAdapter, as it tells the Adapter what query to perform, and
+     * how to parse and format the information retrieved from the database and create a valid
+     * result object, which in this case is an object of the listingObject class.
+     *
+     * Lastly, set the RecyclerView with the configured FirebaseRecyclerAdapter.
+     * @param searchText
+     */
     private void firebaseListingSearch(String searchText) {
-
+        // A query that filters listings according to the title searched
+        // The \uf8ff character is high in the Unicode range and it is located after most regular
+        // characters in Unicode which allows query to match all values from starting to ending
+        // Source: https://firebase.google.com/docs/database/rest/retrieve-data
         Query query = databaseReference.orderByChild("title").startAt(searchText).endAt(searchText
                 + "\uf8ff");
 
@@ -123,7 +143,7 @@ public class SearchActivity extends AppCompatActivity {
                             @NonNull
                             @Override
                             public listingObject parseSnapshot(@NonNull DataSnapshot snapshot) {
-
+                                // What to retrieve and then how to parse it to an object
                                 String listingid = snapshot.getKey();
                                 String titles = snapshot.child("title").getValue(String.class);
                                 String thumbnailurl = snapshot.child("tURL").getValue(String.class);
@@ -155,6 +175,19 @@ public class SearchActivity extends AppCompatActivity {
                         return new SearchResultsViewHolder(view);
                     }
 
+                    /**
+                     * An event handler (onClickListener) is set to each individual listing card
+                     * allowing users to interact and tap on the cards to view more details on the
+                     * listing.
+                     *
+                     * A bundle with the listing ID is passed to an intent which is then used to
+                     * start the individual_listing activity, in order for the activity to know
+                     * which listing to retrieve from Firebase and display, according to its ID.
+                     *
+                     * @param holder
+                     * @param position
+                     * @param model
+                     */
                     @Override
                     protected void onBindViewHolder(@NonNull SearchResultsViewHolder holder,
                                                     int position, @NonNull listingObject model) {
@@ -171,6 +204,14 @@ public class SearchActivity extends AppCompatActivity {
         searchResultsView.setAdapter(firebaseRecyclerAdapter);
     }
 
+    /**
+     * FirebaseRecyclerAdapter uses event listener to monitor changes to the Firebase query, and
+     * startListening() tells the adapter to read at the onStart() part of Android's activity
+     * lifecycle, which happens after onCreate() to ensure that the RecyclerView and Adapter is
+     * initialised before listening.
+     *
+     * Source: https://firebaseopensource.com/projects/firebase/firebaseui-android/database/readme/
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -181,9 +222,11 @@ public class SearchActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         /**
-         * MUST: Otherwise there will be inconsistency error.
+         * NOTE: MUST notifyDataSetChanged() when the user navigates out of the activity, such as
+         * tapping on a listing card to view more details of a listing and returning back to the
+         * SearchActivity. Otherwise there will be inconsistency error.
          *
-         * This occurs when the fragment/activity is closed and all data on the recycler view
+         * This occurs when the fragment/activity is stopped and all data on the recycler view
          * have been reset, which will raise an inconsistency error.
          */
         firebaseRecyclerAdapter.notifyDataSetChanged();

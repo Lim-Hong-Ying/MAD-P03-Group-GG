@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                     this.startActivity(newList);
                     break;
                 case R.id.user:
+                    // Replace the fragment with User Profile Fragment
                     replaceFragment(new User_Profile_Fragment());
                     break;
             }
@@ -49,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Find the frame layout for replacing fragments
         fragmentTransaction.replace(R.id.frame_layout, fragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit(); // Apply changes
     }
 }
