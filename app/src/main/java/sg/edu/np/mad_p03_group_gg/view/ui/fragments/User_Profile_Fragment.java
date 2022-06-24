@@ -211,7 +211,10 @@ public class User_Profile_Fragment extends Fragment {
                 try {
                     //sign out from user
 
+
                     auth.signOut();
+                    //Inform user activity finished
+                    Toast.makeText(getContext(),"Sign-Out sucessful!",Toast.LENGTH_SHORT).show();
                     //Got to login page activity
 
                     startActivity(intent);
