@@ -84,9 +84,12 @@ public class loginpage extends AppCompatActivity {
             public void onClick(View view) {
                 Intent signup = new Intent(loginpage.this,
                         signupactivity.class);
+                //Clear activity stack on top (prevent duplication of activities)
+                signup.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(signup);//Starts sign up activity
                 //Pause current activity, enable user to retun to loginactivity if needed
-                loginpage.this.onPause();
+
+
             }
         });
 

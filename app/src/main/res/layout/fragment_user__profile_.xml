@@ -105,7 +105,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:text="event"
+                                android:text="Event(s) today"
                                 android:textSize="20sp">
 
                             </TextView>
@@ -142,7 +142,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <EditText
+                        <TextView
                             android:id="@+id/user_profile_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
 
                             android:src="@android:drawable/ic_menu_call" />
 
-                        <EditText
+                        <TextView
                             android:id="@+id/User_Profile_phonenumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -177,6 +177,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="20dp"
                             android:paddingTop="50dp"
+                            android:textStyle="bold"
 
                             android:textSize="17sp" />
 
