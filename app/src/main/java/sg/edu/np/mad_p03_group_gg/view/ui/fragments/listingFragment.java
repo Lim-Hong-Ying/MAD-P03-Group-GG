@@ -91,16 +91,16 @@ public class listingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    viewChanger(view, data); //Does check for view mode
                     retrieveFromFirebase(view, data); //Starts main downloading task
+                    viewChanger(view, data); //Does check for view mode
                 } else {
-                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -168,7 +168,7 @@ public class listingFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
     }
