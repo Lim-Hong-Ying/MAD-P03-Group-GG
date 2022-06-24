@@ -91,8 +91,7 @@ public class listingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    retrieveFromFirebase(view, data); //Starts main downloading task
-                    viewChanger(view, data); //Does check for view mode
+
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
@@ -103,6 +102,10 @@ public class listingFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
+
+        retrieveFromFirebase(view, data); //Starts main downloading task
+        viewChanger(view, data); //Does check for view mode
+
         return view;
     }
 
