@@ -130,6 +130,9 @@ public class HomepageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
+        /**
+         * Ad Banner Component
+         */
         // Download images from /advertisement which are stored as temp files
         File dir = new File(getContext().getCacheDir(),"advertisement");
         ArrayList<String> filePaths = new ArrayList<>();
@@ -163,6 +166,9 @@ public class HomepageFragment extends Fragment {
 
         viewPager2.setAdapter(viewPagerAdapter);
 
+        /**
+         * Event Handling
+         */
         // Set onClickListeners for Buttons
         CardView listingsCardView = view.findViewById(R.id.listingsButton);
         CardView meetingPlannerCardView = view.findViewById(R.id.meetingPlannerButton);
@@ -196,7 +202,7 @@ public class HomepageFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Intent searchActivity = new Intent(getContext(), SearchActivity.class);
-
+                // To pass the user's search query to the SearchActivity
                 searchActivity.putExtra("query", s);
                 startActivity(searchActivity);
 
@@ -262,6 +268,7 @@ public class HomepageFragment extends Fragment {
     }
 
     /**
+     * [Same concept as SearchActivity]
      * Utilize the FirebaseRecyclerAdapter (from com.firebaseui:firebase-ui-database:8.0.1)
      * to populate a RecyclerView of listing objects
      *
@@ -309,7 +316,19 @@ public class HomepageFragment extends Fragment {
 
                         return new newListingViewholder(view);
                     }
-
+                    /**
+                     * An event handler (onClickListener) is set to each individual listing card
+                     * allowing users to interact and tap on the cards to view more details on the
+                     * listing.
+                     *
+                     * A bundle with the listing ID is passed to an intent which is then used to
+                     * start the individual_listing activity, in order for the activity to know
+                     * which listing to retrieve from Firebase and display, according to its ID.
+                     *
+                     * @param holder
+                     * @param position
+                     * @param model
+                     */
                     @Override
                     protected void onBindViewHolder(@NonNull newListingViewholder holder,
                                                     int position, @NonNull listingObject model) {
@@ -327,6 +346,11 @@ public class HomepageFragment extends Fragment {
         newListingsRecycler.setAdapter(firebaseRecyclerAdapter);
     }
 
+    /**
+     * [Same concept as SearchActivity]
+     *
+     * View Holder for FirebaseRecyclerAdapter
+     */
     public class newListingViewholder extends RecyclerView.ViewHolder {
         View searchView;
 
@@ -371,6 +395,14 @@ public class HomepageFragment extends Fragment {
         }
     }
 
+    /**
+     * FirebaseRecyclerAdapter uses event listener to monitor changes to the Firebase query, and
+     * startListening() tells the adapter to read at the onStart() part of Android's activity
+     * lifecycle, which happens after onCreate() to ensure that the RecyclerView and Adapter is
+     * initialised before listening.
+     *
+     * Source: https://firebaseopensource.com/projects/firebase/firebaseui-android/database/readme/
+     */
     @Override
     public void onStart() {
         super.onStart();

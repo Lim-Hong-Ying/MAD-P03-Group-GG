@@ -33,22 +33,16 @@ import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.listingObject;
 
 /**
- * Various methods to help retrive data from Firebase and improve re-usability
- *
- * TO-DO:
- * 1) Get user data
- * 2) Get chat data
- * 3) Get listings data
- *
+ * This is a utility class and it contains various methods to help retrive data from Firebase and
+ * improve re-usability.
  */
-
 public  class FirebaseTools {
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private static DatabaseReference databaseReference = database.getReference();
 
+    // Retrieve UserID from Authenticated User Session
     public static @Nullable String getCurrentAuthenticatedUser() {
-        // Retrive user data using the current authenticated session
         String userID;
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

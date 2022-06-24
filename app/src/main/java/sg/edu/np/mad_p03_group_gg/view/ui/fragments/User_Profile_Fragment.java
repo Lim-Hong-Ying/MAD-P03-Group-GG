@@ -75,7 +75,7 @@ import sg.edu.np.mad_p03_group_gg.loginpage;
 public class User_Profile_Fragment extends Fragment {
     private int YourRequestCode = 1;
     DatabaseReference reference;
-
+    // Set variables
 
     FirebaseAuth auth;
     private Uri ImageUri;
@@ -86,7 +86,7 @@ public class User_Profile_Fragment extends Fragment {
     private FirebaseStorage base = FirebaseStorage.getInstance();
     private String Filepath;
     private String profilePicurl = null;
-    //StorageReference storageRef = storage.getReference();
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -203,13 +203,28 @@ public class User_Profile_Fragment extends Fragment {
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Clear events
                 Event.eventsList.clear();
+                //Create intent
                 Intent intent = new Intent(getActivity(), loginpage.class);
-                startActivity(intent);
-                //Sign out authenticated user
-                auth.signOut();
-                //Finish activity
-                getActivity().finish();
+                //If sign out have problem, create toast message informing user of problem
+                try {
+                    //sign out from user
+
+
+                    auth.signOut();
+                    //Inform user activity finished
+                    Toast.makeText(getContext(),"Sign-Out sucessful!",Toast.LENGTH_SHORT).show();
+                    //Got to login page activity
+
+                    startActivity(intent);
+                    //Finish activity
+                    getActivity().finish();
+                }
+                catch(Exception e){
+                    //Error message
+                    Toast.makeText(getContext(),"Something went wrong. Please check your internet connection",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -240,8 +255,7 @@ public class User_Profile_Fragment extends Fragment {
                 if (ContextCompat.checkSelfPermission(getActivity(),//Checks for permision to access external storage, if dont have, external storage is request again
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
-
-
+                    // request permission
                     ActivityCompat.requestPermissions(getActivity(),
                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                             YourRequestCode);

@@ -9,12 +9,7 @@
     android:background="@drawable/img2"
 
     >
-<!--    <ImageView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:src="@drawable/img"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        ></ImageView>-->
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -105,7 +100,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:text="event"
+                                android:text="Event(s) today"
                                 android:textSize="20sp">
 
                             </TextView>
@@ -177,6 +172,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="20dp"
                             android:paddingTop="50dp"
+                            android:textStyle="bold"
 
                             android:textSize="17sp" />
 
@@ -204,118 +200,6 @@
     </ScrollView>
 
 
-    <!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-
-<!--        >-->
-
-
-<!--        -->
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/relativeLayout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            >-->
-
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:id="@+id/shadowContainer"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:cardBackgroundColor="#FFFFFF"-->
-<!--                app:cardCornerRadius="16dp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.0"-->
-<!--                app:layout_constraintStart_toStartOf="parent">-->
-
-<!--                <RelativeLayout-->
-<!--                    android:layout_width="624dp"-->
-<!--                    android:layout_height="610dp">-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/textView9"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginStart="20dp"-->
-<!--                        android:layout_marginTop="40dp"-->
-<!--                        android:text="Email"-->
-<!--                        android:textSize="20sp"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintHorizontal_bias="0.036"-->
-<!--                        app:layout_constraintStart_toEndOf="@+id/imageView2"-->
-<!--                        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                    <EditText-->
-<!--                        android:id="@+id/User_Profile_phonenumber"-->
-<!--                        android:layout_width="167dp"-->
-<!--                        android:layout_height="4dp"-->
-<!--                        android:layout_marginStart="116dp"-->
-<!--                        android:layout_marginTop="20dp"-->
-<!--                        android:textSize="17sp"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/textView10" />-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/imageView2"-->
-<!--                        android:layout_width="71dp"-->
-<!--                        android:layout_height="43dp"-->
-<!--                        android:layout_marginStart="20dp"-->
-<!--                        android:layout_marginTop="40dp"-->
-<!--                        android:src="@android:drawable/ic_dialog_email"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/textView10"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginStart="36dp"-->
-<!--                        android:layout_marginTop="44dp"-->
-<!--                        android:text="Phone number"-->
-<!--                        android:textSize="20sp"-->
-<!--                        app:layout_constraintStart_toEndOf="@+id/imageView3"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/user_profile_email" />-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/imageView3"-->
-<!--                        android:layout_width="62dp"-->
-<!--                        android:layout_height="57dp"-->
-<!--                        android:layout_marginStart="20dp"-->
-<!--                        android:layout_marginTop="112dp"-->
-<!--                        android:src="@android:drawable/ic_menu_call"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/imageView2" />-->
-
-<!--                    <Button-->
-<!--                        android:id="@+id/log_out"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="wrap_content"-->
-
-<!--                        android:layout_marginStart="61dp"-->
-<!--                        android:layout_marginEnd="61dp"-->
-<!--                        android:background="@drawable/sign_in_button"-->
-<!--                        android:text="Log out"></Button>-->
-
-<!--                    <EditText-->
-<!--                        android:id="@+id/user_profile_email"-->
-<!--                        android:layout_width="253dp"-->
-<!--                        android:layout_height="66dp"-->
-<!--                        android:layout_marginStart="116dp"-->
-<!--                        android:layout_marginTop="28dp"-->
-<!--                        android:textSize="17sp"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/textView9" />-->
-
-<!--                </RelativeLayout>-->
-
-<!--            </androidx.cardview.widget.CardView>-->
-<!--        </RelativeLayout>-->
-
-
-
-<!--    </RelativeLayout>-->
 
 
 

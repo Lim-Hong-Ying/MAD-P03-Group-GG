@@ -42,21 +42,18 @@ public class signupactivity extends AppCompatActivity {
         EditText Password = findViewById(R.id.enterpassword);
         EditText Email = findViewById(R.id.emailaddr);
         EditText PhoneNumber = findViewById(R.id.phone_number);
+        //Get string
         String email = Email.getText().toString().trim();
         String password = Password.getText().toString().trim();
         String ph = PhoneNumber.getText().toString().trim();
         String userName = name.getText().toString().trim();
         String img ="";
-        //setonclick listener for tologin button
 
         Button signup = findViewById(R.id.button);
         auth=FirebaseAuth.getInstance();
-        //Check if users has registered
-
 
         User u = new User(userName,email,ph,img);
-
-
+        //Set onclick listner for signup button
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,9 +62,9 @@ public class signupactivity extends AppCompatActivity {
                     Log.e("Status",Boolean.toString(checkDataEntered(v)));
                     u = Register(v);
                     if(u!=null) {
+                        // check if user does not exist
                         String key = database.getReference("quiz").push().getKey();
-
-                        //do something if not exists
+                        //if user does nto exist
                     }
 
                 }
@@ -75,12 +72,15 @@ public class signupactivity extends AppCompatActivity {
             }
         });
 
-
+        //Set onclick listner to login button
         tologin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent Login = new Intent(signupactivity.this, loginpage.class);
-                startActivity(Login);//Starts sign up activity
+                //Clear activties on top of stack, prevent duplicate activites
+                Login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(Login);//Starts log in activity
+
             }
         });
 
