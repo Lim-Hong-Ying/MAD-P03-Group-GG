@@ -64,8 +64,6 @@ public class signupactivity extends AppCompatActivity {
                     if(u!=null) {
                         // check if user does not exist
                         String key = database.getReference("quiz").push().getKey();
-
-
                         //if user does nto exist
                     }
 
@@ -79,9 +77,10 @@ public class signupactivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent Login = new Intent(signupactivity.this, loginpage.class);
+                //Clear activties on top of stack, prevent duplicate activites
+                Login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(Login);//Starts log in activity
-                //Enable user to return to sigupactivity when needed
-                signupactivity.this.finish();
+
             }
         });
 
