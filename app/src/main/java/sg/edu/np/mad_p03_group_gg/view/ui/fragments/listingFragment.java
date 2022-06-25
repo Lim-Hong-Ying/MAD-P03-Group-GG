@@ -114,7 +114,6 @@ public class listingFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
-        Log.e("mode", mode);
 
         if (mode == "") {
             SharedPreferences.Editor editor = sharedPreferences.edit();
