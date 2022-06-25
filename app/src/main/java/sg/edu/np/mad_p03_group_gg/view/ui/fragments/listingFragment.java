@@ -93,20 +93,33 @@ public class listingFragment extends Fragment {
                 if (connected) {
 
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
 
+        initialCheckSharedPreferences();
         retrieveFromFirebase(view, data); //Starts main downloading task
         viewChanger(view, data); //Does check for view mode
 
         return view;
+    }
+
+    private void initialCheckSharedPreferences() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+
+        String mode = sharedPreferences.getString("view", "");
+
+        if (mode == "") {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("view", "card");
+            editor.commit();
+        }
     }
 
     private void viewChanger(View view, ArrayList<listingObject> data) { //Changes view for listing
@@ -171,7 +184,7 @@ public class listingFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
     }
