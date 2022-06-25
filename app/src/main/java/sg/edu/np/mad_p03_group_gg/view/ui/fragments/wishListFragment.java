@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -89,10 +90,41 @@ public class wishListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
         ArrayList<listingObject> data = new ArrayList<>();
 
-        viewChanger(view, data); //Does check for view mode
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
 
+                } else {
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        initialCheckSharedPreferences();
         retrieveFromFirebase(view, data); //Starts main downloading task
+        viewChanger(view, data); //Does check for view mode
         return view;
+    }
+
+    private void initialCheckSharedPreferences() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+
+        String mode = sharedPreferences.getString("view", "");
+        Log.e("mode", mode);
+
+        if (mode == "") {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("view", "card");
+            editor.commit();
+        }
     }
 
     private void viewChanger(View view, ArrayList<listingObject> data) { //Changes view for listing
