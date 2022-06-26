@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -84,10 +85,41 @@ public class listingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listing, container, false);
         ArrayList<listingObject> data = new ArrayList<>();
 
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+
+                } else {
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        initialCheckSharedPreferences();
+        retrieveFromFirebase(view, data); //Starts main downloading task
         viewChanger(view, data); //Does check for view mode
 
-        retrieveFromFirebase(view, data); //Starts main downloading task
         return view;
+    }
+
+    private void initialCheckSharedPreferences() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+
+        String mode = sharedPreferences.getString("view", "");
+
+        if (mode == "") {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("view", "card");
+            editor.commit();
+        }
     }
 
     private void viewChanger(View view, ArrayList<listingObject> data) { //Changes view for listing
@@ -152,7 +184,7 @@ public class listingFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
     }
