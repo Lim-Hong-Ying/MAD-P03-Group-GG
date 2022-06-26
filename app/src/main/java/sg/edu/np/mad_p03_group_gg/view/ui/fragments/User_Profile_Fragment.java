@@ -388,7 +388,7 @@ public class User_Profile_Fragment extends Fragment {
             }
 
 
-            // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+
         });
     }
      //Get the number of events
@@ -396,7 +396,7 @@ public class User_Profile_Fragment extends Fragment {
 
 
 
-
+        // Get events list
         Event[] evenet =Event.eventsList.toArray(new Event[0]);//Get list of events
         int numofevent =0;
         //For every event in list
