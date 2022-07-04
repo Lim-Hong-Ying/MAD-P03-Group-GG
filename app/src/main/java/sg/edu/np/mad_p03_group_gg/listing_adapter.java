@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +59,8 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
     @Override
     public void onBindViewHolder(@NonNull listing_viewholder holder, int position) {
         listingObject listing = data.get(position);
-        new ImageDownloader(holder.listing_image).execute(listing.gettURL());
+        Picasso.get().load(listing.gettURL()).into(holder.listing_image); //External library to download images
+        //new ImageDownloader(holder.listing_image).execute(listing.gettURL());
 
         holder.listing_title.setText(listing.getTitle());
         holder.price.setText("$" + listing.getPrice());
@@ -77,7 +79,8 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
 
                 holder.seller_username.setText(sid);
                 if (!SPPU.isEmpty()) {
-                    new ImageDownloader(holder.seller_image).execute(SPPU);
+                    Picasso.get().load(SPPU).into(holder.seller_image); //External library to download images
+                    //new ImageDownloader(holder.seller_image).execute(SPPU);
                 }
             }
         });

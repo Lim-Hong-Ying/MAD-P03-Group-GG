@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -219,7 +220,8 @@ public class individual_listing extends AppCompatActivity {
                     deliverypriceholder = findViewById(R.id.individual_deliveryprice);
                     deliverytimeholder = findViewById(R.id.individual_deliverytime);
 
-                    new ImageDownloader(holder).execute(listing.gettURL());
+                    Picasso.get().load(listing.gettURL()).into(holder); //External library to download images
+                    //new ImageDownloader(holder).execute(listing.gettURL());
                     titleholder.setText(listing.getTitle());
                     priceholder.setText("$" + listing.getPrice());
                     itemconditionholder.setText("Condition: " + listing.getiC());
@@ -282,7 +284,8 @@ public class individual_listing extends AppCompatActivity {
 
                             name_holder.setText(sellername);
                             if (!SPPU.isEmpty()) {
-                                new ImageDownloader(sellerpfp).execute(SPPU);
+                                Picasso.get().load(SPPU).into(sellerpfp); //External library to download images
+                                //new ImageDownloader(sellerpfp).execute(SPPU);
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
