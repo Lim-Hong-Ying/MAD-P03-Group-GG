@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".userProfile"
+            android:exported="false" />
+        <activity
             android:name=".successListPage"
             android:exported="false" />
         <activity

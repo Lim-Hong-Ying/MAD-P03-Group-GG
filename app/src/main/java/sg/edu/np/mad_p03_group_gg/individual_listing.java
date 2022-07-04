@@ -268,6 +268,18 @@ public class individual_listing extends AppCompatActivity {
                             ImageView sellerpfp = findViewById(R.id.seller_pfp);
                             TextView name_holder = findViewById(R.id.seller_name);
 
+                            name_holder.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Bundle seller_id = new Bundle();
+                                    seller_id.putString("uid", sellerid);
+
+                                    Intent profilepage = new Intent(view.getContext(), userProfile.class);
+                                    profilepage.putExtras(seller_id);
+                                    view.getContext().startActivity(profilepage);
+                                }
+                            });
+
                             name_holder.setText(sellername);
                             if (!SPPU.isEmpty()) {
                                 new ImageDownloader(sellerpfp).execute(SPPU);
