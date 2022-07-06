@@ -1,5 +1,6 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,17 +9,21 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,8 +41,10 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.Random;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 
 public class individual_listing extends AppCompatActivity {
 
@@ -68,6 +75,14 @@ public class individual_listing extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        ImageView contextMenu = findViewById(R.id.context_menu);
+        contextMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopup(view, pID);
             }
         });
 
@@ -169,6 +184,59 @@ public class individual_listing extends AppCompatActivity {
         // ############# END WILLIAM SECTION ###############
     }
 
+    public void showPopup(View v, String lID) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.individual_listing_seller, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.delete:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(individual_listing.this);
+
+                        builder.setTitle("Confirm");
+                        builder.setMessage("Are you sure you want to delete this listing?");
+                        builder.setCancelable(true);
+                        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                deleteListing(lID);
+                                finish();
+                                Toast.makeText(getApplicationContext(), "Deleted listing!", Toast.LENGTH_SHORT).show();
+                                Intent returnHome = new Intent(individual_listing.this, MainActivity.class);
+                                returnHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(returnHome);
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        return true;
+
+                    case R.id.edit:
+                        Bundle listingID = new Bundle();
+                        listingID.putString("lID", lID);
+
+                        Intent editListing = new Intent(individual_listing.this, editListing.class);
+                        editListing.putExtras(listingID);
+                        startActivity(editListing);
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+        popup.show();
+    }
+
     private void createObjectFromFB(String pid, String currentuID) {
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
@@ -257,6 +325,11 @@ public class individual_listing extends AppCompatActivity {
 
                         likebutton.setVisibility(View.GONE);
                         chatbutton.setVisibility(View.GONE);
+                    }
+
+                    else {
+                        ImageView contextMenu = findViewById(R.id.context_menu);
+                        contextMenu.setVisibility(View.GONE);
                     }
 
                     //Retrieves seller's username and downloads image if available
@@ -355,30 +428,9 @@ public class individual_listing extends AppCompatActivity {
         liked.child(pID).removeValue();
     }
 
-    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> { //Method to download images
-        ImageView bitmap;
-
-        public ImageDownloader(ImageView bitmap) {
-            this.bitmap = bitmap;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) { //Downloads image
-            String url = strings[0];
-            Bitmap image = null;
-            try {
-                InputStream input = new java.net.URL(url).openStream();
-                image = BitmapFactory.decodeStream(input);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return image;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bitmap.setImageBitmap(result);
-        } //Sets image for bitmap holder
+    private void deleteListing(String lID) {
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
+        individualdb.getReference().child("individual-listing").child(lID).removeValue();
     }
 }

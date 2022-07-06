@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,37 +67,10 @@ public class userProfile extends AppCompatActivity {
                     usernameHolder.setText(username);
 
                     if (!profilePictureURL.isEmpty()) {
-                        new ImageDownloader(profilepictureHolder).execute(profilePictureURL);
+                        Picasso.get().load(profilePictureURL).into(profilepictureHolder); //External library to download images
                     }
                 }
             }
         });
-    }
-
-    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> { //Method to download images
-        ImageView bitmap;
-
-        public ImageDownloader(ImageView bitmap) {
-            this.bitmap = bitmap;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) { //Downloads image
-            String url = strings[0];
-            Bitmap image = null;
-            try {
-                InputStream input = new java.net.URL(url).openStream();
-                image = BitmapFactory.decodeStream(input);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return image;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bitmap.setImageBitmap(result);
-        } //Sets image for bitmap holder
     }
 }
