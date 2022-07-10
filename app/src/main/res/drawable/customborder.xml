@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-
-    <solid android:color="@color/white"/>
-    <stroke
-        android:width="1dp"
-        android:color="@color/light_grey" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--Minus (-) how much dp you gave in the stroke width from left right-->
+<item android:top="-10dp" android:left="-10dp" android:right="-10dp">
+    <shape
+        android:shape="rectangle">
+        <solid android:color="@color/white"/>
+        <stroke
+            android:width="1dp"
+            android:color="@color/light_grey" />
+    </shape>
+</item>
+</layer-list>

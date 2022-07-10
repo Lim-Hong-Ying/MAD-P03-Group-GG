@@ -162,6 +162,14 @@ public class individual_listing extends AppCompatActivity {
                 // Send main user data to chat activity
                 intent.putExtra("mainUser", (Parcelable) mainUser);
 
+                // Add seller to friend list
+                databaseReference.child("selectedChatUsers").child(mainUser.getId())
+                        .child(sID).setValue("");
+                // Add current user to friend list of seller
+                databaseReference.child("selectedChatUsers").child(sID)
+                        .child(mainUser.getId()).setValue("");
+
+                // Start chat activity
                 individual_listing.this.startActivity(intent);
             }
         });

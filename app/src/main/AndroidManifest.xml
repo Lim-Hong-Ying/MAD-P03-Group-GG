@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".ChatAddUser"
+            android:exported="false" />
+        <activity
             android:name=".successListPage"
             android:exported="false" />
         <activity
@@ -71,5 +74,4 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-
 </manifest>

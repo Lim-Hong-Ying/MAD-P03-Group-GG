@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,9 +23,12 @@ import com.squareup.picasso.Picasso;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.R;
@@ -44,6 +48,9 @@ public class Chat extends AppCompatActivity {
     private User mainUser;
     private boolean loadFirstTime = true;
     String mainUserid = "";
+    String getid;
+    Boolean inchat;
+    Boolean hasMessages = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,25 +74,83 @@ public class Chat extends AppCompatActivity {
         EditText messageToSend = findViewById(R.id.messageToSend);
         CircleImageView profilePic = findViewById(R.id.profilePic);
         ImageView sendBtn = findViewById(R.id.sendButton);
+        TextView statusView = findViewById(R.id.status);
 
         // Getting data from messages adapter class
         String getName = getIntent().getStringExtra("name");
         String getProfilePic = getIntent().getStringExtra("profilePic");
         chatKey = getIntent().getStringExtra("chatKey");
-        String getid = getIntent().getStringExtra("id");
+        getid = getIntent().getStringExtra("id");
 
         // Set main user ID
         mainUserid = mainUser.getId();
 
         // Set Name
         name.setText(getName);
+        // Set profile pic
         if(!TextUtils.isEmpty(getProfilePic)){
             Picasso.get().load(getProfilePic).into(profilePic);
+        }
+
+        // On first entering chat, set all messages to seen
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Set all seen to true
+                if (!TextUtils.isEmpty(chatKey)){
+                    for (DataSnapshot message : snapshot.child("chat").child(chatKey).child("messages").getChildren()){
+                        if (message.hasChild("seen") && TextUtils.equals( message.child("seen").getValue(String.class),"False") && message.getKey() != null){
+                            // Get only those messages sent by the other user
+                            if (!TextUtils.equals(message.child("id").getValue(String.class), mainUser.getId())){
+                                databaseReference.child("chat").child(chatKey).child("messages").child(message.getKey()).child("seen").setValue("True");
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        // Set user inchat status to true if chatkey exists
+        if (!TextUtils.isEmpty(chatKey)){
+            databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("True");
         }
 
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // Get inChat value
+                    inchat = Boolean.parseBoolean(snapshot.child("chat").child(chatKey).child(getid).child("inChat").getValue(String.class));
+
+                    // Setting other user's status to top bar
+                    if (snapshot.child("users").child(getid).hasChild("userState")){
+                        // Get user status
+                        String userStatus = snapshot.child("users").child(getid).child("userState").child("type").getValue(String.class);
+                        String lastSeenDate;
+                        String lastSeenTime;
+                        String lastSeen;
+                        // If user status is offline, get last seen date & time as well
+                        if (TextUtils.equals(userStatus,"offline")){
+                            lastSeenDate = snapshot.child("users").child(getid).child("userState").child("date").getValue(String.class);
+                            lastSeenTime = snapshot.child("users").child(getid).child("userState").child("time").getValue(String.class);
+                            lastSeen = "last seen " + lastSeenDate + " at " + lastSeenTime;
+                            // Set colour to grey
+                            statusView.setTextColor(Color.parseColor("#676767"));
+                            statusView.setText(lastSeen);
+                        }
+                        else{
+                            // If not offline, set other user's status to online
+                            // Set Colour to green
+                            statusView.setTextColor(Color.parseColor("#0AB605"));
+                            statusView.setText("online");
+                        }
+                    }
+
                     // Setting chat key
                     if(chatKey.isEmpty()) {
                         // ChatKey increment by 1 for each chat. Default chat key is 1 (for first 2 users)
@@ -147,24 +212,43 @@ public class Chat extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!TextUtils.isEmpty(chatKey)){
+                    String getTextMessage = messageToSend.getText().toString();
 
-                String getTextMessage = messageToSend.getText().toString();
+                    // Prevent sending empty message
+                    if (getTextMessage.isEmpty()){
+                        return;
+                    }
 
-                // Prevent sending empty message
-                if (getTextMessage.isEmpty()){
-                    return;
+                    // Get current time (add 28800000 milliseconds to convert to SGT, if emulator timezone is UTC)
+                    String currentTime = String.valueOf(System.currentTimeMillis());
+
+                    // Set users
+                    databaseReference.child("chat").child(chatKey).child("user1").setValue(mainUserid);
+                    databaseReference.child("chat").child(chatKey).child("user2").setValue(getid);
+                    databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(getTextMessage);
+                    databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(mainUserid);
+
+                    // If user inchat status is true, set message seen value to True
+                    if (inchat){
+                        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("True");
+                    }
+                    // If other user is not in current chat, set value to false
+                    else{
+                        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("False");
+                    }
+
+                    // Remove text EditText after message is sent
+                    messageToSend.setText("");
+
+                    // If current user (you) are not already in other user's friend list, add to his friend list
+                    databaseReference.child("selectedChatUsers").child(getid).child(mainUser.getId()).setValue("");
+
+                    // Set in chat status to true if message is sent
+                    databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("True");
+
                 }
 
-                // Get current time (add 28800000 milliseconds to convert to SGT, if emulator timezone is UTC)
-                String currentTime = String.valueOf(System.currentTimeMillis());
-
-                databaseReference.child("chat").child(chatKey).child("user1").setValue(mainUserid);
-                databaseReference.child("chat").child(chatKey).child("user2").setValue(getid);
-                databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(getTextMessage);
-                databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(mainUserid);
-
-                // Remove text EditText after message is sent
-                messageToSend.setText("");
             }
         });
 
@@ -175,5 +259,69 @@ public class Chat extends AppCompatActivity {
                 finish();
             }
         });
+
+        // If chatkey has child messages, return true. (To prevent database set in onPause from setting to a unused key)
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child("chat").child(chatKey).hasChild("messages")){
+                    hasMessages = true;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    // Update user online/offline status
+    public void updateUserStatus (String state){
+        String saveCurrentDate;
+        String saveCurrentTime;
+
+        // Get current date
+        Calendar date = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(date.getTime());
+
+        // Get current Time
+        Calendar time = Calendar.getInstance();
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(time.getTime());
+
+        // Create hashmap for storing status data
+        Map currentStateMap = new HashMap();
+        currentStateMap.put("time", saveCurrentTime);
+        currentStateMap.put("date", saveCurrentDate);
+        currentStateMap.put("type", state);
+
+        // Update DB with status
+        databaseReference.child("users").child(mainUser.getId()).child("userState").updateChildren(currentStateMap);
+    }
+
+    // On start of main activity, set user status to Online
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Set user status to online
+        updateUserStatus("online");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUserStatus("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        updateUserStatus("offline");
+        // Set user inchat status to False is got chatKey
+        if (!TextUtils.isEmpty(chatKey) && hasMessages){
+            databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("False");
+        }
     }
 }
