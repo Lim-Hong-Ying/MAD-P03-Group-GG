@@ -3,6 +3,7 @@ package sg.edu.np.mad_p03_group_gg;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Locale;
 
 import sg.edu.np.mad_p03_group_gg.view.ui.fragments.HomepageFragment;
@@ -165,6 +168,13 @@ public class EventEditActivity extends AppCompatActivity
             selectedEvent.setTime(time);
             addDataToFireBase(userId, selectedEvent.getID(), eventName, location, time, CalendarUtils.selectedDate.toString());
         }
+
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setData(CalendarContract.Events.CONTENT_URI);
+        intent.putExtra(CalendarContract.Events.TITLE, eventName);
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);
+        startActivity(intent);
+
         finish();
     }
 
