@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".EventDetails"
+            android:exported="false" />
+        <activity
             android:name=".EventsPage"
             android:exported="false" />
         <activity

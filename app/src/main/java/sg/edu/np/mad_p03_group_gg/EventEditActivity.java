@@ -168,12 +168,15 @@ public class EventEditActivity extends AppCompatActivity
             selectedEvent.setTime(time);
             addDataToFireBase(userId, selectedEvent.getID(), eventName, location, time, CalendarUtils.selectedDate.toString());
         }
-
+        /*
+        // Intent to Google Calendar
         Intent intent = new Intent(Intent.ACTION_INSERT);
         intent.setData(CalendarContract.Events.CONTENT_URI);
         intent.putExtra(CalendarContract.Events.TITLE, eventName);
         intent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);
         startActivity(intent);
+
+         */
 
         finish();
     }
