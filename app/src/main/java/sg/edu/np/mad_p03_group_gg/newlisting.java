@@ -344,10 +344,6 @@ public class newlisting extends AppCompatActivity {
 
         if (image_selected == true && title_filled == true && price_filled == true && itemcondition_selected == true && desc_filled == true && meetup_filled == true && deliverytype_filled == true && deliveryprice_filled == true && deliverytime_filled == true) {
             writeToDatabaseAndFirebase();
-
-            Intent returnhome = new Intent(view.getContext(), successListPage.class);
-            finish();
-            view.getContext().startActivity(returnhome);
         }
 
         else {
@@ -356,16 +352,22 @@ public class newlisting extends AppCompatActivity {
     }
 
     private void writeToDatabaseAndFirebase() {
-        String dblink = "gs://cashoppe-179d4.appspot.com";
-        StorageReference db = FirebaseStorage.getInstance(dblink).getReference().child("listing-images");
+        String storagelink = "gs://cashoppe-179d4.appspot.com";
+        StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images");
+
+        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
             final String sID = String.valueOf(user.getUid());
 
+            DatabaseReference pushTask = db.push(); //Creates a push task to get a unique post ID
+            String pID = String.valueOf(pushTask.getKey()); //Retrieves unique key
+
             long currenttime = new Date().getTime();
-            final StorageReference newfilename = db.child(sID + currenttime); //add userid for further uniqueness
+            final StorageReference newfilename = storage.child(pID + "/" + sID);
             ImageView selectimage = findViewById(R.id.choose_image);
 
             selectimage.setDrawingCacheEnabled(true);
@@ -391,7 +393,7 @@ public class newlisting extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String imageUrl = uri.toString();
-                                    createListingObject(imageUrl, sID);
+                                    createListingObject(imageUrl, sID, pID);
                                 }
                             });
                         }
@@ -406,7 +408,7 @@ public class newlisting extends AppCompatActivity {
         }
     }
 
-    private void createListingObject(String url, String sID) {
+    private void createListingObject(String url, String sID, String pID) {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -454,18 +456,24 @@ public class newlisting extends AppCompatActivity {
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
         individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, false, deltype, delprice, deltime);
-        writeToFirebase(listing);
+        writeToFirebase(listing, pID, sID);
     }
 
-    private String writeToFirebase(individualListingObject listing) {
+    private void writeToFirebase(individualListingObject listing, String pID, String uID) {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
+        DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("users").child(uID).child("listings");
 
         //individualListingObject listing = new individualListingObject("1", "FB test title 1", url, "test seller id 1", url, "New", 10, false, "test description", "ngee ann poly", false, "null", 0, 0);
-        DatabaseReference pushTask = db.push();
-        Task<Void> setValue = pushTask.setValue(listing);
-        String pID = String.valueOf(pushTask.getKey());
-        return pID;
+        //DatabaseReference pushTask = db.push();
+        //Task<Void> setValue = pushTask.setValue(listing);
+        //String pID = String.valueOf(pushTask.getKey());
+        db.child(pID).setValue(listing);
+        db2.child(pID).setValue("");
+
+        Intent returnhome = new Intent(newlisting.this, successListPage.class);
+        finish();
+        newlisting.this.startActivity(returnhome);
     }
 
     private void chooseImage() {
