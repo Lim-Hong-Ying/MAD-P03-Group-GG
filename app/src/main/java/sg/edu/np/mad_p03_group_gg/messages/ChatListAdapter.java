@@ -2,8 +2,12 @@ package sg.edu.np.mad_p03_group_gg.messages;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Message;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -27,7 +31,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,15 +45,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.User;
+import sg.edu.np.mad_p03_group_gg.listing_adapter;
 import sg.edu.np.mad_p03_group_gg.others.RecyclerViewInterface;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder> {
 
-    private List<MessageList> messageList;
+    public List<MessageList> messageList;
     private Context context;
     private User mainUser;
     private DatabaseReference databaseReference;
-    private String selectedUserID;
     private final RecyclerViewInterface recyclerViewInterface;
     private List<String> unseenMessageList = new ArrayList<>();
     private HashMap<String, Boolean> unseenMessageDict = new HashMap<>();
@@ -67,30 +75,19 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
     }
 
     @Override
+    public void onViewRecycled(@NonNull ChatListAdapter.MyViewHolder holder) {
+
+    }
+    @Override
     public void onBindViewHolder(@NonNull ChatListAdapter.MyViewHolder holder, int position) {
         MessageList user = messageList.get(position);
-//        user = messageList.get(position);
-
-        // Load/update profile pic on dataChange
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                holder.profilePic.setImageResource(R.drawable.profile_icon);
-                if(user.getProfilePic() != null && !user.getProfilePic().isEmpty()
-                        && !snapshot.child("users").child(user.getid()).child("userprofilepic").getValue(String.class).isEmpty()){
-//                    String profilePic = snapshot.child("users").child(user.getid()).child("userprofilepic").getValue(String.class);
-                    Picasso.get().load(user.getProfilePic()).into(holder.profilePic);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Failed to read from db
-            }
-        });
 
         holder.name.setText(user.getName());
         holder.lastMessage.setText(user.getLastMessage());
+
+        // Load user image
+        holder.picUrl = user.getProfilePic();
+        holder.LoadProfileImage();
 
 
         // If 0 unseen messages, don't show number
@@ -150,6 +147,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
         private TextView lastMessage;
         private TextView unseenMessages;
         private LinearLayout rootLayout;
+        public String picUrl;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -158,18 +156,23 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
             lastMessage = itemView.findViewById(R.id.lastMessage);
             unseenMessages = itemView.findViewById(R.id.unseenMessages);
             rootLayout = itemView.findViewById(R.id.rootLayout);
+            setIsRecyclable(false);
         }
 
-
+        public void LoadProfileImage(){
+            if(picUrl != null && !picUrl.isEmpty()){
+                Picasso.get().load(picUrl).placeholder(R.drawable.profile_icon).into(profilePic);
+            }
+            else{
+                profilePic.setImageResource(R.drawable.profile_icon);
+            }
+        }
     }
+
+
 
     // Filter recyclerview list method
     public void filterList(List<MessageList> filteredList){
-//        messageList.clear();
-//        for(MessageList m: filteredList){
-//            messageList.add(m);
-//        }
-
         messageList = filteredList;
         this.notifyDataSetChanged();
     }

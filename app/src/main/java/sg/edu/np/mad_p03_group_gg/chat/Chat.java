@@ -111,7 +111,7 @@ public class Chat extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Failed to read from db
             }
         });
 
