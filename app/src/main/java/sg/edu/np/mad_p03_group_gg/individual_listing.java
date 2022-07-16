@@ -36,6 +36,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -82,7 +84,7 @@ public class individual_listing extends AppCompatActivity {
         contextMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopup(view, pID);
+                showPopup(view, pID, uID);
             }
         });
 
@@ -184,7 +186,7 @@ public class individual_listing extends AppCompatActivity {
         // ############# END WILLIAM SECTION ###############
     }
 
-    public void showPopup(View v, String lID) {
+    public void showPopup(View v, String lID, String uID) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.individual_listing_seller, popup.getMenu());
@@ -201,12 +203,7 @@ public class individual_listing extends AppCompatActivity {
                         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                deleteListing(lID);
-                                finish();
-                                Toast.makeText(getApplicationContext(), "Deleted listing!", Toast.LENGTH_SHORT).show();
-                                Intent returnHome = new Intent(individual_listing.this, MainActivity.class);
-                                returnHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(returnHome);
+                                deleteListing(lID, uID);
                             }
                         });
                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -222,7 +219,7 @@ public class individual_listing extends AppCompatActivity {
 
                     case R.id.edit:
                         Bundle listingID = new Bundle();
-                        listingID.putString("lID", lID);
+                        listingID.putString("pID", lID);
 
                         Intent editListing = new Intent(individual_listing.this, editListing.class);
                         editListing.putExtras(listingID);
@@ -428,9 +425,32 @@ public class individual_listing extends AppCompatActivity {
         liked.child(pID).removeValue();
     }
 
-    private void deleteListing(String lID) {
+    private void deleteListing(String lID, String uID) {
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
-        individualdb.getReference().child("individual-listing").child(lID).removeValue();
+
+        String storagelink = "gs://cashoppe-179d4.appspot.com";
+        StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images").child(lID).child(uID);
+
+        individualdb.getReference().child("individual-listing").child(lID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                storage.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        individualdb.getReference().child("users").child(uID).child("listings").child(lID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                finish();
+                                Toast.makeText(getApplicationContext(), "Deleted listing!", Toast.LENGTH_SHORT).show();
+                                Intent returnHome = new Intent(individual_listing.this, MainActivity.class);
+                                returnHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(returnHome);
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 }

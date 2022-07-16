@@ -442,12 +442,14 @@ public class newlisting extends AppCompatActivity {
         String deltype = deltype_input.getText().toString();
         String delprice = delprice_input.getText().toString();
         String deltime = deltime_input.getText().toString();
+        Boolean delivery = true;
 
         if (!meeting_toggle.isChecked()) {
             address = "";
         }
 
         if (!delivery_toggle.isChecked()) {
+            delivery = false;
             deltype = "";
             delprice = "";
             deltime = "";
@@ -455,7 +457,7 @@ public class newlisting extends AppCompatActivity {
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, false, deltype, delprice, deltime);
+        individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, delivery, deltype, delprice, deltime);
         writeToFirebase(listing, pID, sID);
     }
 
@@ -471,9 +473,14 @@ public class newlisting extends AppCompatActivity {
         db.child(pID).setValue(listing);
         db2.child(pID).setValue("");
 
-        Intent returnhome = new Intent(newlisting.this, successListPage.class);
+        Bundle listingInfo = new Bundle();
+        listingInfo.putString("pID", pID);
+        listingInfo.putString("type", "new");
+
+        Intent successList = new Intent(newlisting.this, successListPage.class);
+        successList.putExtras(listingInfo);
         finish();
-        newlisting.this.startActivity(returnhome);
+        newlisting.this.startActivity(successList);
     }
 
     private void chooseImage() {

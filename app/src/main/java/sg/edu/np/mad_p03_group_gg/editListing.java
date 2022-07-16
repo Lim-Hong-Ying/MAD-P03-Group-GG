@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -26,7 +27,9 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -40,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -58,6 +62,9 @@ public class editListing extends AppCompatActivity {
         Button createListing = findViewById(R.id.create_listing);
         createListing.setText("Update listing!");
 
+        Bundle postID = getIntent().getExtras();
+        String pID = postID.getString("pID");
+
         DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -74,13 +81,7 @@ public class editListing extends AppCompatActivity {
                         }
                     });
 
-                    Button createlisting = findViewById(R.id.create_listing);
-                    createlisting.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            finalCheck(view);
-                        }
-                    });
+                    createObjectFromFB(pID);
                 }
 
                 else {
@@ -92,6 +93,102 @@ public class editListing extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createObjectFromFB(String pID) {
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
+        individualdb.getReference().child("individual-listing").child(pID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                }
+                else { //Builds individualListingObject from data retrieved
+                    Log.d("firebase", String.valueOf(task.getResult()));
+                    individualListingObject listing = new individualListingObject();
+                    DataSnapshot result = task.getResult();
+
+                    String listingid = result.getKey();
+                    String title = result.child("title").getValue(String.class);
+                    String thumbnailurl = result.child("tURL").getValue(String.class);
+                    String sellerid = result.child("sid").getValue(String.class);
+                    String sellerprofilepicurl = result.child("sppu").getValue(String.class);
+                    String itemcondition = result.child("iC").getValue(String.class);
+                    String price = result.child("price").getValue(String.class);
+                    Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String desc = result.child("description").getValue(String.class);
+                    String location = result.child("location").getValue(String.class);
+                    Boolean delivery = result.child("delivery").getValue(Boolean.class);
+                    String deliverytype = result.child("deliveryType").getValue(String.class);
+                    String deliveryprice = result.child("deliveryPrice").getValue(String.class);
+                    String deliverytime = result.child("deliveryTime").getValue(String.class);
+
+                    listing = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
+
+                    ImageView holder;
+                    EditText titleholder;
+                    EditText priceholder;
+                    RadioGroup itemconditionholder;
+                    EditText descriptionholder;
+                    Switch meettoggle;
+                    EditText locationholder;
+                    Switch deliverytoggle;
+                    EditText deliveryoptionholder;
+                    EditText deliverypriceholder;
+                    EditText deliverytimeholder;
+
+                    holder = findViewById(R.id.imageholder);
+                    titleholder = findViewById(R.id.input_title);
+                    priceholder = findViewById(R.id.input_price);
+                    itemconditionholder = findViewById(R.id.input_condition);
+                    descriptionholder = findViewById(R.id.input_description);
+                    meettoggle = findViewById(R.id.meet_toggle);
+                    locationholder = findViewById(R.id.input_address);
+                    deliverytoggle = findViewById(R.id.del_toggle);
+                    deliveryoptionholder = findViewById(R.id.input_deliverytype);
+                    deliverypriceholder = findViewById(R.id.input_deliveryprice);
+                    deliverytimeholder = findViewById(R.id.input_deliverytime);
+
+                    //Picasso.get().load(listing.gettURL()).into(holder); //External library to download images
+                    //new ImageDownloader(holder).execute(listing.gettURL());
+
+                    titleholder.setText(listing.getTitle());
+                    priceholder.setText(listing.getPrice());
+                    descriptionholder.setText(listing.getDescription());
+                    locationholder.setText(listing.getLocation());
+                    deliveryoptionholder.setText(listing.getDeliveryType());
+                    deliverypriceholder.setText(listing.getDeliveryPrice());
+                    deliverytimeholder.setText(listing.getDeliveryTime());
+
+                    switch (itemcondition) {
+                        case "New":
+                            itemconditionholder.check(R.id.input_condition_new);
+                            break;
+
+                        case "Used":
+                            itemconditionholder.check(R.id.input_condition_used);
+                            break;
+                    }
+
+                    if (location != "") {
+                        meettoggle.setChecked(true);
+                    }
+
+                    if (delivery != false) {
+                        deliverytoggle.setChecked(true);
+                    }
+
+                    Button updateListing = findViewById(R.id.create_listing);
+                    updateListing.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            finalCheck(view, pID, sellerid);
+                        }
+                    });
+                }
             }
         });
     }
@@ -286,7 +383,7 @@ public class editListing extends AppCompatActivity {
         });
     }
 
-    private void finalCheck(View view) {
+    private void finalCheck(View view, String pID, String sID) {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -351,11 +448,7 @@ public class editListing extends AppCompatActivity {
         }
 
         if (image_selected == true && title_filled == true && price_filled == true && itemcondition_selected == true && desc_filled == true && meetup_filled == true && deliverytype_filled == true && deliveryprice_filled == true && deliverytime_filled == true) {
-            writeToDatabaseAndFirebase();
-
-            Intent returnhome = new Intent(view.getContext(), successListPage.class);
-            finish();
-            view.getContext().startActivity(returnhome);
+            writeToDatabaseAndFirebase(pID, sID);
         }
 
         else {
@@ -363,14 +456,13 @@ public class editListing extends AppCompatActivity {
         }
     }
 
-    private void writeToDatabaseAndFirebase() {
+    private void writeToDatabaseAndFirebase(String pID, String sID) {
         String dblink = "gs://cashoppe-179d4.appspot.com";
         StorageReference db = FirebaseStorage.getInstance(dblink).getReference().child("listing-images");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
-            final String sID = String.valueOf(user.getUid());
 
             long currenttime = new Date().getTime();
             final StorageReference newfilename = db.child(sID + currenttime); //add userid for further uniqueness
@@ -399,7 +491,7 @@ public class editListing extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String imageUrl = uri.toString();
-                                    //createListingObject(imageUrl, sID);
+                                    createListingObject(imageUrl, sID, pID);
                                 }
                             });
                         }
@@ -412,6 +504,79 @@ public class editListing extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Not logged in. Please relogin.", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    private void createListingObject(String url, String sID, String pID) {
+        EditText title_input = findViewById(R.id.input_title);
+        EditText price_input = findViewById(R.id.input_price);
+        RadioGroup condition_input = findViewById(R.id.input_condition);
+        RadioButton condition_input_new = findViewById(R.id.input_condition_new);
+        RadioButton condition_input_used = findViewById(R.id.input_condition_used);
+        EditText desc_input = findViewById(R.id.input_description);
+        EditText address_input = findViewById(R.id.input_address);
+        EditText deltype_input = findViewById(R.id.input_deliverytype);
+        EditText delprice_input = findViewById(R.id.input_deliveryprice);
+        EditText deltime_input = findViewById(R.id.input_deliverytime);
+        Switch meeting_toggle = findViewById(R.id.meet_toggle);
+        Switch delivery_toggle = findViewById(R.id.del_toggle);
+
+        String title = title_input.getText().toString();
+        String price = price_input.getText().toString();
+        String condition;
+        if (condition_input_new.isChecked()) {
+            condition = "New";
+        }
+
+        else if (condition_input_used.isChecked()){
+            condition = "Used";
+        }
+
+        else {
+            condition = null;
+        }
+
+        String desc = desc_input.getText().toString();
+        String address = address_input.getText().toString();
+        String deltype = deltype_input.getText().toString();
+        String delprice = delprice_input.getText().toString();
+        String deltime = deltime_input.getText().toString();
+        Boolean delivery = true;
+
+        if (!meeting_toggle.isChecked()) {
+            address = "";
+        }
+
+        if (!delivery_toggle.isChecked()) {
+            delivery = false;
+            deltype = "";
+            delprice = "";
+            deltime = "";
+        }
+
+        //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
+
+        individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, delivery, deltype, delprice, deltime);
+        writeToFirebase(listing, pID);
+    }
+
+    private void writeToFirebase(individualListingObject listing, String pID) {
+        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
+
+        //individualListingObject listing = new individualListingObject("1", "FB test title 1", url, "test seller id 1", url, "New", 10, false, "test description", "ngee ann poly", false, "null", 0, 0);
+        //DatabaseReference pushTask = db.push();
+        //Task<Void> setValue = pushTask.setValue(listing);
+        //String pID = String.valueOf(pushTask.getKey());
+        db.child(pID).setValue(listing);
+
+        Bundle listingInfo = new Bundle();
+        listingInfo.putString("pID", pID);
+        listingInfo.putString("type", "edit");
+
+        Intent successEdit = new Intent(editListing.this, successListPage.class);
+        successEdit.putExtras(listingInfo);
+        finish();
+        editListing.this.startActivity(successEdit);
     }
 
     private void chooseImage() {
