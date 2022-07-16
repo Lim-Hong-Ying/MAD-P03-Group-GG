@@ -1,6 +1,7 @@
 package sg.edu.np.mad_p03_group_gg;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.Month;
@@ -31,6 +33,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
    @Override
    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
        String date = Event.eventsList.get(position).getDate().toString();
+       int id = Event.eventsList.get(position).getID();
        String[] dateArr = date.split("-", 3);
        int monthNo = Integer.parseInt(dateArr[1]);
        Month monthName = Month.of(monthNo);
@@ -39,19 +42,16 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
        holder.month.setText(monthName.toString());
        holder.title.setText(Event.eventsList.get(position).getName());
        holder.place.setText(Event.eventsList.get(position).getLocation());
-       int id = Event.eventsList.get(position).getID();
-
-       /*
-       holder.itemView.setOnClickListener(new View.OnClickListener(){
+       holder.event_card.setOnClickListener(new View.OnClickListener(){
            @Override
            public void onClick(View view) {
+               Log.e("RV clicked", "RV OnClick Worked");
                Intent createEvent = new Intent(view.getContext(), EventDetails.class);
                createEvent.putExtra("EventDetails", id);
                view.getContext().startActivity(createEvent);
            }
        });
 
-        */
    }
 
    @Override
@@ -60,10 +60,12 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+       CardView event_card;
        TextView date, month, title, place;
 
        public ViewHolder(@NonNull View itemView) {
            super(itemView);
+           event_card = itemView.findViewById(R.id.eventCardView);
            date = itemView.findViewById(R.id.day);
            month = itemView.findViewById(R.id.month);
            title = itemView.findViewById(R.id.eventTitle);

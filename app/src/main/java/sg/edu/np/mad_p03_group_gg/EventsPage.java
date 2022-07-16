@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.time.LocalDate;
@@ -19,7 +21,7 @@ public class EventsPage extends AppCompatActivity {
     RecyclerView eventRV;
     EventsRecyclerViewAdapter eventsRecyclerViewAdapter;
     private TextView eventTV;
-
+    private EditText searchEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,14 @@ public class EventsPage extends AppCompatActivity {
         initRecyclerView();
         //filterEvent(Event.eventsList);
         noOfEvent(Event.eventsList);
+        searchEvent = findViewById(R.id.searchEvent);
+        searchEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(EventsPage.this, EventEditActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -60,13 +70,12 @@ public class EventsPage extends AppCompatActivity {
         eventTV.setText(eventNumberText);
     }
 
-    public void createEvent(View view){
-        Intent createEvent = new Intent(EventsPage.this, EventDetails.class);
-        // Pass eventID to EventDetails activity
-        //Event selectedEvent = (Event) eventRV.getItemAtPosition(position);
-        //createEvent.putExtra("eventEdit", selectedEvent.getID());
-        startActivity(createEvent);
+    public void editEvent(View view){
+        Intent i = new Intent(EventsPage.this, WeekViewActivity.class);
+        startActivity(i);
     }
+
+
 
     /*
     public void filterEvent(ArrayList<Event> eventsList){

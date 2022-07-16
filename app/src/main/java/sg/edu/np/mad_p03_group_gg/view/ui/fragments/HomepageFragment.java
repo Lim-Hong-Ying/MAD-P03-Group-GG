@@ -47,6 +47,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import sg.edu.np.mad_p03_group_gg.ChatList;
 import sg.edu.np.mad_p03_group_gg.Event;
@@ -257,6 +258,19 @@ public class HomepageFragment extends Fragment {
                     LocalDate dt = LocalDate.parse(date, dtf);
                     Event event = new Event(eventId, name, location, dt, time);
                     Event.eventsList.add(event);
+                    // Requries API 24 (to fix this issue soon)
+                    Event.eventsList.sort(Comparator.comparing(o -> o.getDate()));
+                    /*
+                    // Only display current events
+                    if (dt.equals(LocalDate.now())){
+                        Event event = new Event(eventId, name, location, dt, time);
+                        Event.eventsList.add(event);
+                    }
+                    else {
+                        continue;
+                    }
+
+                     */
                 }
             }
 
