@@ -42,6 +42,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -442,8 +443,10 @@ public class newlisting extends AppCompatActivity {
         String deltype = deltype_input.getText().toString();
         String delprice = delprice_input.getText().toString();
         String deltime = deltime_input.getText().toString();
-        LocalDateTime CurrentTime = LocalDateTime.now();
-        String TimeStamp = CurrentTime.toString();
+        //****ISAAC: ADDED TIMESTAMP****?//
+        LocalDate CurrentDate = LocalDate.now();
+        String TimeStamp = CurrentDate.toString();
+        //Isaac end//
 
 
 

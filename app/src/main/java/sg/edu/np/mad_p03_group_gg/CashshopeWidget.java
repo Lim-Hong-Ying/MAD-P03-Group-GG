@@ -32,9 +32,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import sg.edu.np.mad_p03_group_gg.view.ui.fragments.User_Profile_Fragment;
 
@@ -49,7 +54,7 @@ public class CashshopeWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.cashshope_widget);
         DatabaseReference mDataref;
-        ArrayList<listingObject> data = new ArrayList<>();
+        ArrayList<individualListingObject> data = new ArrayList<>();
 
 
         //views.setImageViewUri(R.id.widgetimg1, Uri.parse("https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/listing-images%2FoHZkQY1Uk0MKyEw3kN3aRLrKJwE21657456107633?alt=media&token=d4efe848-d438-40c3-9d5e-a835082a311e"));
@@ -70,17 +75,59 @@ public class CashshopeWidget extends AppWidgetProvider {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         mDataref = database.getReference();
         Log.e("test", "test1");
-        listingObject l1 = new listingObject();
-        listingObject l2 = new listingObject();
+
         mDataref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.child("individual-listing").getChildren()) {
+                for (DataSnapshot result : snapshot.child("individual-listing").getChildren()) {
                     Log.e("test", "testd");
-                    String getid = dataSnapshot.getKey();
-                    listingObject listing = dataSnapshot.getValue(listingObject.class);
-                    Log.e("item",listing.title);
-                    data.add(listing);
+
+                    individualListingObject l1 = new individualListingObject();
+                    individualListingObject l2 = new individualListingObject();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    String listingid = result.getKey();
+                    String title = result.child("title").getValue(String.class);
+                    String thumbnailurl = result.child("tURL").getValue(String.class);
+                    String sellerid = result.child("sid").getValue(String.class);
+                    String sellerprofilepicurl = result.child("sppu").getValue(String.class);
+                    String itemcondition = result.child("iC").getValue(String.class);
+                    String price = result.child("price").getValue(String.class);
+                    Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String desc = result.child("description").getValue(String.class);
+                    String location = result.child("location").getValue(String.class);
+                    Boolean delivery = result.child("delivery").getValue(Boolean.class);
+                    String deliverytype = result.child("deliveryType").getValue(String.class);
+                    String deliveryprice = result.child("deliveryPrice").getValue(String.class);
+                    String deliverytime = result.child("deliveryTime").getValue(String.class);
+                    String TimeStamp = result.child("timeStamp").getValue(String.class);
+
+
+
+
+                    individualListingObject l = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime,TimeStamp);
+
+
+
+
+                    if (TimeStamp==null){
+                        String Time = LocalDate.now().toString();
+                        l.setTimeStamp(Time);
+                    }
+                    if ((LocalDate.parse(l.getTimeStamp())).isAfter(LocalDate.parse(l1.getTimeStamp()))) {
+                        l1 = l;
+                    } else if (LocalDate.parse(l.getTimeStamp()).isAfter(LocalDate.parse(l2.getTimeStamp()))) {
+                        l2 = l;
+                    }
+                    Log.e("item",l.title);
+                    data.add(l);
+                }
+
+                Log.e("List Length",Integer.toString(data.size()));
+                for (individualListingObject l : data) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    Log.e("url",l.title);
+
+
                 }
             }
 
@@ -88,18 +135,11 @@ public class CashshopeWidget extends AppWidgetProvider {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
 
-        for (listingObject l : data) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            Log.e("url",l.tURL);
 
-            if (l.getDateCreated().isAfter(l1.getDateCreated())) {
-                l1 = l;
-            } else if (l.getDateCreated().isAfter(l2.getDateCreated())) {
-                l2 = l;
-            }
-        }
+
 
         //Glide.with(context)
           //      .asBitmap()
