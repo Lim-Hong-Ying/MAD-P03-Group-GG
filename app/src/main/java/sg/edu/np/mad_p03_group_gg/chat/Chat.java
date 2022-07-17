@@ -1,25 +1,55 @@
 package sg.edu.np.mad_p03_group_gg.chat;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +70,7 @@ public class Chat extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference databaseReference = database.getReference();
 
+    public final String APP_TAG = "Chat Function";
     private static final String TAG = "Chat";
     private List<ChatInfo> chatInfoList = new ArrayList<>();
     private RecyclerView chatRecyclerView;
@@ -47,10 +78,17 @@ public class Chat extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private User mainUser;
     private boolean loadFirstTime = true;
-    String mainUserid = "";
-    String getid;
-    Boolean inchat;
-    Boolean hasMessages = false;
+    private String mainUserid = "";
+    private String getid;
+    private Boolean inchat;
+    private Boolean hasMessages = false;
+    private String checker = "";
+    private String myUrl = "";
+    private StorageTask uploadTask;
+    private Uri fileUri;
+    private ProgressDialog loadingBar;
+    private ActivityResultLauncher<String> startForResult;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +113,7 @@ public class Chat extends AppCompatActivity {
         CircleImageView profilePic = findViewById(R.id.profilePic);
         ImageView sendBtn = findViewById(R.id.sendButton);
         TextView statusView = findViewById(R.id.status);
+        ImageView sendFilesBtn = findViewById(R.id.sendFilesButton);
 
         // Getting data from messages adapter class
         String getName = getIntent().getStringExtra("name");
@@ -91,6 +130,9 @@ public class Chat extends AppCompatActivity {
         if(!TextUtils.isEmpty(getProfilePic)){
             Picasso.get().load(getProfilePic).into(profilePic);
         }
+
+        // Create loading progress dialog for sending image
+        loadingBar = new ProgressDialog(Chat.this);
 
         // On first entering chat, set all messages to seen
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -173,7 +215,10 @@ public class Chat extends AppCompatActivity {
                                     String getMessage = messageSnapshot.child("msg").getValue(String.class);
                                     String getid = messageSnapshot.child("id").getValue(String.class);
 
+                                    // If message has the isImage child, set isImage to True. If not set it to false
+                                    boolean isImage = messageSnapshot.hasChild("isImage") ?messageSnapshot.child("isImage").getValue(String.class).equals("True"): false;
                                     Timestamp timestamp = new Timestamp(Long.parseLong(messageTime));
+
                                     // get current date
                                     Date date = new Date(timestamp.getTime());
                                     // format for date
@@ -181,7 +226,7 @@ public class Chat extends AppCompatActivity {
                                     // format for time
                                     SimpleDateFormat TimeFormat = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
                                     // Create new ChatInfo object for each message
-                                    ChatInfo chatInfo = new ChatInfo(getid, getName, getMessage, DateFormat.format(date), TimeFormat.format(timestamp));
+                                    ChatInfo chatInfo = new ChatInfo(getid, getName, getMessage, DateFormat.format(date), TimeFormat.format(timestamp), isImage);
                                     // Add to chatInfo list
                                     chatInfoList.add(chatInfo);
 
@@ -226,6 +271,7 @@ public class Chat extends AppCompatActivity {
                     // Set users
                     databaseReference.child("chat").child(chatKey).child("user1").setValue(mainUserid);
                     databaseReference.child("chat").child(chatKey).child("user2").setValue(getid);
+                    // Set message and who sent the message
                     databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(getTextMessage);
                     databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(mainUserid);
 
@@ -249,6 +295,98 @@ public class Chat extends AppCompatActivity {
 
                 }
 
+            }
+
+        });
+
+        startForResult = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+                loadingBar.setTitle("Sending Image");
+                loadingBar.setMessage("Please wait, the image is being sent...");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
+
+                fileUri = result;
+                boolean isUploading = false;
+                if (checker.equals("image") && fileUri != null) {
+                    isUploading = true;
+                    // Create reference to firebase storage
+                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("chat-images");
+
+                    ContentResolver cr = getContentResolver();
+                    MimeTypeMap mime = MimeTypeMap.getSingleton();
+                    //String imgExtension = mime.getExtensionFromMimeType(cr.getType(fileUri));
+
+                    // Get current time
+                    String currentTime = String.valueOf(System.currentTimeMillis());
+                    String imageFileName = mainUser.getId() + "_" + currentTime;
+                    StorageReference imgStorageRef = storageReference.child(imageFileName);
+
+                    //UploadTask uploadTask = imgStorageRef.putBytes(data);
+
+                    uploadTask = imgStorageRef.putFile(fileUri);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Failed to sent a file", Toast.LENGTH_LONG).show();
+                            loadingBar.dismiss();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Toast.makeText(getApplicationContext(), "Successfully sent a file", Toast.LENGTH_LONG).show();
+                                    storageReference.child(imageFileName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            String imagePath = uri.toString();
+                                            setImagePathToChatMessage(imagePath);
+                                            loadingBar.dismiss();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Failed to get an Uri", Toast.LENGTH_LONG).show();
+                                            loadingBar.dismiss();
+                                        }
+                                    });
+                                }
+                            });
+                }
+
+                if(!isUploading){
+                    loadingBar.dismiss();
+                }
+            }
+        });
+
+        // Add Files when button is click
+        sendFilesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!TextUtils.isEmpty(chatKey)){
+
+                    CharSequence options[] = new CharSequence[]{
+                            "Images"
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
+                    builder.setTitle("Select the Files");
+
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // Images
+                            if (i == 0){
+                                // Checker used to determine file is an image
+                                checker = "image";
+
+                                startForResult.launch("image/*");
+                            }
+                        }
+                    });
+                    builder.show();
+                }
             }
         });
 
@@ -313,15 +451,49 @@ public class Chat extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateUserStatus("online");
+        // Set user inchat status to True if got chatKey
+        if (!TextUtils.isEmpty(chatKey) && hasMessages){
+            databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("True");
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         updateUserStatus("offline");
-        // Set user inchat status to False is got chatKey
+        // Set user inchat status to False if got chatKey
         if (!TextUtils.isEmpty(chatKey) && hasMessages){
             databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("False");
         }
+    }
+
+    private void setImagePathToChatMessage(String myUrl){
+        String currentTime = String.valueOf(System.currentTimeMillis());
+
+        // Set users
+        databaseReference.child("chat").child(chatKey).child("user1").setValue(mainUserid);
+        databaseReference.child("chat").child(chatKey).child("user2").setValue(getid);
+        // Set message and who sent the message
+        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(myUrl);
+        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(mainUserid);
+        // Set isImage to true
+        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("isImage").setValue("True");
+
+        // If user inchat status is true, set message seen value to True
+        if (inchat){
+            databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("True");
+        }
+        // If other user is not in current chat, set value to false
+        else{
+            databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("False");
+        }
+
+
+
+        // If current user (you) are not already in other user's friend list, add to his friend list
+        databaseReference.child("selectedChatUsers").child(getid).child(mainUser.getId()).setValue("");
+
+        // Set in chat status to true if message is sent
+        databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("True");
     }
 }
