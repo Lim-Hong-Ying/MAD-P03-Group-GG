@@ -12,13 +12,15 @@ public class listingObject {
     protected String iC; //item condition
     protected String price; //item price
     protected Boolean reserved; //is item reserved?
+    //###ISAAC: TIMESTAMP###
+    private String TimeStamp;
 
 
     public listingObject() {
 
     }
 
-    public listingObject(String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r) {
+    public listingObject(String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r,String ts) {
         setlID(lID);
         setTitle(t);
         settURL(turl);
@@ -28,8 +30,16 @@ public class listingObject {
         setPrice(p);
         setReserved(r);
         //ISAAC START
+        setTimeStamp(ts);
 
 
+    }
+    public void setTimeStamp(String timeStamp) {
+        TimeStamp = timeStamp;
+    }
+
+    public String getTimeStamp() {
+        return TimeStamp;
     }
 
     public void setlID(String id) {

@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 import sg.edu.np.mad_p03_group_gg.R;
@@ -194,8 +195,9 @@ public class wishListFragment extends Fragment {
                             String itemcondition = String.valueOf(result.child("iC").getValue(String.class));
                             String price = String.valueOf(result.child("price").getValue(String.class));
                             Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                            String TimeStamp = result.child("timeStamp").getValue(String.class);
 
-                            listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
+                            listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, TimeStamp);
                             data.add(listing);
                             adapter.notifyDataSetChanged();
                         }

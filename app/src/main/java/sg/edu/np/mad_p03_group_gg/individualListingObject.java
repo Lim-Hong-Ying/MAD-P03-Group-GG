@@ -19,13 +19,12 @@ public class individualListingObject extends listingObject {
     private String deliveryType; //if yes, what kind
     private String deliveryPrice; //price for delivery
     private String deliveryTime; //lead time for delivery
-    //###ISAAC: TIMESTAMP###
-    private String TimeStamp;
+
 
     public individualListingObject() {
 
     }
-    public individualListingObject(String lid, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, String dp, String dtime) {
+    public individualListingObject(String lid, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, String dp, String dtime,String ts) {
         /*setlID(lID);
         setTitle(t);
         settURL(turl);
@@ -34,7 +33,7 @@ public class individualListingObject extends listingObject {
         setiC(ic);
         setPrice(p);
         setReserved(r);*/
-        super(lid, t, turl, sid, sppu, ic, p, r);
+        super(lid, t, turl, sid, sppu, ic, p, r,ts);
         setDescription(desc);
         setLocation(l);
         setDelivery(d);
@@ -45,25 +44,7 @@ public class individualListingObject extends listingObject {
 
     }
 
-    public individualListingObject(String lid, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, String dp, String dtime, String Ts) {
-        /*setlID(lID);
-        setTitle(t);
-        settURL(turl);
-        setSID(sid);
-        setSPPU(sppu);
-        setiC(ic);
-        setPrice(p);
-        setReserved(r);*/
-        super(lid, t, turl, sid, sppu, ic, p, r);
-        setDescription(desc);
-        setLocation(l);
-        setDelivery(d);
-        setDeliveryType(dt);
-        setDeliveryPrice(dp);
-        setDeliveryTime(dtime);
-        setTimeStamp(Ts);
 
-    }
 
     /*public void setlID(String id) {
         lID = id;
@@ -132,13 +113,7 @@ public class individualListingObject extends listingObject {
     //####ISAAC SECTION START####
 
 
-    public void setTimeStamp(String timeStamp) {
-        TimeStamp = timeStamp;
-    }
 
-    public String getTimeStamp() {
-        return TimeStamp;
-    }
 
     public void setDescription(String s) {
         description = s;

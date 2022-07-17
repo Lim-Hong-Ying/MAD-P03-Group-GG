@@ -198,9 +198,10 @@ public class individual_listing extends AppCompatActivity {
                     String deliverytype = result.child("deliveryType").getValue(String.class);
                     String deliveryprice = result.child("deliveryPrice").getValue(String.class);
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
+                    String TimeStamp = result.child("timeStamp").getValue(String.class);
 
 
-                    listing = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
+                    listing = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime,TimeStamp);
 
                     ImageView holder;
                     TextView titleholder;
