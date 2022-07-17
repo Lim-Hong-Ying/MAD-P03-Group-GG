@@ -12,6 +12,7 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/circrleprofile_background.xml" value="0.19" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/customborder.xml" value="0.19" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/default_image_icon_160.xml" value="0.19" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/deletebutton.xml" value="0.2205" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_baseline_clear_48.xml" value="0.276" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.2575" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2575" />
@@ -29,6 +30,7 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/font/roboto_bold.xml" value="0.18489583333333334" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_chat.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_chat_list.xml" value="0.1" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_deleteaccount.xml" value="0.16075245831551946" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_event_edit.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_forget_password_activitiy.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_homepage.xml" value="0.1" />
@@ -46,12 +48,14 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_success_list_page.xml" value="0.11559383499546691" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_week_view.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/calendar_cell.xml" value="0.19067028985507245" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/cashshope_widget.xml" value="0.22" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/chat_layout.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/chat_list_row.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/event_cell.xml" value="0.19067028985507245" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_homepage.xml" value="0.1082427536231884" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_listing.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_user__profile_.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_user__profile_.xml" value="0.22" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_wish_list.xml" value="0.16005014625992478" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/liked_item.xml" value="0.23278985507246377" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/listing_card.xml" value="0.22" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/listing_grid.xml" value="0.1082427536231884" />

@@ -111,8 +111,8 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="360dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="374dp"
+                    android:layout_height="454dp"
                     android:layout_gravity="center"
                     android:background="@color/white"
 
@@ -172,27 +172,61 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="20dp"
                             android:paddingTop="50dp"
-                            android:textStyle="bold"
+                            android:textSize="17sp"
 
-                            android:textSize="17sp" />
+                            android:textStyle="bold" />
 
 
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/changepassword"
+                        android:layout_width="360dp"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+
+                        android:text="2 Factor Authentication" />
+
+                    <Button
+                        android:id="@+id/editprofilebutton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/sign_in_button"
+                        android:text="Edit Profile" />
 
                     <Button
                         android:id="@+id/log_out"
 
 
-                        android:layout_gravity="center"
-                        android:layout_marginTop="40px"
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="40px"
                         android:layout_marginBottom="20dp"
-
-
-
                         android:background="@drawable/sign_in_button"
+
+
+                        android:gravity="center"
                         android:text="Log out"></Button>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/Delete_Account"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/deletebutton"
+
+
+                        android:text="Delete Account"
+                        android:textColor="@color/white" />
 
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

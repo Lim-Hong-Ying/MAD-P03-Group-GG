@@ -1,5 +1,8 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class listingObject {
     protected String lID; //listing ID in DB
     protected String title; //listing title
@@ -9,6 +12,9 @@ public class listingObject {
     protected String iC; //item condition
     protected String price; //item price
     protected Boolean reserved; //is item reserved?
+    //ISAAC: DATE LISTING IS CREATED
+    protected LocalDateTime DateCreated;
+    //ISAAC:END
 
     public listingObject() {
 
@@ -23,7 +29,33 @@ public class listingObject {
         setiC(ic);
         setPrice(p);
         setReserved(r);
+        //ISAAC START
+
+
     }
+    public listingObject(String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r,LocalDateTime dt) {
+        setlID(lID);
+        setTitle(t);
+        settURL(turl);
+        setSID(sid);
+        setSPPU(sppu);
+        setiC(ic);
+        setPrice(p);
+        setReserved(r);
+        setDateCreated(dt);
+
+
+    }
+    //ISAAC PORTION START
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        DateCreated = dateCreated;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return DateCreated;
+    }
+    //ISAAC PORTION END
 
     public void setlID(String id) {
         lID = id;

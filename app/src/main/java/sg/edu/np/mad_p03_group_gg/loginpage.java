@@ -6,30 +6,23 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.database.annotations.Nullable;
 
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 
@@ -55,7 +48,7 @@ public class loginpage extends AppCompatActivity {
                     23);
         }
         //find views and buttons
-        Button button = (Button) findViewById(R.id.fgt_pswrd_btn);
+        Button button = (Button) findViewById(R.id.cnrmuser);
         TextView signup = findViewById(R.id.Sign_up);
         TextView fgtpassword = findViewById(R.id.forgetpsswrdbtn);
         //On click listener to bring user to forget password activity when clicked
@@ -106,7 +99,7 @@ public class loginpage extends AppCompatActivity {
     public void Log_in(View v) {
         //Find view
         TextView error = findViewById(R.id.siginerror);
-        EditText Email = (EditText) findViewById(R.id.fgtemail);
+        EditText Email = (EditText) findViewById(R.id.reemail);
         EditText password = (EditText) findViewById(R.id.password_toggle);
         String email = Email.getText().toString().trim();
         String Password = password.getText().toString();

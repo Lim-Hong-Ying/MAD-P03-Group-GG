@@ -2,6 +2,7 @@ package sg.edu.np.mad_p03_group_gg.view.ui.fragments;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,12 +16,16 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.ContactsContract;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -37,6 +42,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -65,6 +72,7 @@ import sg.edu.np.mad_p03_group_gg.Event;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
+import sg.edu.np.mad_p03_group_gg.deleteaccount;
 import sg.edu.np.mad_p03_group_gg.loginpage;
 
 /**
@@ -86,6 +94,7 @@ public class User_Profile_Fragment extends Fragment {
     private FirebaseStorage base = FirebaseStorage.getInstance();
     private String Filepath;
     private String profilePicurl = null;
+    private FirebaseUser fbUser;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -146,11 +155,14 @@ public class User_Profile_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
 
          //Get Views
-        TextView Email = (EditText) view.findViewById(R.id.user_profile_email);
+        EditText Email = (EditText) view.findViewById(R.id.user_profile_email);
         TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
-        TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
+        EditText Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
         ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
         Button log_out = (Button) view.findViewById(R.id.log_out);
+        Button delete =  (Button)view.findViewById(R.id.Delete_Account);
+        Button EditProfilebtn = (Button)view.findViewById(R.id.editprofilebutton);
+
         //Get References
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         mDataref = database.getReference();
@@ -164,7 +176,7 @@ public class User_Profile_Fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //Get authenticated user from an instance
                 auth = FirebaseAuth.getInstance();
-                FirebaseUser fbUser = auth.getCurrentUser();
+                fbUser = auth.getCurrentUser();
                 //Get parameters
                 String uid = fbUser.getUid();
                 String email = fbUser.getEmail();
@@ -283,6 +295,25 @@ public class User_Profile_Fragment extends Fragment {
                 startActivity(toCalender);
             }
         });
+        //Set onclick listner for delete btn
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog();
+
+            }
+        });
+        //Allow Edit Account info
+        EditProfilebtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                ChangeInfo(Email, Phonenumber);
+            }
+            
+        });
+        
+
+
         return view;
 
     }
@@ -295,6 +326,86 @@ public class User_Profile_Fragment extends Fragment {
         noevents.setText(Integer.toString(noofevents));
 
 
+    }
+    boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
+        CharSequence email = text.getText().toString();
+        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+    boolean isPhone(EditText Phone){
+        CharSequence phone = Phone.getText().toString();
+        return(!TextUtils.isEmpty(phone)&& Patterns.PHONE.matcher(phone).matches());
+    }
+
+
+    private void ChangeInfo(EditText email,EditText Phonumber){
+        AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
+        if (isEmail(email) && isPhone(Phonumber)){
+            Toast.makeText(getContext(), "Field is not complete, please enter it correctly", Toast.LENGTH_SHORT).show();
+
+        }
+        else if((email.getText().toString() == fbUser.getEmail().toString())&( Phonumber.getText().toString()== fbUser.getPhoneNumber().toString())){
+
+            Toast.makeText(getContext(), "Account details are the same", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            dialog.setMessage("Do you want to change this?");
+            dialog.setTitle("Change Confirmation");
+            dialog.setPositiveButton("YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            fbUser.updateEmail(email.getText().toString())
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+
+                                                String ID = auth.getUid();
+                                                user.setEmail(email.getText().toString());
+                                                user.setPhonenumber(Phonumber.getText().toString());
+                                                mDataref.child("users").child(user.getId()).setValue(user);
+
+                                                Toast.makeText(getContext(), "Email Changed Successfully", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else{
+                                                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
+
+                        }
+                    });
+            dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            AlertDialog alertDialog = dialog.create();
+            alertDialog.show();
+        }
+    }
+    private void alertDialog() {
+        AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
+        dialog.setMessage("This action is ireversible. Would you want to continue?");
+        dialog.setTitle("Deletion Confirmation");
+        dialog.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        Intent gotodelete = new Intent(getActivity(), deleteaccount.class);
+                        startActivity(gotodelete);
+                    }
+                });
+        dialog.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog alertDialog=dialog.create();
+        alertDialog.show();
     }
 
 
