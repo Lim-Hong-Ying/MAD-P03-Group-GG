@@ -169,14 +169,17 @@ public class listingFragment extends Fragment {
                 for (DataSnapshot datasnap : snapshot.getChildren()) {
                     String listingid = datasnap.getKey();
                     String titles = datasnap.child("title").getValue(String.class);
-                    String thumbnailurl = datasnap.child("tURL").getValue(String.class);
+                    long thumbnailurlsize = datasnap.child("tURLs").getChildrenCount();
+                    ArrayList<String> tURLs = new ArrayList<>();
+                    for (int i = 0; i < thumbnailurlsize; i++) {
+                        tURLs.add(datasnap.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                    }
                     String sellerid = datasnap.child("sid").getValue(String.class);
-                    String sellerprofilepicurl = datasnap.child("sppu").getValue(String.class);
                     String itemcondition = datasnap.child("iC").getValue(String.class);
                     String price = datasnap.child("price").getValue(String.class);
                     Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
 
-                    listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
+                    listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved);
                     data.add(listing);
                     adapter.notifyDataSetChanged();
                 }

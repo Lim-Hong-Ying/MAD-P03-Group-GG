@@ -1,15 +1,19 @@
 package sg.edu.np.mad_p03_group_gg;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -25,10 +29,16 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,14 +47,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class newlisting extends AppCompatActivity {
+
+    ArrayList<Uri> imageArray = new ArrayList<>();
+    ArrayList<String> imageURLs = new ArrayList<>();
+    int position = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,11 +129,12 @@ public class newlisting extends AppCompatActivity {
         delprice_input.setVisibility(View.GONE);
         deltime_input.setVisibility(View.GONE);
 
-        ImageView selectimage = findViewById(R.id.choose_image);
+        Button selectimage = findViewById(R.id.choose_image);
+        imageChooserAdapter adapter = recyclerViewStarter(imageArray);
         selectimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseImage();
+                chooseImages(adapter);
             }
         });
 
@@ -366,9 +389,51 @@ public class newlisting extends AppCompatActivity {
             DatabaseReference pushTask = db.push(); //Creates a push task to get a unique post ID
             String pID = String.valueOf(pushTask.getKey()); //Retrieves unique key
 
-            long currenttime = new Date().getTime();
-            final StorageReference newfilename = storage.child(pID + "/" + sID);
-            ImageView selectimage = findViewById(R.id.choose_image);
+            for (int i = 0; i < imageArray.size(); i++) {
+                StorageReference image = storage.child(pID + "/" + i);
+                UploadTask uploadTask = image.putFile(imageArray.get(i));
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(false);
+                builder.setView(R.layout.loading_dialog);
+                AlertDialog dialog = builder.create();
+
+                uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        dialog.show();
+                        int progress = (int) ((100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount());
+                        LinearProgressIndicator loading_bar = findViewById(R.id.loading_bar);
+                        //loading_bar.setProgressCompat(progress, true);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        if (taskSnapshot.getMetadata() != null) {
+                            if (taskSnapshot.getMetadata().getReference() != null) {
+                                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String imageUrl = uri.toString();
+                                        imageURLs.add(imageUrl);
+                                        Log.e("added url to array", imageUrl);
+                                        uploadStatusCheck(imageURLs, sID, pID);
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+
+            /*ImageView selectimage = findViewById(R.id.choose_image);
 
             selectimage.setDrawingCacheEnabled(true);
             selectimage.buildDrawingCache();
@@ -399,7 +464,7 @@ public class newlisting extends AppCompatActivity {
                         }
                     }
                 }
-            });
+            });*/
         }
 
         else {
@@ -408,7 +473,13 @@ public class newlisting extends AppCompatActivity {
         }
     }
 
-    private void createListingObject(String url, String sID, String pID) {
+    private void uploadStatusCheck(ArrayList<String> urls, String sID, String pID) {
+        if (imageURLs.size() == imageArray.size()) {
+            createListingObject(urls, sID, pID);
+        }
+    }
+
+    private void createListingObject(ArrayList<String> urls, String sID, String pID) {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -457,7 +528,7 @@ public class newlisting extends AppCompatActivity {
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, delivery, deltype, delprice, deltime);
+        individualListingObject listing = new individualListingObject(pID, title, urls, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime);
         writeToFirebase(listing, pID, sID);
     }
 
@@ -466,11 +537,8 @@ public class newlisting extends AppCompatActivity {
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
         DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("users").child(uID).child("listings");
 
-        //individualListingObject listing = new individualListingObject("1", "FB test title 1", url, "test seller id 1", url, "New", 10, false, "test description", "ngee ann poly", false, "null", 0, 0);
-        //DatabaseReference pushTask = db.push();
-        //Task<Void> setValue = pushTask.setValue(listing);
-        //String pID = String.valueOf(pushTask.getKey());
         db.child(pID).setValue(listing);
+
         db2.child(pID).setValue("");
 
         Bundle listingInfo = new Bundle();
@@ -483,15 +551,67 @@ public class newlisting extends AppCompatActivity {
         newlisting.this.startActivity(successList);
     }
 
+    private void chooseImages(imageChooserAdapter adapter) {
+        Intent chooser = new Intent();
+        chooser.setType("image/*");
+        chooser.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        chooser.setAction(Intent.ACTION_GET_CONTENT);
+        launchPicker.launch(Intent.createChooser(chooser, "Select images"));
+        Log.e("Number of images", String.valueOf(imageArray.size()));
+        adapter.notifyDataSetChanged();
+    }
+
+    private imageChooserAdapter recyclerViewStarter(ArrayList<Uri> data) {
+        RecyclerView imageRecycler = findViewById(R.id.images);
+        imageChooserAdapter adapter = new imageChooserAdapter(data);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(newlisting.this, LinearLayoutManager.HORIZONTAL, false);
+        imageRecycler.setLayoutManager(layoutManager);
+        imageRecycler.setItemAnimator(new DefaultItemAnimator());
+        imageRecycler.setAdapter(adapter);
+
+        return adapter;
+    }
+
     private void chooseImage() {
         Intent chooser = new Intent();
         chooser.setType("image/*");
         chooser.setAction(Intent.ACTION_GET_CONTENT);
-        launchPicker.launch(chooser);
+        launchPicker2.launch(chooser);
     }
 
-    ActivityResultLauncher<Intent> launchPicker
-            = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+    ActivityResultLauncher<Intent> launchPicker = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK && null != result.getData()) {
+
+            // Get the Image from data
+            if (result.getData().getClipData() != null) {
+                ClipData mClipData = result.getData().getClipData();
+                int cout = result.getData().getClipData().getItemCount();
+                for (int i = 0; i < cout; i++) {
+                    // adding imageuri in array
+                    Uri imageurl = result.getData().getClipData().getItemAt(i).getUri();
+                    imageArray.add(imageurl);
+                }
+                // setting 1st selected image into image switcher
+                //selectimage.setImageURI(imageArray.get(0));
+                //position = 0;
+            }
+
+            else {
+                Uri imageurl = result.getData().getData();
+                imageArray.add(imageurl);
+                //selectimage.setImageURI(imageArray.get(0));
+                //position = 0;
+            }
+        }
+
+        else {
+            // show this if no image is selected
+            Toast.makeText(this, "No images selected.", Toast.LENGTH_SHORT).show();
+        }
+    });
+
+    ActivityResultLauncher<Intent> launchPicker2 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent data = result.getData();
 
@@ -504,8 +624,8 @@ public class newlisting extends AppCompatActivity {
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-                ImageView selectimage = findViewById(R.id.choose_image);
-                selectimage.setImageBitmap(selectedImageBitmap);
+                //ImageView selectimage = findViewById(R.id.choose_image);
+                //selectimage.setImageBitmap(selectedImageBitmap);
             }
         }
     });

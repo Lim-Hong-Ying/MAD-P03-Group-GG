@@ -43,6 +43,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
@@ -250,9 +251,14 @@ public class individual_listing extends AppCompatActivity {
 
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
-                    String thumbnailurl = result.child("tURL").getValue(String.class);
+                    //String thumbnailurl = result.child("tURL").getValue(String.class);
+                    long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                    ArrayList<String> tURLs = new ArrayList<>();
+                    for (int i = 0; i < thumbnailurlsize; i++) {
+                        tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                    }
                     String sellerid = result.child("sid").getValue(String.class);
-                    String sellerprofilepicurl = result.child("sppu").getValue(String.class);
+                    //String sellerprofilepicurl = result.child("sppu").getValue(String.class);
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
@@ -263,7 +269,7 @@ public class individual_listing extends AppCompatActivity {
                     String deliveryprice = result.child("deliveryPrice").getValue(String.class);
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
 
-                    listing = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
 
                     ImageView holder;
                     TextView titleholder;
@@ -285,7 +291,7 @@ public class individual_listing extends AppCompatActivity {
                     deliverypriceholder = findViewById(R.id.individual_deliveryprice);
                     deliverytimeholder = findViewById(R.id.individual_deliverytime);
 
-                    Picasso.get().load(listing.gettURL()).into(holder); //External library to download images
+                    Picasso.get().load(listing.gettURLs().get(0)).into(holder); //External library to download images
                     //new ImageDownloader(holder).execute(listing.gettURL());
                     titleholder.setText(listing.getTitle());
                     priceholder.setText("$" + listing.getPrice());
