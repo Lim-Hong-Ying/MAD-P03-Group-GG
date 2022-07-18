@@ -93,13 +93,13 @@ public class listingFragment extends Fragment {
                 if (connected) {
 
                 } else {
-                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -111,7 +111,7 @@ public class listingFragment extends Fragment {
     }
 
     private void initialCheckSharedPreferences() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
 
@@ -125,7 +125,7 @@ public class listingFragment extends Fragment {
     private void viewChanger(View view, ArrayList<listingObject> data) { //Changes view for listing
         ToggleButton viewMode = view.findViewById(R.id.view_mode);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
 
@@ -142,7 +142,7 @@ public class listingFragment extends Fragment {
         viewMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 if (b == false) {

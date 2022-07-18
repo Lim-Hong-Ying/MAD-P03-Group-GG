@@ -4,8 +4,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -33,6 +38,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,15 +47,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class editListing extends AppCompatActivity {
+
+    ArrayList<Uri> imageArray = new ArrayList<>();
+    ArrayList<String> imageURLs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,14 +96,14 @@ public class editListing extends AppCompatActivity {
                 }
 
                 else {
-                    Toast.makeText(getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(editListing.this, "No internet connection.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(editListing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -104,7 +115,7 @@ public class editListing extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(editListing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
                 }
                 else { //Builds individualListingObject from data retrieved
                     Log.d("firebase", String.valueOf(task.getResult()));
@@ -113,9 +124,13 @@ public class editListing extends AppCompatActivity {
 
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
-                    String thumbnailurl = result.child("tURL").getValue(String.class);
+                    //String thumbnailurl = result.child("tURL").getValue(String.class);
+                    long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                    ArrayList<String> tURLs = new ArrayList<>();
+                    for (int i = 0; i < thumbnailurlsize; i++) {
+                        imageArray.add(Uri.parse(result.child("tURLs").child(String.valueOf(i)).getValue(String.class)));
+                    }
                     String sellerid = result.child("sid").getValue(String.class);
-                    String sellerprofilepicurl = result.child("sppu").getValue(String.class);
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
@@ -126,7 +141,7 @@ public class editListing extends AppCompatActivity {
                     String deliveryprice = result.child("deliveryPrice").getValue(String.class);
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
 
-                    listing = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
 
                     EditText titleholder;
                     EditText priceholder;
@@ -171,7 +186,7 @@ public class editListing extends AppCompatActivity {
                             break;
                     }
 
-                    if (location != "") {
+                    if (location.isEmpty() != true) {
                         meettoggle.setChecked(true);
                     }
 
@@ -183,7 +198,7 @@ public class editListing extends AppCompatActivity {
                     updateListing.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            finalCheck(view, pID, sellerid);
+                            finalCheck(pID, sellerid);
                         }
                     });
                 }
@@ -210,11 +225,12 @@ public class editListing extends AppCompatActivity {
         delprice_input.setVisibility(View.GONE);
         deltime_input.setVisibility(View.GONE);
 
-        ImageView selectimage = findViewById(R.id.choose_image);
+        Button selectimage = findViewById(R.id.choose_image);
+        imageChooserAdapter adapter = recyclerViewStarter(imageArray);
         selectimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseImage();
+                chooseImages(adapter);
             }
         });
 
@@ -381,7 +397,7 @@ public class editListing extends AppCompatActivity {
         });
     }
 
-    private void finalCheck(View view, String pID, String sID) {
+    private void finalCheck(String pID, String sID) {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -450,21 +466,65 @@ public class editListing extends AppCompatActivity {
         }
 
         else {
-            Toast.makeText(getApplicationContext(), "Please enter required information.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(editListing.this, "Please enter required information.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void writeToDatabaseAndFirebase(String pID, String sID) {
-        String dblink = "gs://cashoppe-179d4.appspot.com";
-        StorageReference db = FirebaseStorage.getInstance(dblink).getReference().child("listing-images");
+        String storagelink = "gs://cashoppe-179d4.appspot.com";
+        StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images");
+
+        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
+            for (int i = 0; i < imageArray.size(); i++) {
+                StorageReference image = storage.child(pID + "/" + i);
+                UploadTask uploadTask = image.putFile(imageArray.get(i));
 
-            long currenttime = new Date().getTime();
-            final StorageReference newfilename = db.child(sID + currenttime); //add userid for further uniqueness
-            ImageView selectimage = findViewById(R.id.choose_image);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(false);
+                builder.setView(R.layout.loading_dialog);
+                AlertDialog dialog = builder.create();
+
+                uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        dialog.show();
+                        int progress = (int) ((100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount());
+                        LinearProgressIndicator loading_bar = findViewById(R.id.loading_bar);
+                        //loading_bar.setProgressCompat(progress, true);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        if (taskSnapshot.getMetadata() != null) {
+                            if (taskSnapshot.getMetadata().getReference() != null) {
+                                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String imageUrl = uri.toString();
+                                        imageURLs.add(imageUrl);
+                                        Log.e("added url to array", imageUrl);
+                                        uploadStatusCheck(imageURLs, sID, pID);
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+
+            /*ImageView selectimage = findViewById(R.id.choose_image);
 
             selectimage.setDrawingCacheEnabled(true);
             selectimage.buildDrawingCache();
@@ -495,16 +555,22 @@ public class editListing extends AppCompatActivity {
                         }
                     }
                 }
-            });
+            });*/
         }
 
         else {
-            Toast.makeText(getApplicationContext(), "Not logged in. Please relogin.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(editListing.this, "Not logged in. Please relogin.", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
-    private void createListingObject(String url, String sID, String pID) {
+    private void uploadStatusCheck(ArrayList<String> urls, String sID, String pID) {
+        if (imageURLs.size() == imageArray.size()) {
+            createListingObject(urls, sID, pID);
+        }
+    }
+
+    private void createListingObject(ArrayList<String> urls, String sID, String pID) {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -553,39 +619,90 @@ public class editListing extends AppCompatActivity {
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, delivery, deltype, delprice, deltime);
-        writeToFirebase(listing, pID);
+        individualListingObject listing = new individualListingObject(pID, title, urls, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime);
+        writeToFirebase(listing, pID, sID);
     }
 
-    private void writeToFirebase(individualListingObject listing, String pID) {
+    private void writeToFirebase(individualListingObject listing, String pID, String uID) {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
+        DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("users").child(uID).child("listings");
 
-        //individualListingObject listing = new individualListingObject("1", "FB test title 1", url, "test seller id 1", url, "New", 10, false, "test description", "ngee ann poly", false, "null", 0, 0);
-        //DatabaseReference pushTask = db.push();
-        //Task<Void> setValue = pushTask.setValue(listing);
-        //String pID = String.valueOf(pushTask.getKey());
         db.child(pID).setValue(listing);
+
+        db2.child(pID).setValue("");
 
         Bundle listingInfo = new Bundle();
         listingInfo.putString("pID", pID);
         listingInfo.putString("type", "edit");
 
-        Intent successEdit = new Intent(editListing.this, successListPage.class);
-        successEdit.putExtras(listingInfo);
+        Intent successList = new Intent(editListing.this, successListPage.class);
+        successList.putExtras(listingInfo);
         finish();
-        editListing.this.startActivity(successEdit);
+        editListing.this.startActivity(successList);
+    }
+
+    private void chooseImages(imageChooserAdapter adapter) {
+        Intent chooser = new Intent();
+        chooser.setType("image/*");
+        chooser.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        chooser.setAction(Intent.ACTION_GET_CONTENT);
+        launchPicker.launch(Intent.createChooser(chooser, "Select images"));
+        Log.e("Number of images", String.valueOf(imageArray.size()));
+        adapter.notifyDataSetChanged();
+    }
+
+    private imageChooserAdapter recyclerViewStarter(ArrayList<Uri> data) {
+        RecyclerView imageRecycler = findViewById(R.id.images);
+        imageChooserAdapter adapter = new imageChooserAdapter(data);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(editListing.this, LinearLayoutManager.HORIZONTAL, false);
+        imageRecycler.setLayoutManager(layoutManager);
+        imageRecycler.setItemAnimator(new DefaultItemAnimator());
+        imageRecycler.setAdapter(adapter);
+
+        return adapter;
     }
 
     private void chooseImage() {
         Intent chooser = new Intent();
         chooser.setType("image/*");
         chooser.setAction(Intent.ACTION_GET_CONTENT);
-        launchPicker.launch(chooser);
+        launchPicker2.launch(chooser);
     }
 
-    ActivityResultLauncher<Intent> launchPicker
-            = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+    ActivityResultLauncher<Intent> launchPicker = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK && null != result.getData()) {
+
+            // Get the Image from data
+            if (result.getData().getClipData() != null) {
+                ClipData mClipData = result.getData().getClipData();
+                int cout = result.getData().getClipData().getItemCount();
+                for (int i = 0; i < cout; i++) {
+                    // adding imageuri in array
+                    Uri imageurl = result.getData().getClipData().getItemAt(i).getUri();
+                    imageArray.add(imageurl);
+                }
+                // setting 1st selected image into image switcher
+                //selectimage.setImageURI(imageArray.get(0));
+                //position = 0;
+            }
+
+            else {
+                Uri imageurl = result.getData().getData();
+                imageArray.add(imageurl);
+                //selectimage.setImageURI(imageArray.get(0));
+                //position = 0;
+            }
+        }
+
+        else {
+            // show this if no image is selected
+            Toast.makeText(this, "No images selected.", Toast.LENGTH_SHORT).show();
+        }
+    });
+
+    ActivityResultLauncher<Intent> launchPicker2 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent data = result.getData();
 
@@ -598,8 +715,8 @@ public class editListing extends AppCompatActivity {
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-                ImageView selectimage = findViewById(R.id.choose_image);
-                selectimage.setImageBitmap(selectedImageBitmap);
+                //ImageView selectimage = findViewById(R.id.choose_image);
+                //selectimage.setImageBitmap(selectedImageBitmap);
             }
         }
     });

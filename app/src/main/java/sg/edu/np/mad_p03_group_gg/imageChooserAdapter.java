@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class imageChooserAdapter extends RecyclerView.Adapter<imageChooserViewholder> {
@@ -31,7 +33,8 @@ public class imageChooserAdapter extends RecyclerView.Adapter<imageChooserViewho
     public void onBindViewHolder(@NonNull imageChooserViewholder holder, int position) {
         Uri image = data.get(position);
 
-        holder.imageHolder.setImageURI(image);
+        Picasso.get().load(image).into(holder.imageHolder); //External library to download images
+        //holder.imageHolder.setImageURI(image);
     }
 
     @Override

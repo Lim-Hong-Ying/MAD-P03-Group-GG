@@ -66,7 +66,6 @@ public class newlisting extends AppCompatActivity {
 
     ArrayList<Uri> imageArray = new ArrayList<>();
     ArrayList<String> imageURLs = new ArrayList<>();
-    int position = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,20 +92,20 @@ public class newlisting extends AppCompatActivity {
                     createlisting.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            finalCheck(view);
+                            finalCheck();
                         }
                     });
                 }
 
                 else {
-                    Toast.makeText(getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(newlisting.this, "No internet connection.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(newlisting.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -302,7 +301,7 @@ public class newlisting extends AppCompatActivity {
         });
     }
 
-    private void finalCheck(View view) {
+    private void finalCheck() {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -375,7 +374,7 @@ public class newlisting extends AppCompatActivity {
         }
 
         else {
-            Toast.makeText(getApplicationContext(), "Please enter required information.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(newlisting.this, "Please enter required information.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -473,7 +472,7 @@ public class newlisting extends AppCompatActivity {
         }
 
         else {
-            Toast.makeText(getApplicationContext(), "Not logged in. Please relogin.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(newlisting.this, "Not logged in. Please relogin.", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
