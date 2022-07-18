@@ -219,7 +219,7 @@ public class EventEditActivity extends AppCompatActivity
     }
 
     // Adding event details into Firebase
-    public void addDataToFireBase(String userID, int id, String name, String location, String time, String date){
+    public static void addDataToFireBase(String userID, int id, String name, String location, String time, String date){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("Planner");
         DatabaseReference user = myRef.child(userID);
@@ -235,7 +235,7 @@ public class EventEditActivity extends AppCompatActivity
     }
 
     // Deleting event from Firebase
-    public void removeDataFromFireBase(String userId, int eventId){
+    public static void removeDataFromFireBase(String userId, int eventId){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("Planner").child(userId);
         DatabaseReference event = myRef.child(String.valueOf(eventId));
