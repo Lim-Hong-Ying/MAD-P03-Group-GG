@@ -25,9 +25,11 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +39,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
@@ -47,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 
 public class individual_listing extends AppCompatActivity {
@@ -271,7 +275,6 @@ public class individual_listing extends AppCompatActivity {
 
                     listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
 
-                    ImageView holder;
                     TextView titleholder;
                     TextView priceholder;
                     TextView itemconditionholder;
@@ -281,7 +284,6 @@ public class individual_listing extends AppCompatActivity {
                     TextView deliverypriceholder;
                     TextView deliverytimeholder;
 
-                    holder = findViewById(R.id.imageholder);
                     titleholder = findViewById(R.id.individual_title);
                     priceholder = findViewById(R.id.individual_price);
                     itemconditionholder = findViewById(R.id.individual_itemcondition);
@@ -291,7 +293,12 @@ public class individual_listing extends AppCompatActivity {
                     deliverypriceholder = findViewById(R.id.individual_deliveryprice);
                     deliverytimeholder = findViewById(R.id.individual_deliverytime);
 
-                    Picasso.get().load(listing.gettURLs().get(0)).into(holder); //External library to download images
+                    ViewPager viewPager = findViewById(R.id.viewPagerMain);
+                    individualListingViewPagerAdapter viewPagerAdapter = new individualListingViewPagerAdapter(individual_listing.this, listing.gettURLs());
+                    viewPager.setAdapter(viewPagerAdapter);
+                    Log.e("ILURL", String.valueOf(listing.gettURLs()));
+
+                    //Picasso.get().load(listing.gettURLs().get(0)).into(holder); //External library to download images
                     //new ImageDownloader(holder).execute(listing.gettURL());
                     titleholder.setText(listing.getTitle());
                     priceholder.setText("$" + listing.getPrice());
@@ -431,20 +438,24 @@ public class individual_listing extends AppCompatActivity {
         liked.child(pID).removeValue();
     }
 
-    private void deleteListing(String lID, String uID) {
+    private void deleteListing(String pID, String uID) {
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
 
         String storagelink = "gs://cashoppe-179d4.appspot.com";
-        StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images").child(lID).child(uID);
+        StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images").child(pID);
 
-        individualdb.getReference().child("individual-listing").child(lID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+        individualdb.getReference().child("individual-listing").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                storage.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                storage.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        individualdb.getReference().child("users").child(uID).child("listings").child(lID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference item : listResult.getItems()) {
+                            item.delete();
+                        }
+
+                        individualdb.getReference().child("users").child(uID).child("listings").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 finish();

@@ -29,6 +29,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.ObservableArrayList;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -313,7 +314,7 @@ public class newlisting extends AppCompatActivity {
         Switch meeting_toggle = findViewById(R.id.meet_toggle);
         Switch delivery_toggle = findViewById(R.id.del_toggle);
 
-        Boolean image_selected = true;
+        Boolean image_selected = false;
         Boolean title_filled = false;
         Boolean price_filled = false;
         Boolean desc_filled = false;
@@ -322,6 +323,10 @@ public class newlisting extends AppCompatActivity {
         Boolean deliverytype_filled = false;
         Boolean deliveryprice_filled = false;
         Boolean deliverytime_filled = false;
+
+        if (imageArray.size() > 0) {
+            image_selected = true;
+        }
 
         if (!meeting_toggle.isChecked()) {
             meetup_filled = true;

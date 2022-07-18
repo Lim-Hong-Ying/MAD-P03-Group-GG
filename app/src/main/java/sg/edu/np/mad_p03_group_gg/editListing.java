@@ -128,7 +128,6 @@ public class editListing extends AppCompatActivity {
 
                     listing = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
 
-                    ImageView holder;
                     EditText titleholder;
                     EditText priceholder;
                     RadioGroup itemconditionholder;
@@ -140,7 +139,6 @@ public class editListing extends AppCompatActivity {
                     EditText deliverypriceholder;
                     EditText deliverytimeholder;
 
-                    holder = findViewById(R.id.imageholder);
                     titleholder = findViewById(R.id.input_title);
                     priceholder = findViewById(R.id.input_price);
                     itemconditionholder = findViewById(R.id.input_condition);
