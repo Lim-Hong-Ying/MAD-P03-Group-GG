@@ -239,11 +239,20 @@
             android:textOn="Remove from wishlist" />
 
         <Button
-            android:id="@+id/button_chat"
+            android:id="@+id/buyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:background="#D0B4FC"
+            android:text="Buy Now" />
+
+        <Button
+            android:id="@+id/button_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="#d0b4fc"
             android:text="Chat with seller" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

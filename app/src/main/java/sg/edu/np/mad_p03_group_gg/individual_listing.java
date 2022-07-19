@@ -166,6 +166,18 @@ public class individual_listing extends AppCompatActivity {
             }
         });
         // ############# END WILLIAM SECTION ###############
+
+        // ############# KAI ZHE PAYMENT SECTION ###############
+        Button buyButton = findViewById(R.id.buyButton);
+
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        // ############# END WILLIAM SECTION ###############
+
     }
 
     private void createObjectFromFB(String pid, String currentuID) {
