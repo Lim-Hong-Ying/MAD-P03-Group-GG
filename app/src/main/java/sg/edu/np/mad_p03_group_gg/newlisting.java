@@ -73,9 +73,7 @@ public class newlisting extends AppCompatActivity {
                             finalCheck(view);
                         }
                     });
-                }
-
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -86,6 +84,12 @@ public class newlisting extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
+        // ATTENTION: This was auto-generated to handle app links.
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
+
+        handleIntent(getIntent());
     }
 
     private void activeChecker() {
@@ -276,6 +280,19 @@ public class newlisting extends AppCompatActivity {
                 }
             }
         });
+
+        // ############# KAI ZHE PAYMENT SECTION ###############
+
+        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+
+        stripeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+            }
+        });
+
+        // ############# END KAI ZHE PAYMENT SECTION ###############
     }
 
     private void finalCheck(View view) {
@@ -494,4 +511,26 @@ public class newlisting extends AppCompatActivity {
             }
         }
     });
+
+    /**
+     * Handle app links. To handle refresh_url from Stripe
+     *
+     * By: Kai Zhe
+     * @param intent
+     */
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String appLinkAction = intent.getAction();
+        Uri appLinkData = intent.getData();
+        if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
+            /*String recipeId = appLinkData.getLastPathSegment();
+            Uri appData = Uri.parse("content://com.recipe_app/recipe/").buildUpon()
+                    .appendPath(recipeId).build();
+            showRecipe(appData);*/
+        }
+    }
 }
