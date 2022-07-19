@@ -85,7 +85,7 @@ public class HomepageFragment extends Fragment {
     private RecyclerView newListingsRecycler;
 
     // Initialises event details for meeting planner
-    private String name, location, time, date;
+    private String name, location, time, date, desc;
     public static String userId;
 
     public HomepageFragment() {
@@ -256,7 +256,8 @@ public class HomepageFragment extends Fragment {
                     time = snapshot.child("time").getValue(String.class);
                     date = snapshot.child("date").getValue(String.class);
                     LocalDate dt = LocalDate.parse(date, dtf);
-                    Event event = new Event(eventId, name, location, dt, time);
+                    desc = snapshot.child("description").getValue(String.class);
+                    Event event = new Event(eventId, name, location, dt, time, desc);
                     Event.eventsList.add(event);
                     // Requries API 24 (to fix this issue soon)
                     Event.eventsList.sort(Comparator.comparing(o -> o.getDate()));

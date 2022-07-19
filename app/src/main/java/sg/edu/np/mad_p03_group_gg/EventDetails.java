@@ -7,18 +7,14 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -31,8 +27,7 @@ public class EventDetails extends AppCompatActivity {
     private ImageView closeBtn, selectDate, selectTime;
     private int hour, min;
     private boolean editable, newEvent;
-    private TextView eventName, eventLocation, eventDate, eventTime;
-    private EditText eventDesc;
+    private TextView eventName, eventLocation, eventDate, eventTime, eventDesc;
     private MaterialButton greenBtn;
     private String userId = HomepageFragment.userId, sMonth, mth;
 
@@ -42,7 +37,6 @@ public class EventDetails extends AppCompatActivity {
         setContentView(R.layout.activity_event_details);
         Intent fromEventPage = getIntent();
         int eventID = fromEventPage.getIntExtra("EventDetails", -1);
-        Log.e("Event ID", String.valueOf(eventID));
         editable = fromEventPage.getBooleanExtra("Editable", false);
         newEvent = fromEventPage.getBooleanExtra("NewEvent", false);
         greenBtn = findViewById(R.id.greenBtn);
@@ -60,7 +54,7 @@ public class EventDetails extends AppCompatActivity {
             eventLocation.setText(selectedEvent.getLocation());
             eventDate.setText(selectedEvent.getDate().toString());
             eventTime.setText(selectedEvent.getTime());
-            //eventDesc.setText(selectedEvent.getDesc());
+            eventDesc.setText(selectedEvent.getDesc());
         }
 
         Calendar calendar = Calendar.getInstance();
@@ -112,16 +106,17 @@ public class EventDetails extends AppCompatActivity {
             eventLocation.setFocusableInTouchMode(true);
             selectDate.setFocusableInTouchMode(true);
             selectTime.setFocusableInTouchMode(true);
+            eventDesc.setFocusableInTouchMode(true);
             greenBtn.setText("Save Edit");
             greenBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     EventEditActivity.removeDataFromFireBase(userId, eventID);
-                    EventEditActivity.addDataToFireBase(userId, eventID, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString());
+                    EventEditActivity.addDataToFireBase(userId, eventID, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString(), eventDesc.getText().toString());
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     String d = eventDate.getText().toString();
                     LocalDate date = LocalDate.parse(d,dtf);
-                    Event editedEvent = new Event(eventID, eventName.getText().toString(), eventLocation.getText().toString(), date, eventTime.getText().toString());
+                    Event editedEvent = new Event(eventID, eventName.getText().toString(), eventLocation.getText().toString(), date, eventTime.getText().toString(), eventDesc.getText().toString());
                     for (Event e : Event.eventsList){
                         if (e.getID() == eventID){
                             Event.eventsList.set(Event.eventsList.indexOf(e), editedEvent);
@@ -178,6 +173,7 @@ public class EventDetails extends AppCompatActivity {
             eventLocation.setFocusableInTouchMode(true);
             selectDate.setFocusableInTouchMode(true);
             selectTime.setFocusableInTouchMode(true);
+            eventDesc.setFocusableInTouchMode(true);
             greenBtn.setText("Save Event");
             greenBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -191,9 +187,10 @@ public class EventDetails extends AppCompatActivity {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     String d = eventDate.getText().toString();
                     LocalDate date = LocalDate.parse(d,dtf);
-                    Event event = new Event(id, eventName.getText().toString(), eventLocation.getText().toString(), date, eventTime.getText().toString());
+                    Event event = new Event(id, eventName.getText().toString(), eventLocation.getText().toString(), date, eventTime.getText().toString(), eventDesc.getText().toString());
                     Event.eventsList.add(event);
-                    EventEditActivity.addDataToFireBase(userId, id, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString());
+                    EventEditActivity.addDataToFireBase(userId, id, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString(), eventDesc.getText().toString());
+
                     Toast.makeText(EventDetails.this, "New Event Created!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -234,5 +231,8 @@ public class EventDetails extends AppCompatActivity {
             eventTime.setText(String.format(Locale.getDefault(), "%01d:%02d", hour, min) + " " + am_Pm);
         }
     }
+
+
+
 
 }

@@ -152,11 +152,11 @@ public class EventEditActivity extends AppCompatActivity
         // Add new event into Firebase
         if (selectedEvent == null){
             // Initisalise new event
-            Event newEvent = new Event(eventId, eventName, location, CalendarUtils.selectedDate, time);
+            Event newEvent = new Event(eventId, eventName, location, CalendarUtils.selectedDate, time, null);
             // Add to list of events
             Event.eventsList.add(newEvent);
             // Add to firebase
-            addDataToFireBase(userId, eventId, eventName, location, time, CalendarUtils.selectedDate.toString());
+            addDataToFireBase(userId, eventId, eventName, location, time, CalendarUtils.selectedDate.toString(), null);
         }
         // Edit event details and saving it into Firebase
         else{
@@ -166,7 +166,7 @@ public class EventEditActivity extends AppCompatActivity
             selectedEvent.setName(eventName);
             selectedEvent.setLocation(location);
             selectedEvent.setTime(time);
-            addDataToFireBase(userId, selectedEvent.getID(), eventName, location, time, CalendarUtils.selectedDate.toString());
+            addDataToFireBase(userId, selectedEvent.getID(), eventName, location, time, CalendarUtils.selectedDate.toString(), null);
         }
         /*
         // Intent to Google Calendar
@@ -219,7 +219,7 @@ public class EventEditActivity extends AppCompatActivity
     }
 
     // Adding event details into Firebase
-    public static void addDataToFireBase(String userID, int id, String name, String location, String time, String date){
+    public static void addDataToFireBase(String userID, int id, String name, String location, String time, String date, String desc){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("Planner");
         DatabaseReference user = myRef.child(userID);
@@ -232,6 +232,8 @@ public class EventEditActivity extends AppCompatActivity
         userTime.setValue(time);
         DatabaseReference userDate = eventId.child("date");
         userDate.setValue(date);
+        DatabaseReference userDesc = eventId.child("description");
+        userDesc.setValue(desc);
     }
 
     // Deleting event from Firebase

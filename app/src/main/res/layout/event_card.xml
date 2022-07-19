@@ -105,10 +105,10 @@
 
                 <ImageView
                     android:id="@+id/menu"
-                    android:layout_width="76dp"
-                    android:layout_height="67dp"
+                    android:layout_width="56dp"
+                    android:layout_height="55dp"
                     android:layout_gravity="right"
-                    app:srcCompat="@drawable/three_dots_menu" />
+                    app:srcCompat="@drawable/ic_baseline_reorder_24" />
             </FrameLayout>
 
             <LinearLayout

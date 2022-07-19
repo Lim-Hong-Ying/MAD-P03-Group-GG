@@ -35,9 +35,6 @@ public class EventsPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.events_page);
-
-        //objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-
         eventTV = findViewById(R.id.eventTV);
         eventRV = findViewById(R.id.eventRecyclerView);
         initRecyclerView();

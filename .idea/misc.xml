@@ -84,6 +84,7 @@
         <entry key="app/src/main/res/drawable/background_shape_half_circle_half_rectengle.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/eventsearch_bg.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_baseline_clear_48.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_baseline_reorder_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/inpu_text.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/search_icon.xml" value="0.1825" />

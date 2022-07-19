@@ -93,8 +93,8 @@
                         android:background="#FFFFFF"
                         android:ellipsize="end"
                         android:focusable="false"
+                        android:hint="Event Name"
                         android:maxLines="1"
-                        android:text="Event Name"
                         android:textColor="@android:color/black"
                         android:textSize="21dp"
                         android:textStyle="bold"></EditText>
@@ -106,7 +106,7 @@
                         android:layout_marginTop="10sp"
                         android:background="#FFFFFF"
                         android:focusable="false"
-                        android:text="Location"
+                        android:hint="Location"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="15sp"></EditText>
 
@@ -214,12 +214,12 @@
 
                     <EditText
                         android:id="@+id/eventDesc"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:background="#FFFFFF"
                         android:focusable="false"
-                        android:text="Event descriptions"
+                        android:hint="Event Descriptions"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="15sp"></EditText>
 

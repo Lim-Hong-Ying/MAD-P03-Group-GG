@@ -10,6 +10,7 @@ public class Event
     private String location;
     private LocalDate date;
     private String time;
+    private String desc;
     public static ArrayList<Event> eventsList = new ArrayList<>();
 
     // Get events for each date
@@ -24,13 +25,14 @@ public class Event
         return events;
     }
 
-    public Event(int id, String name, String location, LocalDate date, String time)
+    public Event(int id, String name, String location, LocalDate date, String time, String desc)
     {
         this.id = id;
         this.name = name;
         this.location = location;
         this.date = date;
         this.time = time;
+        this.desc = desc;
     }
 
     // Get selected event when editing an event
@@ -76,8 +78,12 @@ public class Event
         return time;
     }
 
-    public void setTime(String  time)
+    public void setTime(String time)
     {
         this.time = time;
     }
+
+    public String getDesc(){return desc;}
+
+    public void setDesc(String desc) {this.desc = desc;}
 }
