@@ -48,7 +48,7 @@ public class loginpage extends AppCompatActivity {
                     23);
         }
         //find views and buttons
-        Button button = (Button) findViewById(R.id.cnrmuser);
+        Button button = (Button) findViewById(R.id.changedtls);
         TextView signup = findViewById(R.id.Sign_up);
         TextView fgtpassword = findViewById(R.id.forgetpsswrdbtn);
         //On click listener to bring user to forget password activity when clicked
@@ -99,7 +99,7 @@ public class loginpage extends AppCompatActivity {
     public void Log_in(View v) {
         //Find view
         TextView error = findViewById(R.id.siginerror);
-        EditText Email = (EditText) findViewById(R.id.reemail);
+        EditText Email = (EditText) findViewById(R.id.ccredentialemail);
         EditText password = (EditText) findViewById(R.id.password_toggle);
         String email = Email.getText().toString().trim();
         String Password = password.getText().toString();

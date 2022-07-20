@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import sg.edu.np.mad_p03_group_gg.view.ui.fragments.User_Profile_Fragment;
 
@@ -55,21 +56,6 @@ public class CashshopeWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.cashshope_widget);
         DatabaseReference mDataref;
         ArrayList<individualListingObject> data = new ArrayList<>();
-
-
-        //views.setImageViewUri(R.id.widgetimg1, Uri.parse("https://firebasestorage.googleapis.com/v0/b/cashoppe-179d4.appspot.com/o/listing-images%2FoHZkQY1Uk0MKyEw3kN3aRLrKJwE21657456107633?alt=media&token=d4efe848-d438-40c3-9d5e-a835082a311e"));
-        views.setTextViewText(R.id.newlistingnum, "5");
-        AppWidgetTarget awt = new AppWidgetTarget(context, R.id.widgetimg1, views, appWidgetId) {
-            @Override
-            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                super.onResourceReady(resource, transition);
-            }
-        };
-
-
-
-
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser u = auth.getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -77,13 +63,15 @@ public class CashshopeWidget extends AppWidgetProvider {
         Log.e("test", "test1");
 
         mDataref.addValueEventListener(new ValueEventListener() {
+            individualListingObject l1 = new individualListingObject();
+            individualListingObject l2 = new individualListingObject();
+            int NoofNewlisting = 0;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot result : snapshot.child("individual-listing").getChildren()) {
                     Log.e("test", "testd");
 
-                    individualListingObject l1 = new individualListingObject();
-                    individualListingObject l2 = new individualListingObject();
+
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
@@ -109,25 +97,57 @@ public class CashshopeWidget extends AppWidgetProvider {
 
 
 
-                    if (TimeStamp==null){
+                    if (l.getTimeStamp()==null){
                         String Time = LocalDate.now().toString();
                         l.setTimeStamp(Time);
                     }
+                    Log.e("Test",l.getTimeStamp());
+                    l1.setTimeStamp("1980-01-01");
+                    l2.setTimeStamp("1980-01-01");
+                    if(LocalDate.parse(l.getTimeStamp()).isEqual(LocalDate.now())){
+                        NoofNewlisting+=1;
+
+                    }
+                    views.setTextViewText(R.id.newlistingnum, Integer.toString(NoofNewlisting)+" new arrivals");
+
+
+
+
+
                     if ((LocalDate.parse(l.getTimeStamp())).isAfter(LocalDate.parse(l1.getTimeStamp()))) {
                         l1 = l;
                     } else if (LocalDate.parse(l.getTimeStamp()).isAfter(LocalDate.parse(l2.getTimeStamp()))) {
                         l2 = l;
                     }
+
                     Log.e("item",l.title);
                     data.add(l);
                 }
 
                 Log.e("List Length",Integer.toString(data.size()));
-                for (individualListingObject l : data) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    Log.e("url",l.title);
-
-
+                if(l1.sID!=null) {
+                    AppWidgetTarget awt = new AppWidgetTarget(context, R.id.widgetimg1, views, appWidgetId) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            super.onResourceReady(resource, transition);
+                        }
+                    };
+                    Glide.with(context)
+                            .asBitmap()
+                            .load(l1.tURL)
+                            .into(awt);
+                }
+                if(l2.sID!=null){
+                    AppWidgetTarget awt2 = new AppWidgetTarget(context, R.id.widgetimg1, views, appWidgetId) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            super.onResourceReady(resource, transition);
+                        }
+                    };
+                    Glide.with(context)
+                            .asBitmap()
+                            .load(l2.tURL)
+                            .into(awt2);
                 }
             }
 
@@ -141,10 +161,6 @@ public class CashshopeWidget extends AppWidgetProvider {
 
 
 
-        //Glide.with(context)
-          //      .asBitmap()
-           //     .load("t")
-             //   .into(awt);
 
 
 

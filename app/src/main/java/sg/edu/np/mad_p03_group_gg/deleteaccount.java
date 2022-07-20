@@ -11,7 +11,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,8 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 public class deleteaccount extends AppCompatActivity {
     private DatabaseReference mDataref;
     private FirebaseUser fbUser;
@@ -38,9 +35,9 @@ public class deleteaccount extends AppCompatActivity {
         setContentView(R.layout.activity_deleteaccount);
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         mDataref = database.getReference();
-        EditText reemail = (EditText) findViewById(R.id.reemail);
+        EditText reemail = (EditText) findViewById(R.id.ccredentialemail);
         EditText repassword = (EditText) findViewById(R.id.repassword);
-        Button cnrmuser = (Button) findViewById(R.id.cnrmuser);
+        Button cnrmuser = (Button) findViewById(R.id.changedtls);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         fbUser = auth.getCurrentUser();
         cnrmuser.setOnClickListener(new View.OnClickListener() {

@@ -22,8 +22,8 @@ public class forget_password_activitiy extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password_activitiy);
         TextView passwordStatus= findViewById(R.id.fgtpasswordstatus);
-        Button fgtpassword_btn = findViewById(R.id.cnrmuser);
-        EditText fgtEmail = (EditText) findViewById(R.id.reemail);
+        Button fgtpassword_btn = findViewById(R.id.changedtls);
+        EditText fgtEmail = (EditText) findViewById(R.id.ccredentialemail);
 
         FirebaseAuth auth;
         fgtpassword_btn.setOnClickListener(new View.OnClickListener() {

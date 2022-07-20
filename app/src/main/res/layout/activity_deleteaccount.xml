@@ -61,7 +61,7 @@
                         app:layout_constraintTop_toTopOf="parent"></TextView>
 
                     <EditText
-                        android:id="@+id/reemail"
+                        android:id="@+id/ccredentialemail"
                         android:layout_width="335dp"
                         android:layout_height="57dp"
 
@@ -88,12 +88,12 @@
                         android:hint="Password"
                         android:inputType="textEmailAddress"
                         android:paddingLeft="20dp"
-                        app:layout_constraintEnd_toEndOf="@+id/reemail"
-                        app:layout_constraintStart_toStartOf="@+id/reemail"
-                        app:layout_constraintTop_toBottomOf="@+id/reemail"></EditText>
+                        app:layout_constraintEnd_toEndOf="@+id/ccredentialemail"
+                        app:layout_constraintStart_toStartOf="@+id/ccredentialemail"
+                        app:layout_constraintTop_toBottomOf="@+id/ccredentialemail"></EditText>
 
                     <Button
-                        android:id="@+id/cnrmuser"
+                        android:id="@+id/changedtls"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
 

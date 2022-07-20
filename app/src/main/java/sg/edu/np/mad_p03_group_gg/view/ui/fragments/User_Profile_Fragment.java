@@ -21,6 +21,8 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.ContactsContract;
 import android.text.Editable;
@@ -66,6 +68,7 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.Event;
@@ -73,7 +76,10 @@ import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
 import sg.edu.np.mad_p03_group_gg.deleteaccount;
+import sg.edu.np.mad_p03_group_gg.listingObject;
+import sg.edu.np.mad_p03_group_gg.listing_viewholder;
 import sg.edu.np.mad_p03_group_gg.loginpage;
+import sg.edu.np.mad_p03_group_gg.changeaccdetails;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,6 +101,9 @@ public class User_Profile_Fragment extends Fragment {
     private String Filepath;
     private String profilePicurl = null;
     private FirebaseUser fbUser;
+    private List<listingObject> llist ;
+    private int nooflisiting;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -154,11 +163,13 @@ public class User_Profile_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
 
+
          //Get Views
-        EditText Email = (EditText) view.findViewById(R.id.user_profile_email);
+        TextView Email = (TextView) view.findViewById(R.id.user_profile_email);
         TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
-        EditText Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
+        TextView Phonenumber = (TextView) view.findViewById(R.id.User_Profile_phonenumber);
         ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
+
         Button log_out = (Button) view.findViewById(R.id.log_out);
         Button delete =  (Button)view.findViewById(R.id.Delete_Account);
         Button EditProfilebtn = (Button)view.findViewById(R.id.editprofilebutton);
@@ -169,6 +180,8 @@ public class User_Profile_Fragment extends Fragment {
         storage = FirebaseStorage.getInstance().getReference("user-images");
         //Retrive and display profile picture
         retrieveUserAndDisplayImage(view);
+
+
         // Get user data from database by in the form of a class.
         mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -190,6 +203,30 @@ public class User_Profile_Fragment extends Fragment {
 
                         user = dataSnapshot.getValue(User.class);
                         user.setId(uid);
+                        DatabaseReference db = mDataref.child("users").child(user.getId()).child("liked");
+                        Log.e("Noofitem1", db.toString());
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    nooflisiting+=1;
+
+                                    Log.e("nofolistingnum",Integer.toString(nooflisiting));
+                                    Log.e("Noofitem", db.toString());
+
+                                }
+                                TextView nolisting = (TextView) view.findViewById(R.id.listing_numbers);
+                                nolisting.setText(Integer.toString(nooflisiting));
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
 
                         break;
                     }
@@ -239,6 +276,47 @@ public class User_Profile_Fragment extends Fragment {
                 }
             }
         });
+        // Get views
+        CardView eventcard = (CardView)view.findViewById(R.id.event_card);
+        CardView listingcard = (CardView) view.findViewById(R.id.listing_card);
+        TextView nolisting = (TextView) view.findViewById(R.id.listing_numbers);
+
+
+        TextView noevents = (TextView)view.findViewById(R.id.num_ofevents);
+        int noofevents = numberOfevents(user);
+        Log.e("nofolistingnum",Integer.toString(nooflisiting));
+
+
+
+
+        //Set number of events
+
+        noevents.setText(Integer.toString(noofevents));
+
+        eventcard.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent toCalender = new Intent(getActivity(), WeekViewActivity.class);
+                startActivity(toCalender);
+            }
+        });
+        listingcard.setOnClickListener(new View.OnClickListener(){
+
+
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new wishListFragment());
+            }
+        });
+        //Set onclick listner for delete btn
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog("This action is ireversible. Would you want to continue?","Deletion Confirmation",deleteaccount.class);
+
+            }
+        });
 
         //
         ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
@@ -281,33 +359,16 @@ public class User_Profile_Fragment extends Fragment {
             }
         });
 
-        // Get views
-        CardView eventcard = (CardView)view.findViewById(R.id.event_card);
-        TextView noevents = (TextView)view.findViewById(R.id.num_ofevents);
-        int noofevents = numberOfevents(user);
-        //Set number of events
-        noevents.setText(Integer.toString(noofevents));
-        eventcard.setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View view) {
-                Intent toCalender = new Intent(getActivity(), WeekViewActivity.class);
-                startActivity(toCalender);
-            }
-        });
-        //Set onclick listner for delete btn
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog();
-
-            }
-        });
         //Allow Edit Account info
         EditProfilebtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                ChangeInfo(Email, Phonenumber);
+                Intent change = new Intent(getActivity(),changeaccdetails.class);
+                Log.e("Username",user.getName());
+                Log.e("Phonenumber",user.getPhonenumber());
+                change.putExtra("User",user);
+                startActivity(change);
             }
             
         });
@@ -323,6 +384,8 @@ public class User_Profile_Fragment extends Fragment {
         // On resume, or when user changes back from calender, updated data is displayed
         int noofevents = numberOfevents(user);
         TextView noevents = (TextView)getActivity().findViewById(R.id.num_ofevents);
+        TextView nolisting = (TextView) getActivity().findViewById(R.id.listing_numbers);
+        nolisting.setText(Integer.toString(nooflisiting));
         noevents.setText(Integer.toString(noofevents));
 
 
@@ -337,64 +400,19 @@ public class User_Profile_Fragment extends Fragment {
     }
 
 
-    private void ChangeInfo(EditText email,EditText Phonumber){
+
+
+
+
+    private void alertDialog(String msg, String Title, Class target) {
         AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
-        if (isEmail(email) && isPhone(Phonumber)){
-            Toast.makeText(getContext(), "Field is not complete, please enter it correctly", Toast.LENGTH_SHORT).show();
-
-        }
-        else if((email.getText().toString() == fbUser.getEmail().toString())&( Phonumber.getText().toString()== fbUser.getPhoneNumber().toString())){
-
-            Toast.makeText(getContext(), "Account details are the same", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            dialog.setMessage("Do you want to change this?");
-            dialog.setTitle("Change Confirmation");
-            dialog.setPositiveButton("YES",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                            int which) {
-                            fbUser.updateEmail(email.getText().toString())
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-
-                                                String ID = auth.getUid();
-                                                user.setEmail(email.getText().toString());
-                                                user.setPhonenumber(Phonumber.getText().toString());
-                                                mDataref.child("users").child(user.getId()).setValue(user);
-
-                                                Toast.makeText(getContext(), "Email Changed Successfully", Toast.LENGTH_SHORT).show();
-                                            }
-                                            else{
-                                                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
-
-
-                        }
-                    });
-            dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
-            AlertDialog alertDialog = dialog.create();
-            alertDialog.show();
-        }
-    }
-    private void alertDialog() {
-        AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
-        dialog.setMessage("This action is ireversible. Would you want to continue?");
-        dialog.setTitle("Deletion Confirmation");
+        dialog.setMessage(msg);
+        dialog.setTitle(Title);
         dialog.setPositiveButton("YES",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int which) {
-                        Intent gotodelete = new Intent(getActivity(), deleteaccount.class);
+                        Intent gotodelete = new Intent(getActivity(),target);
                         startActivity(gotodelete);
                     }
                 });
@@ -438,6 +456,12 @@ public class User_Profile_Fragment extends Fragment {
                 }
             }
         });
+    }
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit(); // To apply changes
     }
 //Get file extension of file
     private String getfileextension(Uri uri) {
