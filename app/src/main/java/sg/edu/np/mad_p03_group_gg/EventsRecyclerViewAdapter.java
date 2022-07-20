@@ -1,6 +1,12 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,10 +30,12 @@ import sg.edu.np.mad_p03_group_gg.view.ui.fragments.HomepageFragment;
 public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecyclerViewAdapter.ViewHolder> {
    private ArrayList<Event> eventModelArrayList = new ArrayList<>();
    private ArrayList<String> monthList = new ArrayList<>();
-    private String userId = HomepageFragment.userId;
+   private String userId = HomepageFragment.userId;
+   private Context context;
 
-   public EventsRecyclerViewAdapter(ArrayList<Event> eventModelArrayList) {
+   public EventsRecyclerViewAdapter(ArrayList<Event> eventModelArrayList, Context context) {
        this.eventModelArrayList = eventModelArrayList;
+       this.context = context;
    }
 
    @NonNull
@@ -59,7 +67,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
        monthList.add("DEC");
        holder.date.setText(dateArr[2]);
        //holder.date.setText(eventModelArrayList.get(position).getDay());
-       holder.month.setText(monthList.get(monthNo));
+       holder.month.setText(monthList.get(monthNo - 1));
        holder.title.setText(Event.eventsList.get(position).getName());
        holder.place.setText(Event.eventsList.get(position).getLocation());
        holder.event_card.setOnClickListener(new View.OnClickListener(){
@@ -91,6 +99,9 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                                EventEditActivity.removeDataFromFireBase(userId, id);
                                notifyDataSetChanged();
                                EventsPage.noOfEvent(Event.eventsList);
+
+                               DeleteCalendarEntry(ListSelectedCalendars(e.getName()));
+
                                Toast.makeText(view.getContext(), "Event Deleted!", Toast.LENGTH_SHORT).show();
                                return true;
                            default:
@@ -98,10 +109,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                        }
                    }
                });
-
            }
        });
-
    }
 
    @Override
@@ -123,6 +132,59 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
            place = itemView.findViewById(R.id.location);
            menu = itemView.findViewById(R.id.menu);
        }
+    }
+
+    private int ListSelectedCalendars(String eventtitle) {
+        Uri eventUri;
+        if (android.os.Build.VERSION.SDK_INT <= 7) {
+            // the old way
+            eventUri = Uri.parse("content://calendar/events");
+        } else {
+            // the new way
+            eventUri = Uri.parse("content://com.android.calendar/events");
+        }
+        int result = 0;
+        String projection[] = { "_id", "title" };
+        Cursor cursor = context.getContentResolver().query(eventUri, null, null, null,
+                null);
+        if (cursor.moveToFirst()) {
+            String calName;
+            String calID;
+
+            int nameCol = cursor.getColumnIndex(projection[1]);
+            int idCol = cursor.getColumnIndex(projection[0]);
+            do {
+                calName = cursor.getString(nameCol);
+                calID = cursor.getString(idCol);
+
+                if (calName != null && calName.contains(eventtitle)) {
+                    result = Integer.parseInt(calID);
+                }
+
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return result;
+    }
+
+    private int DeleteCalendarEntry(int entryID) {
+        int iNumRowsDeleted = 0;
+        Uri eventUri = ContentUris
+                .withAppendedId(getCalendarUriBase(), entryID);
+        iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
+        return iNumRowsDeleted;
+    }
+
+    private Uri getCalendarUriBase() {
+        Uri eventUri;
+        if (android.os.Build.VERSION.SDK_INT <= 7) {
+            // the old way
+            eventUri = Uri.parse("content://calendar/events");
+        } else {
+            // the new way
+            eventUri = Uri.parse("content://com.android.calendar/events");
+        }
+        return eventUri;
     }
 }
 

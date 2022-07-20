@@ -70,7 +70,7 @@ public class EventsPage extends AppCompatActivity {
 
     public void initRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        eventsRecyclerViewAdapter = new EventsRecyclerViewAdapter(Event.eventsList);
+        eventsRecyclerViewAdapter = new EventsRecyclerViewAdapter(Event.eventsList, this);
         eventRV.setLayoutManager(linearLayoutManager);
         eventRV.setAdapter(eventsRecyclerViewAdapter);
         eventsRecyclerViewAdapter.notifyDataSetChanged();
