@@ -93,13 +93,13 @@ public class listingFragment extends Fragment {
                 if (connected) {
 
                 } else {
-                    Toast.makeText(getContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
 

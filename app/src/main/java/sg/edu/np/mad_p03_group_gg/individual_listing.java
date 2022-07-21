@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,14 +62,23 @@ public class individual_listing extends AppCompatActivity {
     private User seller;
     private User mainUser;
 
+    private String pID;
+    private individualListingObject listing = new individualListingObject();
+
+    String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+    FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
+
+    String storagelink = "gs://cashoppe-179d4.appspot.com";
+    StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_individual_listing);
 
         Bundle listinginfo = getIntent().getExtras();
-        String pID = listinginfo.getString("lID");
-        uID = null;
+        pID = listinginfo.getString("lID");
+        storage = storage.child(pID);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); //Gets userID for logged in user
         if (user != null) {
             // User is signed in
@@ -89,7 +99,7 @@ public class individual_listing extends AppCompatActivity {
         contextMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopup(view, pID, uID);
+                showPopup(view);
             }
         });
 
@@ -99,18 +109,18 @@ public class individual_listing extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    initialCheckLiked(pID, uID);
+                    initialCheckLiked();
                     createObjectFromFB(pID, uID);
-                    checkLiked(pID, uID);
+                    checkLiked();
                 } else {
-                    Toast.makeText(getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(individual_listing.this, "No internet connection.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(individual_listing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -191,10 +201,19 @@ public class individual_listing extends AppCompatActivity {
         // ############# END WILLIAM SECTION ###############
     }
 
-    public void showPopup(View v, String lID, String uID) {
+    public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.individual_listing_seller, popup.getMenu());
+        if (listing.getReserved() == false) {
+            MenuItem unreserve = popup.getMenu().findItem(R.id.unreserve);
+            unreserve.setVisible(false);
+        }
+
+        else {
+            MenuItem reserve = popup.getMenu().findItem(R.id.reserve);
+            reserve.setVisible(false);
+        }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -208,7 +227,7 @@ public class individual_listing extends AppCompatActivity {
                         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                deleteListing(lID, uID);
+                                deleteListing();
                             }
                         });
                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -224,11 +243,19 @@ public class individual_listing extends AppCompatActivity {
 
                     case R.id.edit:
                         Bundle listingID = new Bundle();
-                        listingID.putString("pID", lID);
+                        listingID.putString("pID", pID);
 
                         Intent editListing = new Intent(individual_listing.this, editListing.class);
                         editListing.putExtras(listingID);
                         startActivity(editListing);
+                        return true;
+
+                    case R.id.reserve:
+                        reserveListing();
+                        return true;
+
+                    case R.id.unreserve:
+                        unreserveListing();
                         return true;
 
                     default:
@@ -239,18 +266,18 @@ public class individual_listing extends AppCompatActivity {
         popup.show();
     }
 
-    private void createObjectFromFB(String pid, String currentuID) {
-        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
-        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
-        individualdb.getReference().child("individual-listing").child(pid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+    private void createObjectFromFB(String pID, String uID) {
+        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
+        individualdb.getReference().child("individual-listing").child(pID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(individual_listing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
                 }
                 else { //Builds individualListingObject from data retrieved
                     Log.d("firebase", String.valueOf(task.getResult()));
-                    individualListingObject listing = new individualListingObject();
+                    //individualListingObject listing = new individualListingObject();
                     DataSnapshot result = task.getResult();
 
                     String listingid = result.getKey();
@@ -329,7 +356,7 @@ public class individual_listing extends AppCompatActivity {
                         deliverytimeholder.setVisibility(View.GONE);
                     }
 
-                    if (sellerid.equals(currentuID)) {
+                    if (sellerid.equals(uID)) {
                         ToggleButton likebutton = findViewById(R.id.button_like);
                         Button chatbutton = findViewById(R.id.button_chat);
 
@@ -340,6 +367,11 @@ public class individual_listing extends AppCompatActivity {
                     else {
                         ImageView contextMenu = findViewById(R.id.context_menu);
                         contextMenu.setVisibility(View.GONE);
+                        if (reserved) {
+                            Button chatbutton = findViewById(R.id.button_chat);
+                            chatbutton.setText("Item reserved");
+                            chatbutton.setEnabled(false);
+                        }
                     }
 
                     //Retrieves seller's username and downloads image if available
@@ -359,9 +391,9 @@ public class individual_listing extends AppCompatActivity {
                                     Bundle seller_id = new Bundle();
                                     seller_id.putString("uid", sellerid);
 
-                                    Intent profilepage = new Intent(view.getContext(), userProfile.class);
+                                    Intent profilepage = new Intent(individual_listing.this, userProfile.class);
                                     profilepage.putExtras(seller_id);
-                                    view.getContext().startActivity(profilepage);
+                                    individual_listing.this.startActivity(profilepage);
                                 }
                             });
 
@@ -374,7 +406,7 @@ public class individual_listing extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(individual_listing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -382,17 +414,24 @@ public class individual_listing extends AppCompatActivity {
         });
     }
 
-    private void initialCheckLiked(String pID, String uID) { //Checks for like status to set like button on initial start
+    private void initialCheckLiked() { //Checks for like status to set like button on initial start
         ToggleButton like_button = findViewById(R.id.button_like);
 
-        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
-        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
+        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked"); //Points to correct child directory
         liked.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild(pID)) {
-                    like_button.setChecked(true);
+                Log.e("snapshot", String.valueOf(snapshot));
+                if (snapshot.exists()) {
+                    if (snapshot.hasChild(pID)) {
+                        like_button.setChecked(true);
+                    }
+
+                    else {
+                        like_button.setChecked(false);
+                    }
                 }
 
                 else {
@@ -407,43 +446,61 @@ public class individual_listing extends AppCompatActivity {
         });
     }
 
-    private void checkLiked(String pID, String uID) { //Changes like status and updates database
+    private void checkLiked() { //Changes like status and updates database
         ToggleButton like_button = findViewById(R.id.button_like);
 
         like_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (like_button.isChecked()) {
-                    likeFunction(pID, uID);
+                    likeFunction();
                 }
 
                 else {
-                    unlikeFunction(pID, uID);
+                    unlikeFunction();
                 }
             }
         });
     }
 
-    private void likeFunction(String pID, String uID) { //Updates database when liking objects
-        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
+    private void likeFunction() { //Updates database when liking objects
+        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked").child(pID);
         liked.setValue("");
     }
 
-    private void unlikeFunction(String pID, String uID) { //Updates database when unliking objects
-        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
+    private void unlikeFunction() { //Updates database when unliking objects
+        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked");
         liked.child(pID).removeValue();
     }
 
-    private void deleteListing(String pID, String uID) {
-        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
-        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
+    private void reserveListing() {
+        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
 
-        String storagelink = "gs://cashoppe-179d4.appspot.com";
-        StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images").child(pID);
+        individualdb.getReference().child("individual-listing").child(pID).child("reserved").setValue(true);
+        listing.setReserved(true);
+        Toast.makeText(individual_listing.this, "Marked listing as reserved.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void unreserveListing() {
+        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
+
+        individualdb.getReference().child("individual-listing").child(pID).child("reserved").setValue(false);
+        listing.setReserved(false);
+        Toast.makeText(individual_listing.this, "Marked listing as available.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void deleteListing() {
+        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
+
+        //String storagelink = "gs://cashoppe-179d4.appspot.com";
+        //StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images").child(pID);
 
         individualdb.getReference().child("individual-listing").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -459,7 +516,7 @@ public class individual_listing extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 finish();
-                                Toast.makeText(getApplicationContext(), "Deleted listing!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(individual_listing.this, "Deleted listing!", Toast.LENGTH_SHORT).show();
                                 Intent returnHome = new Intent(individual_listing.this, MainActivity.class);
                                 returnHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(returnHome);
