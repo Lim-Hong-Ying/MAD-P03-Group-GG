@@ -46,6 +46,11 @@
         <entry key="app/src/main/res/mipmap-anydpi-v26/shopeeBanner1.xml" value="0.196" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/shopeebanner1.xml" value="0.2075" />
         <entry key="app/src/main/res/xml/activity_search.xml" value="0.24048913043478262" />
+        <entry key="app/src/main/res/layout/view_pager_holder.xml" value="0.23324275362318841" />
+        <entry key="app/src/main/res/menu/image_chooser.xml" value="0.2125" />
+        <entry key="app/src/main/res/menu/individual_listing.xml" value="0.34479166666666666" />
+        <entry key="app/src/main/res/menu/individual_listing_buyer.xml" value="0.34479166666666666" />
+        <entry key="app/src/main/res/menu/individual_listing_seller.xml" value="0.21354166666666666" />
       </map>
     </option>
   </component>

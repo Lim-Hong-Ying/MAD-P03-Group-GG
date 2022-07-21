@@ -8,14 +8,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -67,6 +66,10 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         holder.listing_title.setText(listing.getTitle());
         holder.price.setText("$" + listing.getPrice());
         holder.itemcondition.setText(listing.getiC());
+
+        if (listing.getReserved() == false) {
+            holder.listing_reserved_indicator.setVisibility(View.GONE);
+        }
 
         //Downloads information from Firebase Database
         String sid = "";
