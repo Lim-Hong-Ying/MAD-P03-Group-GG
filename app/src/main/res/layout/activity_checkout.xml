@@ -47,7 +47,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <ImageView
-                        android:id="@+id/searchPageCloseButton"
+                        android:id="@+id/checkoutPageCloseButton"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="16dp"
@@ -100,9 +100,9 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:id="@+id/imageView6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:id="@+id/listingPictureView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             tools:srcCompat="@tools:sample/avatars" />
                     </androidx.cardview.widget.CardView>
 
@@ -162,7 +162,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/listingNameCheckoutView"
+                            android:id="@+id/listingTitlePriceCard"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -172,7 +172,7 @@
                             android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/listingPriceCheckoutView"
+                            android:id="@+id/listingCostPriceCard"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -190,7 +190,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView18"
+                            android:id="@+id/deliveryTextView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -200,7 +200,7 @@
                             android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/textView19"
+                            android:id="@+id/deliveryCostTextView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -226,7 +226,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView20"
+                            android:id="@+id/totalTextView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -235,7 +235,7 @@
                             android:textSize="20sp" />
 
                         <TextView
-                            android:id="@+id/textView21"
+                            android:id="@+id/totalPriceTextView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -249,7 +249,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/payMethodCard"
+                android:id="@+id/paymentMethodCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -267,7 +267,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/imageView7"
+                        android:id="@+id/paymentMethodLogo"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -275,7 +275,7 @@
                         app:srcCompat="@drawable/stripe" />
 
                     <TextView
-                        android:id="@+id/textView10"
+                        android:id="@+id/paymentDetailsHint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -287,7 +287,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/textView11"
+                        android:id="@+id/changePaymentButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -308,95 +308,82 @@
                 app:cardCornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/payMethodCard">
+                app:layout_constraintTop_toBottomOf="@+id/paymentMethodCard">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="14dp"
-                    android:orientation="vertical">
+                    android:layout_margin="14dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                    <RadioGroup
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/textView13"
-                            android:layout_width="wrap_content"
+                        <RadioButton
+                            android:id="@+id/radioButton4"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
+                            android:layoutDirection="rtl"
                             android:text="Meetup"
-                            android:textColor="#000000"
                             android:textSize="20sp" />
 
                         <RadioButton
-                            android:id="@+id/radioButton"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/radioButton5"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:minWidth="48dp"
-                            android:minHeight="48dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView14"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="4"
+                            android:layout_gravity="right"
+                            android:layoutDirection="rtl"
                             android:text="Delivery"
-                            android:textColor="#000000"
                             android:textSize="20sp" />
 
-                        <RadioButton
-                            android:id="@+id/radioButton2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:minWidth="0dp"
-                            android:minHeight="0dp" />
-                    </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/addressLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/addressTextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:text="Enter Address"
+                                android:textSize="20sp" />
 
-                        <TextView
-                            android:id="@+id/textView15"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TextView"
-                            android:textColor="#000000"
-                            android:textSize="20sp" />
+                            <ImageView
+                                android:id="@+id/changeAddressButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="10"
+                                android:minWidth="48dp"
+                                android:minHeight="48dp"
+                                app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
+                        </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/imageView8"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
-
-                    </LinearLayout>
-                </LinearLayout>
+                    </RadioGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/checkoutButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="#A2A1FF"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
                 android:text="CHECKOUT"
-                app:cornerRadius="10dp"
+                android:textSize="16sp"
+                app:cornerRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
