@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
 
 public class individual_listing extends AppCompatActivity {
 
@@ -173,7 +174,8 @@ public class individual_listing extends AppCompatActivity {
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(individual_listing.this, CheckoutActivity.class);
+                startActivity(intent);
             }
         });
         // ############# END WILLIAM SECTION ###############

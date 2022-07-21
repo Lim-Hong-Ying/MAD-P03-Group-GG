@@ -44,6 +44,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
+import sg.edu.np.mad_p03_group_gg.tools.stripe.ConnectWithStripeActivity;
+
 public class newlisting extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,6 +291,9 @@ public class newlisting extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
+
+                Intent intent = new Intent(newlisting.this, ConnectWithStripeActivity.class);
+                startActivity(intent);
             }
         });
 

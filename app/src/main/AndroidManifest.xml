@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".tools.stripe.ConnectWithStripeActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.ui.CheckoutActivity"
             android:exported="false" />
         <activity
@@ -36,19 +39,7 @@
             android:exported="true" />
         <activity
             android:name=".newlisting"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="http"
-                    android:host="www.cashshope.com"
-                    android:pathPattern="/new-listing" />
-            </intent-filter>
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".forget_password_activitiy"
             android:exported="false" />
