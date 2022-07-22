@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".view.ui.PaymentMethodActivity"
+            android:exported="false" />
+        <activity
             android:name=".tools.stripe.ConnectWithStripeActivity"
             android:exported="false" />
         <activity
@@ -39,7 +42,7 @@
             android:exported="true" />
         <activity
             android:name=".newlisting"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".forget_password_activitiy"
             android:exported="false" />

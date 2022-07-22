@@ -47,7 +47,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <ImageView
-                        android:id="@+id/checkoutPageCloseButton"
+                        android:id="@+id/paymentMethodCloseButton"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="16dp"
@@ -103,6 +103,12 @@
                             android:id="@+id/listingPictureView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:maxWidth="128dp"
+                            android:maxHeight="128dp"
+                            android:minWidth="128dp"
+                            android:minHeight="128dp"
+                            android:scaleType="fitXY"
                             tools:srcCompat="@tools:sample/avatars" />
                     </androidx.cardview.widget.CardView>
 

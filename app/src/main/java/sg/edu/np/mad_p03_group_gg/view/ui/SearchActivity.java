@@ -49,7 +49,7 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false); // To disable appname title
 
         searchField = findViewById(R.id.searchField);
-        ImageView searchPageCloseButton = findViewById(R.id.checkoutPageCloseButton);
+        ImageView searchPageCloseButton = findViewById(R.id.paymentMethodCloseButton);
 
         // Get user query from intent
         Intent fromSearchView = getIntent();
