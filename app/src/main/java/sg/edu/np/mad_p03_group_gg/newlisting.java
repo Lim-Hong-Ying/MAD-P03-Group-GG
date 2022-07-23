@@ -46,6 +46,23 @@ import java.util.Date;
 
 import sg.edu.np.mad_p03_group_gg.tools.stripe.ConnectWithStripeActivity;
 
+/**
+ * TODO:
+ *
+ * Check if seller has a Stripe Connected Account ID
+ *
+ * If not:
+ * Initiate new onboarding flow
+ *
+ * If yes:
+ * Use back the account ID
+ *
+ * Added toggle button to let seller choose to enable their mode of payment.
+ *
+ * Toggle button to check if flow is entered and exited properly.
+ * To at least, enable one payment method. (Check upon clicking create listing button)
+ * By: Kai Zhe
+ */
 public class newlisting extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -365,16 +382,35 @@ public class newlisting extends AppCompatActivity {
         }
 
         if (image_selected == true && title_filled == true && price_filled == true && itemcondition_selected == true && desc_filled == true && meetup_filled == true && deliverytype_filled == true && deliveryprice_filled == true && deliverytime_filled == true) {
-            writeToDatabaseAndFirebase();
 
-            Intent returnhome = new Intent(view.getContext(), successListPage.class);
-            finish();
-            view.getContext().startActivity(returnhome);
+
+            // ############# KAI ZHE PAYMENT SECTION ###############
+            // Check if at least one payment method is selected
+
+            Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+            Switch paynowSwitch = findViewById(R.id.paynowSwitch);
+            Switch cardanoSwitch = findViewById(R.id.cardanoSwitch);
+
+            if (stripeSwitch.isChecked() == false && paynowSwitch.isChecked() == false
+                    && cardanoSwitch.isChecked() == false)
+            {
+                // If all is false prompt user to
+                Toast.makeText(getApplicationContext(),
+                        "Please choose at least one payment method.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else {
+                writeToDatabaseAndFirebase();
+                Intent returnhome = new Intent(view.getContext(), successListPage.class);
+                finish();
+                view.getContext().startActivity(returnhome);
+            }
+            // ############# END KAI ZHE PAYMENT SECTION ###############
         }
-
         else {
             Toast.makeText(getApplicationContext(), "Please enter required information.", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void writeToDatabaseAndFirebase() {

@@ -1,20 +1,17 @@
 package sg.edu.np.mad_p03_group_gg.view.ui;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.browser.customtabs.CustomTabsIntent;
 
 import android.app.Activity;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +19,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.stripe.android.ApiResultCallback;
 import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.PaymentIntentResult;
+import com.stripe.android.Stripe;
 import com.stripe.android.model.ConfirmPaymentIntentParams;
+import com.stripe.android.model.PaymentIntent;
 import com.stripe.android.model.PaymentMethodCreateParams;
 import com.stripe.android.payments.paymentlauncher.PaymentLauncher;
 import com.stripe.android.payments.paymentlauncher.PaymentResult;
@@ -32,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -40,18 +49,20 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import sg.edu.np.mad_p03_group_gg.R;
-import sg.edu.np.mad_p03_group_gg.individualListingObject;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
-import sg.edu.np.mad_p03_group_gg.tools.interfaces.Callback;
 
 public class CheckoutActivity extends AppCompatActivity {
+    private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private static DatabaseReference databaseReference = database.getReference();
     private static final String BACKEND_URL = "https://cashshope.japaneast.cloudapp.azure.com/";
     private String paymentIntentClientSecret;
     private PaymentLauncher paymentLauncher;
     private OkHttpClient httpClient = new OkHttpClient();
     private PaymentMethodCreateParams params;
     private String paymentMethod;
+    private FirebaseAuth auth;
+    private Stripe stripe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,28 @@ public class CheckoutActivity extends AppCompatActivity {
         PaymentConfiguration.init(
                 getApplicationContext(),
                 "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
+        );
+
+        /**
+         * TODO: Get Connected Stripe Account (Seller Account) ID from Firebase
+         * Get seller Id from listingObject,
+         * Then get onboarding id from User on Firebase
+         *
+         */
+
+        stripe = new Stripe(
+                this,
+                PaymentConfiguration.getInstance(this).getPublishableKey(),
+                "{{acct_1LNubg2X820yavlY}}"
+        );
+
+        // if payment method == stripe
+        // Start checkout session (create paymentIntent to get clientSecret)
+        paymentLauncher = PaymentLauncher.Companion.create(
+                this,
+                PaymentConfiguration.getInstance(this).getPublishableKey(),
+                PaymentConfiguration.getInstance(this).getStripeAccountId(),
+                this::onPaymentResult
         );
 
         // Get Intent from Individual Listing Activity
@@ -102,6 +135,8 @@ public class CheckoutActivity extends AppCompatActivity {
                         Integer.parseInt(listingObject.getDeliveryPrice());
             }
             totalPriceTextView.setText("$" + totalPrice);
+
+            startCheckout(totalPrice);
         });
 
         /**
@@ -140,22 +175,14 @@ public class CheckoutActivity extends AppCompatActivity {
             }
         });
 
+
         // Check which payment method selected and do appropriate functions
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (paymentMethod.equals("Card"))
                 {
-                    ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
-                            .createWithPaymentMethodCreateParams(params,
-                                    paymentIntentClientSecret);
-                /*paymentLauncher = PaymentLauncher.Companion.create(
-                        "PaymentResult: ",
-                        PaymentConfiguration.getInstance(this.getApplicationContext()).getPublishableKey(),
-                        PaymentConfiguration.getInstance(this.getApplicationContext()).getStripeAccountId(),
-                        this::onPaymentResult
-                );*/
-                    paymentLauncher.confirm(confirmParams);
+                    // If stripe do nothing, as it is handled by startCheckout()
                 }
                 else if (paymentMethod.equals("Paynow"))
                 {
@@ -170,46 +197,91 @@ public class CheckoutActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Only for Stripe Payment
+     *
+     * 1) Gets email address of current authenticated user
+     * 2) Send POST request to backend to create payment intent
+     * 3) Get client secret from payment intent
+     *
+     * @param listingTotalPrice
+     */
     private void startCheckout(int listingTotalPrice) {
-        // Request a PaymentIntent from your server and store its client secret in paymentIntentClientSecret
 
-        // Create a PaymentIntent by calling the sample server's /create-payment-intent endpoint.
-        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+        // Get current user id
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = auth.getCurrentUser();
+        String currentUserID = fbUser.getUid();
 
-        // Stripe uses smallest currency unit
-        String json = String.format("{"
-                + "\"amount\":\"%s\","
-                + "\"items\":["
-                + "{\"id\":\"photo_subscription\"}"
-                + "]"
-                + "}", String.valueOf(listingTotalPrice).concat("00"));
+        databaseReference.child("users").child(currentUserID).get().addOnCompleteListener(
+                new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    String customerEmail = task.getResult().child("email").getValue(String.class);
 
-        RequestBody body = RequestBody.create(mediaType, json);
-        Request request = new Request.Builder()
-                .url(BACKEND_URL + "create-payment-intent")
-                .post(body)
-                .build();
+                    // Request a PaymentIntent from your server and store its client secret in paymentIntentClientSecret
 
-        httpClient.newCall(request)
-                .enqueue(new okhttp3.Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        // Request failed
-                        Log.d("Error", e.getMessage());
+                    // Create a PaymentIntent by calling the sample server's /create-payment-intent endpoint.
+                    MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+
+                    // Stripe uses smallest currency unit
+                    String json = String.format("{"
+                            + "\"amount\":\"%s\","
+                            + "\"cust_email\":\"%s\""
+                            + "}", String.valueOf(listingTotalPrice).concat("00"), customerEmail);
+
+                    RequestBody body = RequestBody.create(mediaType, json);
+                    Request request = new Request.Builder()
+                            .url(BACKEND_URL + "create-payment-intent")
+                            .post(body)
+                            .build();
+
+                    httpClient.newCall(request)
+                            .enqueue(new okhttp3.Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    // Request failed
+                                    Log.d("Error", e.getMessage());
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    String body = response.body().string();
+                                    try {
+                                        JSONObject responseJson = new JSONObject(body);
+                                        paymentIntentClientSecret = responseJson.getString("client_secret");
+                                        Log.d("ClientSecret", paymentIntentClientSecret);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                }
+            }
+        });
+
+        Button checkoutButton = findViewById(R.id.checkoutButton);
+
+        // Check which payment method selected and do appropriate functions
+        checkoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (paymentMethod.equals("Card"))
+                {
+                    if (params != null) {
+                        ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
+                                .createWithPaymentMethodCreateParams(params, paymentIntentClientSecret);
+
+                        paymentLauncher.confirm(confirmParams);
+
                     }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String body = response.body().string();
-                        try {
-                            JSONObject responseJson = new JSONObject(body);
-                            paymentIntentClientSecret = responseJson.getString("client_secret");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                }
+            }
+        });
     }
 
     private void onPaymentResult(PaymentResult paymentResult) {

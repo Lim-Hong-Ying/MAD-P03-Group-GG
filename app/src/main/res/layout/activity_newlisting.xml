@@ -174,7 +174,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="Allow payment with Stripe?"
+                android:minHeight="48dp"
+                android:text="Stripe"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/paynowSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:minHeight="48dp"
+                android:text="Paynow"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/cardanoSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:minHeight="48dp"
+                android:text="Cardano"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
