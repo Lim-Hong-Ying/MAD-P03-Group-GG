@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".listingsPage"
+            android:exported="false" />
+        <activity
+            android:name=".categoryPage"
+            android:exported="false" />
+        <activity
             android:name=".editListing"
             android:exported="false" />
         <activity
@@ -99,4 +105,5 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 </manifest>
