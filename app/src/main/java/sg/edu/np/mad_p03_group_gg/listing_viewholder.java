@@ -17,6 +17,7 @@ public class listing_viewholder extends RecyclerView.ViewHolder {
     TextView seller_username;
     TextView price;
     TextView itemcondition;
+    TextView listing_reserved_indicator;
 
     public listing_viewholder(View itemView) {
         super(itemView);
@@ -28,5 +29,6 @@ public class listing_viewholder extends RecyclerView.ViewHolder {
         seller_username = itemView.findViewById(R.id.seller_username);
         price = itemView.findViewById(R.id.price);
         itemcondition = itemView.findViewById(R.id.itemcondition);
+        listing_reserved_indicator = itemView.findViewById(R.id.listing_reserved_indicator);
     }
 }

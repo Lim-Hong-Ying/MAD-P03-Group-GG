@@ -2,8 +2,14 @@ package sg.edu.np.mad_p03_group_gg.messages;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Message;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +18,26 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.internal.TextDrawableHelper;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,17 +45,25 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.User;
+import sg.edu.np.mad_p03_group_gg.listing_adapter;
+import sg.edu.np.mad_p03_group_gg.others.RecyclerViewInterface;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder> {
 
-    private List<MessageList> messageList;
+    public List<MessageList> messageList;
     private Context context;
     private User mainUser;
+    private DatabaseReference databaseReference;
+    private final RecyclerViewInterface recyclerViewInterface;
+    private List<String> unseenMessageList = new ArrayList<>();
+    private HashMap<String, Boolean> unseenMessageDict = new HashMap<>();
 
-    public ChatListAdapter(List<MessageList> messageList, Context context, User mainUser) {
+    public ChatListAdapter(List<MessageList> messageList, Context context, User mainUser, DatabaseReference databaseReference,RecyclerViewInterface recyclerViewInterface ) {
         this.messageList = messageList;
         this.context = context;
         this.mainUser = mainUser;
+        this.databaseReference = databaseReference;
+        this.recyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
@@ -48,36 +75,39 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
     }
 
     @Override
+    public void onViewRecycled(@NonNull ChatListAdapter.MyViewHolder holder) {
+
+    }
+    @Override
     public void onBindViewHolder(@NonNull ChatListAdapter.MyViewHolder holder, int position) {
         MessageList user = messageList.get(position);
-
-        if(user.getProfilePic() != null && !user.getProfilePic().isEmpty()){
-            Picasso.get().load(user.getProfilePic()).into(holder.profilePic);
-        }
-
 
         holder.name.setText(user.getName());
         holder.lastMessage.setText(user.getLastMessage());
 
-        // Don't display unseen messages
-        holder.unseenMessages.setVisibility(View.GONE);
+        // Load user image
+        holder.picUrl = user.getProfilePic();
+        holder.LoadProfileImage();
+
 
         // If 0 unseen messages, don't show number
-//        if(user.getUnseenMessages() == 0){
-//            holder.unseenMessages.setVisibility(View.GONE);
-//            holder.lastMessage.setTextColor(context.getResources().getColor(R.color.grey));
-//        }
+        if(user.getUnseenMessages() == 0){
+            holder.unseenMessages.setVisibility(View.GONE);
+            holder.lastMessage.setTextColor(context.getResources().getColor(R.color.grey));
+        }
         // If there are unseen messages, show number
-//        else{
-//            holder.unseenMessages.setVisibility(View.VISIBLE);
-//            holder.unseenMessages.setText(String.valueOf(user.getUnseenMessages()));
-//            holder.lastMessage.setTextColor(context.getResources().getColor(R.color.theme_blue));
-//        }
+        else{
+            holder.unseenMessages.setVisibility(View.VISIBLE);
+            holder.unseenMessages.setText(String.valueOf(user.getUnseenMessages()));
+            holder.lastMessage.setTextColor(context.getResources().getColor(R.color.theme_blue));
+        }
 
         // Sending name and profile pic to chat activity when user is clicked
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Starting chat activity
                 Intent intent = new Intent(context, Chat.class);
                 // Send selected user's data to chat activity
                 intent.putExtra("name",user.getName());
@@ -91,35 +121,18 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
             }
         });
 
-    }
 
-    // To update messageList
-    public void updateData(List<MessageList> updateMessageList){
-        //this.messageList = messageList2;
-
-        // looping all the messages to update
-        for(MessageList ml: updateMessageList){
-            //System.out.println(this.messageList);
-            int i = 0;
-            boolean foundMessage = false;
-            for(MessageList ml2: this.messageList){
-                //String chatKey = ml.getChatKey();
-                String personId = ml.getid();
-                if(personId.equals(ml2.getid())){
-                    // update the found message with the latest data
-                    this.messageList.set(i, ml);
-                    foundMessage = true;
-                    break;
+        // On long click, delete user
+        holder.rootLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (recyclerViewInterface != null){
+                    recyclerViewInterface.onItemLongClick(user);
                 }
-                ++i;
+                return true;
             }
+        });
 
-            // not found means first time, not inside this.messageList
-            if(foundMessage == false){
-                this.messageList.add(ml);
-            }
-        }
-        notifyDataSetChanged();
     }
 
     @Override
@@ -134,6 +147,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
         private TextView lastMessage;
         private TextView unseenMessages;
         private LinearLayout rootLayout;
+        public String picUrl;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -142,6 +156,24 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
             lastMessage = itemView.findViewById(R.id.lastMessage);
             unseenMessages = itemView.findViewById(R.id.unseenMessages);
             rootLayout = itemView.findViewById(R.id.rootLayout);
+            setIsRecyclable(false);
         }
+
+        public void LoadProfileImage(){
+            if(picUrl != null && !picUrl.isEmpty()){
+                Picasso.get().load(picUrl).placeholder(R.drawable.profile_icon).into(profilePic);
+            }
+            else{
+                profilePic.setImageResource(R.drawable.profile_icon);
+            }
+        }
+    }
+
+
+
+    // Filter recyclerview list method
+    public void filterList(List<MessageList> filteredList){
+        messageList = filteredList;
+        this.notifyDataSetChanged();
     }
 }
