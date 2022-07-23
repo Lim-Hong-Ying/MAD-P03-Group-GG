@@ -27,6 +27,8 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -35,8 +37,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="397dp"
+                    android:layout_height="489dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -51,7 +53,7 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="24dp"
                         android:fontFamily="sans-serif"
-                        android:text="Forget Password"
+                        android:text="Confirm User"
                         android:textColor="@color/black"
                         android:textSize="48dp"
                         android:textStyle="bold"
@@ -75,29 +77,32 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/appname"></EditText>
 
+                    <EditText
+                        android:id="@+id/repassword"
+                        android:layout_width="335dp"
+                        android:layout_height="57dp"
+
+
+                        android:layout_marginTop="32dp"
+                        android:background="@drawable/inpu_text"
+                        android:hint="Password"
+                        android:inputType="textEmailAddress"
+                        android:paddingLeft="20dp"
+                        app:layout_constraintEnd_toEndOf="@+id/ccredentialemail"
+                        app:layout_constraintStart_toStartOf="@+id/ccredentialemail"
+                        app:layout_constraintTop_toBottomOf="@+id/ccredentialemail"></EditText>
+
                     <Button
                         android:id="@+id/changedtls"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
 
                         android:layout_marginTop="32dp"
-                        android:layout_marginBottom="20dp"
                         android:background="@drawable/sign_in_button"
                         android:text="Continue"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/ccredentialemail"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="@+id/ccredentialemail"
-                        app:layout_constraintTop_toTopOf="@+id/fgtpasswordstatus"></Button>
-
-                    <TextView
-                        android:id="@+id/fgtpasswordstatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        app:layout_constraintEnd_toEndOf="@+id/ccredentialemail"
-                        app:layout_constraintStart_toStartOf="@+id/ccredentialemail"
-                        app:layout_constraintTop_toBottomOf="@+id/ccredentialemail" />
+                        app:layout_constraintEnd_toEndOf="@+id/repassword"
+                        app:layout_constraintStart_toStartOf="@+id/repassword"
+                        app:layout_constraintTop_toBottomOf="@+id/repassword"></Button>
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

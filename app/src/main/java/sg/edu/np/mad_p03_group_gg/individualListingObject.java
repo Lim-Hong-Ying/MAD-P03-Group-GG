@@ -1,5 +1,9 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class individualListingObject extends listingObject {
     /*private String lID; //listing ID in DB
     private String title; //listing title
@@ -16,11 +20,11 @@ public class individualListingObject extends listingObject {
     private String deliveryPrice; //price for delivery
     private String deliveryTime; //lead time for delivery
 
+
     public individualListingObject() {
 
     }
-
-    public individualListingObject(String lid, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, String dp, String dtime) {
+    public individualListingObject(String lid, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, String dp, String dtime,String ts) {
         /*setlID(lID);
         setTitle(t);
         settURL(turl);
@@ -29,14 +33,18 @@ public class individualListingObject extends listingObject {
         setiC(ic);
         setPrice(p);
         setReserved(r);*/
-        super(lid, t, turl, sid, sppu, ic, p, r);
+        super(lid, t, turl, sid, sppu, ic, p, r,ts);
         setDescription(desc);
         setLocation(l);
         setDelivery(d);
         setDeliveryType(dt);
         setDeliveryPrice(dp);
         setDeliveryTime(dtime);
+
+
     }
+
+
 
     /*public void setlID(String id) {
         lID = id;
@@ -102,6 +110,10 @@ public class individualListingObject extends listingObject {
         return reserved;
     }
      */
+    //####ISAAC SECTION START####
+
+
+
 
     public void setDescription(String s) {
         description = s;

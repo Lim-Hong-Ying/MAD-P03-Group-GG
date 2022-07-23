@@ -11,7 +11,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
+import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 
 public class SplashPage extends AppCompatActivity {
 
@@ -37,9 +41,18 @@ public class SplashPage extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashPage.this, loginpage.class);
-                startActivity(intent);
-                finish();//prevents user from going back to splashpage
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Intent i = new Intent(SplashPage.this, MainActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+                } else {
+                    Intent intent = new Intent(SplashPage.this, loginpage.class);
+                    startActivity(intent);
+                    finish();//prevents user from going back to splashpage
+                }
+
             }
         },5000);//5 seconds
     }
