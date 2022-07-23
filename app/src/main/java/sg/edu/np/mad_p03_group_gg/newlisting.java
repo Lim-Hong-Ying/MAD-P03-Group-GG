@@ -63,6 +63,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.tools.stripe.ConnectWithStripeActivity;
 
 /**
@@ -83,6 +84,8 @@ import sg.edu.np.mad_p03_group_gg.tools.stripe.ConnectWithStripeActivity;
  * By: Kai Zhe
  */
 public class newlisting extends AppCompatActivity {
+    private FirebaseAuth auth;
+    private String currentUserId;
 
     ArrayList<Uri> imageArray = new ArrayList<>();
     ArrayList<String> imageURLs = new ArrayList<>();
@@ -115,6 +118,35 @@ public class newlisting extends AppCompatActivity {
                             finalCheck();
                         }
                     });
+
+                    // Get current user id
+                    auth = FirebaseAuth.getInstance();
+                    FirebaseUser fbUser = auth.getCurrentUser();
+                    currentUserId = fbUser.getUid();
+
+                    Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+                    Switch cardanoSwitch = findViewById(R.id.cardanoSwitch);
+
+                    stripeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (b == true)
+                            {
+
+                            }
+                        }
+                    });
+
+                    cardanoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (b == true)
+                            {
+
+                            }
+                        }
+                    });
+
                 }
 
                 else {
@@ -352,8 +384,14 @@ public class newlisting extends AppCompatActivity {
         EditText deltype_input = findViewById(R.id.input_deliverytype);
         EditText delprice_input = findViewById(R.id.input_deliveryprice);
         EditText deltime_input = findViewById(R.id.input_deliverytime);
+
+        EditText paynowPhoneInput = findViewById(R.id.paynowId);
+
         Switch meeting_toggle = findViewById(R.id.meet_toggle);
         Switch delivery_toggle = findViewById(R.id.del_toggle);
+
+        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+        Switch cardanoSwitch = findViewById(R.id.cardanoSwitch);
 
         Boolean image_selected = false;
         Boolean title_filled = false;
@@ -364,6 +402,7 @@ public class newlisting extends AppCompatActivity {
         Boolean deliverytype_filled = false;
         Boolean deliveryprice_filled = false;
         Boolean deliverytime_filled = false;
+        Boolean isPaynowFilled = false;
 
         if (imageArray.size() > 0) {
             image_selected = true;
@@ -411,32 +450,20 @@ public class newlisting extends AppCompatActivity {
             deliverytime_filled = true;
         }
 
-        if (image_selected == true && title_filled == true && price_filled == true && itemcondition_selected == true && desc_filled == true && meetup_filled == true && deliverytype_filled == true && deliveryprice_filled == true && deliverytime_filled == true) {
-            writeToDatabaseAndFirebase();
+        if (TextUtils.isEmpty(paynowPhoneInput.getText().toString()) == false)
+        {
+            isPaynowFilled = true;
         }
 
-            // ############# KAI ZHE PAYMENT SECTION ###############
-            // Check if at least one payment method is selected
+        if (image_selected == true && title_filled == true && price_filled == true &&
+                itemcondition_selected == true && desc_filled == true && meetup_filled == true &&
+                deliverytype_filled == true && deliveryprice_filled == true &&
+                deliverytime_filled == true && isPaynowFilled == true) {
 
-            Switch stripeSwitch = findViewById(R.id.stripeSwitch);
-            Switch paynowSwitch = findViewById(R.id.paynowSwitch);
-            Switch cardanoSwitch = findViewById(R.id.cardanoSwitch);
-
-            if (stripeSwitch.isChecked() == false && paynowSwitch.isChecked() == false
-                    && cardanoSwitch.isChecked() == false)
-            {
-                // If all is false prompt user to
-                Toast.makeText(getApplicationContext(),
-                        "Please choose at least one payment method.",
-                        Toast.LENGTH_SHORT).show();
-            }
-            else {
-                writeToDatabaseAndFirebase();
-                Intent returnhome = new Intent(view.getContext(), successListPage.class);
-                finish();
-                view.getContext().startActivity(returnhome);
-            }
-            // ############# END KAI ZHE PAYMENT SECTION ###############
+            writeToDatabaseAndFirebase();
+            Intent returnhome = new Intent(getApplicationContext(), successListPage.class);
+            finish();
+            getApplicationContext().startActivity(returnhome);
         }
         else {
             Toast.makeText(newlisting.this, "Please enter required information.", Toast.LENGTH_SHORT).show();

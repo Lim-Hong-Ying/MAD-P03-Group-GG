@@ -7,23 +7,30 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import sg.edu.np.mad_p03_group_gg.individualListingObject;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.Callback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ThumbnailCallback;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.paymentMethodCallback;
 
 public  class FirebaseTools {
@@ -61,7 +68,8 @@ public  class FirebaseTools {
     }
 
 
-    public static void getStripeConnectId(String sellerId, Context context) {
+    public static void getStripeConnectId(String sellerId, Context context,
+                                          ConnectStripeCallback callback) {
         databaseReference.child("users").child(sellerId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -77,15 +85,64 @@ public  class FirebaseTools {
                     }
                     catch (NullPointerException nullPointerException)
                     {
-                        // If null. means seller haven't onboarded
+                        // If null means seller haven't onboarded
                         stripeConnectId = null;
                     }
 
-                    callback.userPaymentMethodCallBack(paymentMethod);
+                    callback.connectIdCallback(stripeConnectId);
 
                 }
             }
         });
+    }
+
+    public static void writePaymentInfo(String sellerId, @Nullable String connectStripeId,
+                                        @Nullable String paynowPhone, @Nullable String cardanoWalletAddress) {
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DatabaseReference ref = databaseReference.push();
+
+                if (dataSnapshot.hasChild("paymentMethod"))
+                {
+                    if (connectStripeId != null) {
+                        ref.child("users").child(sellerId).child("paymentMethod").
+                                setValue(connectStripeId);
+                    }
+                    if (paynowPhone != null) {
+                        ref.child("users").child(sellerId).child("paymentMethod").
+                                setValue(paynowPhone);
+                    }
+                    if (cardanoWalletAddress != null) {
+                        ref.child("users").child(sellerId).child("paymentMethod").
+                                setValue(cardanoWalletAddress);
+                    }
+                }
+                else {
+                    databaseReference.child("users").child(sellerId).setValue("paymentMethod");
+
+                    if (connectStripeId != null) {
+                        ref.child("users").child(sellerId).child("paymentMethod").
+                                setValue(connectStripeId);
+                    }
+                    if (paynowPhone != null) {
+                        ref.child("users").child(sellerId).child("paymentMethod").
+                                setValue(paynowPhone);
+                    }
+                    if (cardanoWalletAddress != null) {
+                        ref.child("users").child(sellerId).child("paymentMethod").
+                                setValue(cardanoWalletAddress);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        databaseReference.addValueEventListener(postListener);
     }
 
     /**
@@ -164,13 +221,17 @@ public  class FirebaseTools {
                 } else {
                     //Builds individualListingObject from data retrieved
                     DataSnapshot result = task.getResult();
-                    individualListingObject individualListing = new individualListingObject();
+                    individualListingObject individualListing;
 
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
                     String thumbnailurl = result.child("tURL").getValue(String.class);
+                    long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                    ArrayList<String> tURLs = new ArrayList<>();
+                    for (int i = 0; i < thumbnailurlsize; i++) {
+                        tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                    }
                     String sellerid = result.child("sid").getValue(String.class);
-                    String sellerprofilepicurl = result.child("sppu").getValue(String.class);
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
@@ -181,9 +242,19 @@ public  class FirebaseTools {
                     String deliveryprice = result.child("deliveryPrice").getValue(String.class);
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
 
-                    individualListing = new individualListingObject(listingid, title, thumbnailurl, sellerid,
-                            sellerprofilepicurl, itemcondition, price, reserved, desc, location,
-                            delivery, deliverytype, deliveryprice, deliverytime);
+                    String timeStamp;
+                    try
+                    {
+                        timeStamp = result.child("timeStamp").getValue(String.class);
+                    }
+                    catch (NullPointerException e)
+                    {
+                        timeStamp = null;
+                    }
+
+                    individualListing = new individualListingObject(listingid, title, tURLs, sellerid,
+                            itemcondition, price, reserved, desc, location,
+                            delivery, deliverytype, deliveryprice, deliverytime, timeStamp);
 
                     callback.listingObjectCallback(individualListing);
 

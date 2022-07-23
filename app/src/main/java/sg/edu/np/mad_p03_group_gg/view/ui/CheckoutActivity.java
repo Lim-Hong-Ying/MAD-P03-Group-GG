@@ -121,7 +121,9 @@ public class CheckoutActivity extends AppCompatActivity {
         FirebaseTools.createListingObjectFromFirebase(productId, this, listingObject -> {
             listingTitleView.setText(listingObject.getTitle());
             listingPriceView.setText("$" + listingObject.getPrice());
-            new ImageDownloader(listingPictureView).execute(listingObject.gettURL());
+
+            new ImageDownloader(listingPictureView).execute(listingObject.gettURLs().get(0));
+
             listingTitlePriceCard.setText(listingObject.getTitle());
             listingCostPriceCard.setText("$" + listingObject.getPrice());
             int totalPrice = 0;
