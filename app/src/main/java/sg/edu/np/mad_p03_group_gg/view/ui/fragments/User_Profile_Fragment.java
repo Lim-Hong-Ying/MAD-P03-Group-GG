@@ -2,6 +2,7 @@ package sg.edu.np.mad_p03_group_gg.view.ui.fragments;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,12 +16,18 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.provider.ContactsContract;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -37,6 +44,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -59,13 +68,18 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.Event;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
+import sg.edu.np.mad_p03_group_gg.deleteaccount;
+import sg.edu.np.mad_p03_group_gg.listingObject;
+import sg.edu.np.mad_p03_group_gg.listing_viewholder;
 import sg.edu.np.mad_p03_group_gg.loginpage;
+import sg.edu.np.mad_p03_group_gg.changeaccdetails;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,6 +100,10 @@ public class User_Profile_Fragment extends Fragment {
     private FirebaseStorage base = FirebaseStorage.getInstance();
     private String Filepath;
     private String profilePicurl = null;
+    private FirebaseUser fbUser;
+    private List<listingObject> llist ;
+    private int nooflisiting;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -145,18 +163,25 @@ public class User_Profile_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
 
+
          //Get Views
-        TextView Email = (EditText) view.findViewById(R.id.user_profile_email);
+        TextView Email = (TextView) view.findViewById(R.id.user_profile_email);
         TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
-        TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
+        TextView Phonenumber = (TextView) view.findViewById(R.id.User_Profile_phonenumber);
         ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
+
         Button log_out = (Button) view.findViewById(R.id.log_out);
+        Button delete =  (Button)view.findViewById(R.id.Delete_Account);
+        Button EditProfilebtn = (Button)view.findViewById(R.id.editprofilebutton);
+
         //Get References
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         mDataref = database.getReference();
         storage = FirebaseStorage.getInstance().getReference("user-images");
         //Retrive and display profile picture
         retrieveUserAndDisplayImage(view);
+
+
         // Get user data from database by in the form of a class.
         mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -164,7 +189,7 @@ public class User_Profile_Fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //Get authenticated user from an instance
                 auth = FirebaseAuth.getInstance();
-                FirebaseUser fbUser = auth.getCurrentUser();
+                fbUser = auth.getCurrentUser();
                 //Get parameters
                 String uid = fbUser.getUid();
                 String email = fbUser.getEmail();
@@ -178,6 +203,30 @@ public class User_Profile_Fragment extends Fragment {
 
                         user = dataSnapshot.getValue(User.class);
                         user.setId(uid);
+                        DatabaseReference db = mDataref.child("users").child(user.getId()).child("liked");
+                        Log.e("Noofitem1", db.toString());
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    nooflisiting+=1;
+
+                                    Log.e("nofolistingnum",Integer.toString(nooflisiting));
+                                    Log.e("Noofitem", db.toString());
+
+                                }
+                                TextView nolisting = (TextView) view.findViewById(R.id.listing_numbers);
+                                nolisting.setText(Integer.toString(nooflisiting));
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
 
                         break;
                     }
@@ -227,6 +276,47 @@ public class User_Profile_Fragment extends Fragment {
                 }
             }
         });
+        // Get views
+        CardView eventcard = (CardView)view.findViewById(R.id.event_card);
+        CardView listingcard = (CardView) view.findViewById(R.id.listing_card);
+        TextView nolisting = (TextView) view.findViewById(R.id.listing_numbers);
+
+
+        TextView noevents = (TextView)view.findViewById(R.id.num_ofevents);
+        int noofevents = numberOfevents(user);
+        Log.e("nofolistingnum",Integer.toString(nooflisiting));
+
+
+
+
+        //Set number of events
+
+        noevents.setText(Integer.toString(noofevents));
+
+        eventcard.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent toCalender = new Intent(getActivity(), WeekViewActivity.class);
+                startActivity(toCalender);
+            }
+        });
+        listingcard.setOnClickListener(new View.OnClickListener(){
+
+
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new wishListFragment());
+            }
+        });
+        //Set onclick listner for delete btn
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog("This action is ireversible. Would you want to continue?","Deletion Confirmation",deleteaccount.class);
+
+            }
+        });
 
         //
         ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
@@ -269,20 +359,22 @@ public class User_Profile_Fragment extends Fragment {
             }
         });
 
-        // Get views
-        CardView eventcard = (CardView)view.findViewById(R.id.event_card);
-        TextView noevents = (TextView)view.findViewById(R.id.num_ofevents);
-        int noofevents = numberOfevents(user);
-        //Set number of events
-        noevents.setText(Integer.toString(noofevents));
-        eventcard.setOnClickListener(new View.OnClickListener(){
 
+        //Allow Edit Account info
+        EditProfilebtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent toCalender = new Intent(getActivity(), WeekViewActivity.class);
-                startActivity(toCalender);
+                Intent change = new Intent(getActivity(),changeaccdetails.class);
+                Log.e("Username",user.getName());
+                Log.e("Phonenumber",user.getPhonenumber());
+                change.putExtra("User",user);
+                startActivity(change);
             }
+            
         });
+        
+
+
         return view;
 
     }
@@ -292,9 +384,46 @@ public class User_Profile_Fragment extends Fragment {
         // On resume, or when user changes back from calender, updated data is displayed
         int noofevents = numberOfevents(user);
         TextView noevents = (TextView)getActivity().findViewById(R.id.num_ofevents);
+        TextView nolisting = (TextView) getActivity().findViewById(R.id.listing_numbers);
+        nolisting.setText(Integer.toString(nooflisiting));
         noevents.setText(Integer.toString(noofevents));
 
 
+    }
+    boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
+        CharSequence email = text.getText().toString();
+        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+    boolean isPhone(EditText Phone){
+        CharSequence phone = Phone.getText().toString();
+        return(!TextUtils.isEmpty(phone)&& Patterns.PHONE.matcher(phone).matches());
+    }
+
+
+
+
+
+
+    private void alertDialog(String msg, String Title, Class target) {
+        AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
+        dialog.setMessage(msg);
+        dialog.setTitle(Title);
+        dialog.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        Intent gotodelete = new Intent(getActivity(),target);
+                        startActivity(gotodelete);
+                    }
+                });
+        dialog.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog alertDialog=dialog.create();
+        alertDialog.show();
     }
 
 
@@ -327,6 +456,12 @@ public class User_Profile_Fragment extends Fragment {
                 }
             }
         });
+    }
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit(); // To apply changes
     }
 //Get file extension of file
     private String getfileextension(Uri uri) {
