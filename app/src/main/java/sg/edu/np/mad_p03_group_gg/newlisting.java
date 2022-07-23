@@ -29,6 +29,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,9 +51,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.stripe.android.PaymentConfiguration;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,8 +70,16 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.tools.stripe.ConnectWithStripeActivity;
+import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 
 /**
  * TODO:
@@ -84,6 +99,8 @@ import sg.edu.np.mad_p03_group_gg.tools.stripe.ConnectWithStripeActivity;
  * By: Kai Zhe
  */
 public class newlisting extends AppCompatActivity {
+    private static final String BACKEND_URL = "https://cashshope.japaneast.cloudapp.azure.com/";
+    private OkHttpClient httpClient = new OkHttpClient();
     private FirebaseAuth auth;
     private String currentUserId;
 
@@ -94,6 +111,12 @@ public class newlisting extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newlisting);
+
+        // Stripe
+        PaymentConfiguration.init(
+                getApplicationContext(),
+                "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
+        );
 
         DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
@@ -124,31 +147,7 @@ public class newlisting extends AppCompatActivity {
                     FirebaseUser fbUser = auth.getCurrentUser();
                     currentUserId = fbUser.getUid();
 
-                    Switch stripeSwitch = findViewById(R.id.stripeSwitch);
-                    Switch cardanoSwitch = findViewById(R.id.cardanoSwitch);
-
-                    stripeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            if (b == true)
-                            {
-
-                            }
-                        }
-                    });
-
-                    cardanoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            if (b == true)
-                            {
-
-                            }
-                        }
-                    });
-
                 }
-
                 else {
                     Toast.makeText(newlisting.this, "No internet connection.", Toast.LENGTH_SHORT).show();
                     finish();
@@ -359,16 +358,78 @@ public class newlisting extends AppCompatActivity {
         });
 
         // ############# KAI ZHE PAYMENT SECTION ###############
+        EditText paynowPhoneInput = findViewById(R.id.paynowId);
+
+        paynowPhoneInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (TextUtils.isEmpty(paynowPhoneInput.getText().toString())) {
+                    paynowPhoneInput.setError("Enter a valid Paynow-registered phone number.");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+        final StripeDialog stripeDialog = new StripeDialog(newlisting.this);
 
         stripeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b == true)
+                {
+                    stripeDialog.startStripeAlertDialog();
 
+                    WeakReference<Activity> weakActivity = new WeakReference<>(newlisting.this);
+                    Request request = new Request.Builder()
+                            .url(BACKEND_URL + "onboard")
+                            .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ""))
+                            .build();
+                    httpClient.newCall(request)
+                            .enqueue(new Callback() {
+                                @Override
+                                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                    // Request failed
+                                    Log.d("Error", e.getMessage());
+                                }
 
-                Intent intent = new Intent(newlisting.this, ConnectWithStripeActivity.class);
-                startActivity(intent);
+                                @Override
+                                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                    stripeDialog.dismissDialog();
+
+                                    final Activity activity = weakActivity.get();
+                                    if (activity == null) {
+                                        return;
+                                    }
+                                    if (!response.isSuccessful() || response.body() == null) {
+                                        // Request failed
+                                    } else {
+                                        String body = response.body().string();
+                                        try {
+                                            JSONObject responseJson = new JSONObject(body);
+                                            String accountId = responseJson.getString("account_id");
+                                            String url = responseJson.getJSONObject("url").getString("url");
+                                            Log.d("url", url);
+                                            Log.d("accountId", accountId);
+                                            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                                            CustomTabsIntent customTabsIntent = builder.build();
+                                            customTabsIntent.launchUrl(newlisting.this, Uri.parse(url));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+                }
             }
         });
 
