@@ -5,11 +5,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,29 +44,67 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull ChatAdapter.MyViewHolder holder, int position) {
         ChatInfo chatInfo = chatInfoList.get(position);
 
-        // If chatInfo id is the same as main user's id
-        if (TextUtils.equals(chatInfo.getid(),mainUserid)){
-            // Change outgoing layout to visible
-            holder.outgoingLayout.setVisibility(View.VISIBLE);
-            // Change incoming layout to be invisible
+        // If message sent is not an image
+        if (!chatInfo.isImage()){
+            // Hide the image layouts
+            holder.outgoingLayoutImg.setVisibility(View.GONE);
+            holder.incomingLayoutImg.setVisibility(View.GONE);
+
+            // If chatInfo id is the same as main user's id
+            if (TextUtils.equals(chatInfo.getid(),mainUserid)){
+                // Change outgoing layout to visible
+                holder.outgoingLayout.setVisibility(View.VISIBLE);
+                // Change incoming layout to be invisible
+                holder.incomingLayout.setVisibility(View.GONE);
+
+                // Setting text from chatInfo according to position in list
+                holder.outgoingMessage.setText(chatInfo.getMessage());
+                // Setting time text was sent
+                holder.outgoingTime.setText(chatInfo.getDate()+" "+chatInfo.getTime());
+            }
+            // If chatInfo id is other user's
+            else{
+                // Change outgoing layout to invisible
+                holder.outgoingLayout.setVisibility(View.GONE);
+                // Change incoming layout to be visible
+                holder.incomingLayout.setVisibility(View.VISIBLE);
+
+                // Setting text from chatInfo according to position in list
+                holder.incomingMessage.setText(chatInfo.getMessage());
+                // Setting time text was sent
+                holder.incomingTime.setText(chatInfo.getDate()+" "+chatInfo.getTime());
+            }
+        }
+        // If message sent is an image
+        else{
+            // Hide the image layouts
+            holder.outgoingLayout.setVisibility(View.GONE);
             holder.incomingLayout.setVisibility(View.GONE);
 
-            // Setting text from chatInfo according to position in list
-            holder.outgoingMessage.setText(chatInfo.getMessage());
-            // Setting time text was sent
-            holder.outgoingTime.setText(chatInfo.getDate()+" "+chatInfo.getTime());
-        }
-        // If chatInfo id is other user's
-        else{
-            // Change outgoing layout to invisible
-            holder.outgoingLayout.setVisibility(View.GONE);
-            // Change incoming layout to be visible
-            holder.incomingLayout.setVisibility(View.VISIBLE);
+            // If chatInfo id is the same as main user's id
+            if (TextUtils.equals(chatInfo.getid(),mainUserid)){
+                // Change outgoing layout to visible
+                holder.outgoingLayoutImg.setVisibility(View.VISIBLE);
+                // Change incoming layout to be invisible
+                holder.incomingLayoutImg.setVisibility(View.GONE);
 
-            // Setting text from chatInfo according to position in list
-            holder.incomingMessage.setText(chatInfo.getMessage());
-            // Setting time text was sent
-            holder.incomingTime.setText(chatInfo.getDate()+" "+chatInfo.getTime());
+                // Load Image from chatInfo according to position in list
+                Picasso.get().load(chatInfo.getMessage()).into(holder.outgoingImage);
+                // Setting time text was sent
+                holder.outgoingTimeImg.setText(chatInfo.getDate()+" "+chatInfo.getTime());
+            }
+            // If chatInfo id is other user's
+            else{
+                // Change outgoing layout to invisible
+                holder.outgoingLayoutImg.setVisibility(View.GONE);
+                // Change incoming layout to be visible
+                holder.incomingLayoutImg.setVisibility(View.VISIBLE);
+
+                // Load Image from chatInfo according to position in list
+                Picasso.get().load(chatInfo.getMessage()).into(holder.incomingImage);
+                // Setting time text was sent
+                holder.incomingTimeImg.setText(chatInfo.getDate()+" "+chatInfo.getTime());
+            }
         }
     }
 
@@ -87,8 +128,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
         private TextView outgoingTime;
         private TextView incomingTime;
 
+        private LinearLayout outgoingLayoutImg;
+        private LinearLayout incomingLayoutImg;
+        private ImageView outgoingImage;
+        private ImageView incomingImage;
+        private TextView outgoingTimeImg;
+        private TextView incomingTimeImg;
+
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Layout for text message
             outgoingLayout = itemView.findViewById(R.id.outgoingLayout);
             outgoingMessage = itemView.findViewById(R.id.outgoingMessage);
             outgoingTime = itemView.findViewById(R.id.outgoingTime);
@@ -96,6 +146,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
             incomingMessage = itemView.findViewById(R.id.incomingMessage);
             incomingTime = itemView.findViewById(R.id.incomingTime);
 
+            // Layout for image
+            outgoingLayoutImg = itemView.findViewById(R.id.outgoingLayoutImg);
+            outgoingImage = itemView.findViewById(R.id.outgoingImage);
+            outgoingTimeImg = itemView.findViewById(R.id.outgoingTimeImg);
+            incomingLayoutImg = itemView.findViewById(R.id.incomingLayoutImg);
+            incomingImage = itemView.findViewById(R.id.incomingImage);
+            incomingTimeImg = itemView.findViewById(R.id.incomingTimeImg);
         }
     }
+
 }

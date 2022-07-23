@@ -4,16 +4,16 @@ public class MessageList {
     private String name;
     private String id;
     private String lastMessage;
-//    private int unseenMessages;
+    private int unseenMessages;
     private String profilePic;
     private String chatKey;
 
-    public MessageList(String name, String id, String lastMessage, String profilePic, String chatKey) {
+    public MessageList(String name, String id, String lastMessage, String profilePic, String chatKey, int unseenMessages) {
         this.name = name;
         this.id = id;
         this.lastMessage = lastMessage;
         this.profilePic = profilePic;
-//        this.unseenMessages = unseenMessages;
+        this.unseenMessages = unseenMessages;
         this.chatKey = chatKey;
     }
 
@@ -30,9 +30,9 @@ public class MessageList {
         return lastMessage;
     }
 
-//    public int getUnseenMessages() {
-//        return unseenMessages;
-//    }
+    public int getUnseenMessages() {
+        return unseenMessages;
+    }
 
     public String getProfilePic() {
         return profilePic;
