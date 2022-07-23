@@ -189,15 +189,20 @@ public class wishListFragment extends Fragment {
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                             DataSnapshot result = task.getResult();
                             String titles = String.valueOf(result.child("title").getValue(String.class));
-                            String thumbnailurl = String.valueOf(result.child("tURL").getValue(String.class));
+                            long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                            ArrayList<String> tURLs = new ArrayList<>();
+                            for (int i = 0; i < thumbnailurlsize; i++) {
+                                tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                            }
                             String sellerid = String.valueOf(result.child("sid").getValue(String.class));
-                            String sellerprofilepicurl = String.valueOf(result.child("sppu").getValue(String.class));
                             String itemcondition = String.valueOf(result.child("iC").getValue(String.class));
                             String price = String.valueOf(result.child("price").getValue(String.class));
                             Boolean reserved = result.child("reserved").getValue(Boolean.class);
-                            String TimeStamp = result.child("timeStamp").getValue(String.class);
+                            String timeStamp = result.child("timeStamp").getValue(String.class);
 
-                            listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, TimeStamp);
+
+                            listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, timeStamp);
+
                             data.add(listing);
                             adapter.notifyDataSetChanged();
                         }

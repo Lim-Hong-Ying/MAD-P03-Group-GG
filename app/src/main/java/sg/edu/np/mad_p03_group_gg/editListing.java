@@ -1,5 +1,13 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
@@ -7,7 +15,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -23,21 +30,14 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,20 +50,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
-public class newlisting extends AppCompatActivity {
+public class editListing extends AppCompatActivity {
 
     ArrayList<Uri> imageArray = new ArrayList<>();
     ArrayList<String> imageURLs = new ArrayList<>();
@@ -72,6 +66,15 @@ public class newlisting extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newlisting);
+
+        TextView header = findViewById(R.id.textView9);
+        header.setText("Edit Listing");
+
+        Button createListing = findViewById(R.id.create_listing);
+        createListing.setText("Update listing!");
+
+        Bundle postID = getIntent().getExtras();
+        String pID = postID.getString("pID");
 
         DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
@@ -89,24 +92,116 @@ public class newlisting extends AppCompatActivity {
                         }
                     });
 
-                    Button createlisting = findViewById(R.id.create_listing);
-                    createlisting.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            finalCheck();
-                        }
-                    });
+                    createObjectFromFB(pID);
                 }
 
                 else {
-                    Toast.makeText(newlisting.this, "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(editListing.this, "No internet connection.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(newlisting.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(editListing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createObjectFromFB(String pID) {
+        String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
+        FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
+        individualdb.getReference().child("individual-listing").child(pID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(editListing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                }
+                else { //Builds individualListingObject from data retrieved
+                    Log.d("firebase", String.valueOf(task.getResult()));
+                    individualListingObject listing = new individualListingObject();
+                    DataSnapshot result = task.getResult();
+
+                    String listingid = result.getKey();
+                    String title = result.child("title").getValue(String.class);
+                    //String thumbnailurl = result.child("tURL").getValue(String.class);
+                    long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                    ArrayList<String> tURLs = new ArrayList<>();
+                    for (int i = 0; i < thumbnailurlsize; i++) {
+                        imageArray.add(Uri.parse(result.child("tURLs").child(String.valueOf(i)).getValue(String.class)));
+                    }
+                    String sellerid = result.child("sid").getValue(String.class);
+                    String itemcondition = result.child("iC").getValue(String.class);
+                    String price = result.child("price").getValue(String.class);
+                    Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String desc = result.child("description").getValue(String.class);
+                    String location = result.child("location").getValue(String.class);
+                    Boolean delivery = result.child("delivery").getValue(Boolean.class);
+                    String deliverytype = result.child("deliveryType").getValue(String.class);
+                    String deliveryprice = result.child("deliveryPrice").getValue(String.class);
+                    String deliverytime = result.child("deliveryTime").getValue(String.class);
+
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
+
+                    EditText titleholder;
+                    EditText priceholder;
+                    RadioGroup itemconditionholder;
+                    EditText descriptionholder;
+                    Switch meettoggle;
+                    EditText locationholder;
+                    Switch deliverytoggle;
+                    EditText deliveryoptionholder;
+                    EditText deliverypriceholder;
+                    EditText deliverytimeholder;
+
+                    titleholder = findViewById(R.id.input_title);
+                    priceholder = findViewById(R.id.input_price);
+                    itemconditionholder = findViewById(R.id.input_condition);
+                    descriptionholder = findViewById(R.id.input_description);
+                    meettoggle = findViewById(R.id.meet_toggle);
+                    locationholder = findViewById(R.id.input_address);
+                    deliverytoggle = findViewById(R.id.del_toggle);
+                    deliveryoptionholder = findViewById(R.id.input_deliverytype);
+                    deliverypriceholder = findViewById(R.id.input_deliveryprice);
+                    deliverytimeholder = findViewById(R.id.input_deliverytime);
+
+                    //Picasso.get().load(listing.gettURL()).into(holder); //External library to download images
+                    //new ImageDownloader(holder).execute(listing.gettURL());
+
+                    titleholder.setText(listing.getTitle());
+                    priceholder.setText(listing.getPrice());
+                    descriptionholder.setText(listing.getDescription());
+                    locationholder.setText(listing.getLocation());
+                    deliveryoptionholder.setText(listing.getDeliveryType());
+                    deliverypriceholder.setText(listing.getDeliveryPrice());
+                    deliverytimeholder.setText(listing.getDeliveryTime());
+
+                    switch (itemcondition) {
+                        case "New":
+                            itemconditionholder.check(R.id.input_condition_new);
+                            break;
+
+                        case "Used":
+                            itemconditionholder.check(R.id.input_condition_used);
+                            break;
+                    }
+
+                    if (location.isEmpty() != true) {
+                        meettoggle.setChecked(true);
+                    }
+
+                    if (delivery != false) {
+                        deliverytoggle.setChecked(true);
+                    }
+
+                    Button updateListing = findViewById(R.id.create_listing);
+                    updateListing.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            finalCheck(pID, sellerid);
+                        }
+                    });
+                }
             }
         });
     }
@@ -302,7 +397,7 @@ public class newlisting extends AppCompatActivity {
         });
     }
 
-    private void finalCheck() {
+    private void finalCheck(String pID, String sID) {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -314,7 +409,7 @@ public class newlisting extends AppCompatActivity {
         Switch meeting_toggle = findViewById(R.id.meet_toggle);
         Switch delivery_toggle = findViewById(R.id.del_toggle);
 
-        Boolean image_selected = false;
+        Boolean image_selected = true;
         Boolean title_filled = false;
         Boolean price_filled = false;
         Boolean desc_filled = false;
@@ -323,10 +418,6 @@ public class newlisting extends AppCompatActivity {
         Boolean deliverytype_filled = false;
         Boolean deliveryprice_filled = false;
         Boolean deliverytime_filled = false;
-
-        if (imageArray.size() > 0) {
-            image_selected = true;
-        }
 
         if (!meeting_toggle.isChecked()) {
             meetup_filled = true;
@@ -371,15 +462,15 @@ public class newlisting extends AppCompatActivity {
         }
 
         if (image_selected == true && title_filled == true && price_filled == true && itemcondition_selected == true && desc_filled == true && meetup_filled == true && deliverytype_filled == true && deliveryprice_filled == true && deliverytime_filled == true) {
-            writeToDatabaseAndFirebase();
+            writeToDatabaseAndFirebase(pID, sID);
         }
 
         else {
-            Toast.makeText(newlisting.this, "Please enter required information.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(editListing.this, "Please enter required information.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void writeToDatabaseAndFirebase() {
+    private void writeToDatabaseAndFirebase(String pID, String sID) {
         String storagelink = "gs://cashoppe-179d4.appspot.com";
         StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images");
 
@@ -389,11 +480,6 @@ public class newlisting extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
-            final String sID = String.valueOf(user.getUid());
-
-            DatabaseReference pushTask = db.push(); //Creates a push task to get a unique post ID
-            String pID = String.valueOf(pushTask.getKey()); //Retrieves unique key
-
             for (int i = 0; i < imageArray.size(); i++) {
                 StorageReference image = storage.child(pID + "/" + i);
                 UploadTask uploadTask = image.putFile(imageArray.get(i));
@@ -473,7 +559,7 @@ public class newlisting extends AppCompatActivity {
         }
 
         else {
-            Toast.makeText(newlisting.this, "Not logged in. Please relogin.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(editListing.this, "Not logged in. Please relogin.", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -513,18 +599,12 @@ public class newlisting extends AppCompatActivity {
             condition = null;
         }
 
-
         String desc = desc_input.getText().toString();
         String address = address_input.getText().toString();
         String deltype = deltype_input.getText().toString();
         String delprice = delprice_input.getText().toString();
         String deltime = deltime_input.getText().toString();
         Boolean delivery = true;
-
-        //****ISAAC: ADDED TIMESTAMP****?//
-        LocalDate CurrentDate = LocalDate.now();
-        String TimeStamp = CurrentDate.toString();
-        //Isaac end//
 
         if (!meeting_toggle.isChecked()) {
             address = "";
@@ -539,7 +619,7 @@ public class newlisting extends AppCompatActivity {
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(pID, title, urls, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime, TimeStamp);
+        individualListingObject listing = new individualListingObject(pID, title, urls, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime);
         writeToFirebase(listing, pID, sID);
     }
 
@@ -554,12 +634,12 @@ public class newlisting extends AppCompatActivity {
 
         Bundle listingInfo = new Bundle();
         listingInfo.putString("pID", pID);
-        listingInfo.putString("type", "new");
+        listingInfo.putString("type", "edit");
 
-        Intent successList = new Intent(newlisting.this, successListPage.class);
+        Intent successList = new Intent(editListing.this, successListPage.class);
         successList.putExtras(listingInfo);
         finish();
-        newlisting.this.startActivity(successList);
+        editListing.this.startActivity(successList);
     }
 
     private void chooseImages(imageChooserAdapter adapter) {
@@ -576,7 +656,7 @@ public class newlisting extends AppCompatActivity {
         RecyclerView imageRecycler = findViewById(R.id.images);
         imageChooserAdapter adapter = new imageChooserAdapter(data);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(newlisting.this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(editListing.this, LinearLayoutManager.HORIZONTAL, false);
         imageRecycler.setLayoutManager(layoutManager);
         imageRecycler.setItemAnimator(new DefaultItemAnimator());
         imageRecycler.setAdapter(adapter);

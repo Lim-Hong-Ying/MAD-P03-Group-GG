@@ -1,5 +1,6 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -7,6 +8,7 @@ public class listingObject {
     protected String lID; //listing ID in DB
     protected String title; //listing title
     protected String tURL; //thumbnail URL
+    protected ArrayList tURLs; //listing images URLs
     protected String sID; //seller ID
     protected String sPPU; //seller profile picture
     protected String iC; //item condition
@@ -42,6 +44,16 @@ public class listingObject {
         return TimeStamp;
     }
 
+    public listingObject(String lID, String t, ArrayList<String> tURLs, String sid, String ic, String p, Boolean r) {
+        setlID(lID);
+        setTitle(t);
+        settURLs(tURLs);
+        setSID(sid);
+        setiC(ic);
+        setPrice(p);
+        setReserved(r);
+    }
+
     public void setlID(String id) {
         lID = id;
     }
@@ -64,6 +76,14 @@ public class listingObject {
 
     public String gettURL() {
         return tURL;
+    }
+
+    public void settURLs(ArrayList<String> s) {
+        tURLs = s;
+    }
+
+    public ArrayList<String> gettURLs() {
+        return tURLs;
     }
 
     public void setSID(String s) {

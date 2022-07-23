@@ -1,5 +1,6 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import java.util.ArrayList;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,7 +45,23 @@ public class individualListingObject extends listingObject {
 
     }
 
-
+    public individualListingObject(String lid, String t, ArrayList<String> tURLs, String sid, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, String dp, String dtime) {
+        /*setlID(lID);
+        setTitle(t);
+        settURL(turl);
+        setSID(sid);
+        setSPPU(sppu);
+        setiC(ic);
+        setPrice(p);
+        setReserved(r);*/
+        super(lid, t, tURLs, sid, ic, p, r);
+        setDescription(desc);
+        setLocation(l);
+        setDelivery(d);
+        setDeliveryType(dt);
+        setDeliveryPrice(dp);
+        setDeliveryTime(dtime);
+    }
 
     /*public void setlID(String id) {
         lID = id;
