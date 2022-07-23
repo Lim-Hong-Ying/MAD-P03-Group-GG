@@ -1,5 +1,8 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class listingObject {
     protected String lID; //listing ID in DB
     protected String title; //listing title
@@ -9,12 +12,15 @@ public class listingObject {
     protected String iC; //item condition
     protected String price; //item price
     protected Boolean reserved; //is item reserved?
+    //###ISAAC: TIMESTAMP###
+    private String TimeStamp;
+
 
     public listingObject() {
 
     }
 
-    public listingObject(String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r) {
+    public listingObject(String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r,String ts) {
         setlID(lID);
         setTitle(t);
         settURL(turl);
@@ -23,6 +29,17 @@ public class listingObject {
         setiC(ic);
         setPrice(p);
         setReserved(r);
+        //ISAAC START
+        setTimeStamp(ts);
+
+
+    }
+    public void setTimeStamp(String timeStamp) {
+        TimeStamp = timeStamp;
+    }
+
+    public String getTimeStamp() {
+        return TimeStamp;
     }
 
     public void setlID(String id) {

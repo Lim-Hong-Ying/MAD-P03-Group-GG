@@ -42,6 +42,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class newlisting extends AppCompatActivity {
@@ -435,11 +437,18 @@ public class newlisting extends AppCompatActivity {
             condition = null;
         }
 
+
         String desc = desc_input.getText().toString();
         String address = address_input.getText().toString();
         String deltype = deltype_input.getText().toString();
         String delprice = delprice_input.getText().toString();
         String deltime = deltime_input.getText().toString();
+        //****ISAAC: ADDED TIMESTAMP****?//
+        LocalDate CurrentDate = LocalDate.now();
+        String TimeStamp = CurrentDate.toString();
+        //Isaac end//
+
+
 
         if (!meeting_toggle.isChecked()) {
             address = "";
@@ -453,7 +462,7 @@ public class newlisting extends AppCompatActivity {
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, false, deltype, delprice, deltime);
+        individualListingObject listing = new individualListingObject(null, title, url, sID, url, condition, price, false, desc, address, false, deltype, delprice, deltime,TimeStamp);
         writeToFirebase(listing);
     }
 
