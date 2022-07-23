@@ -93,7 +93,7 @@ public class listingFragment extends Fragment {
                 if (connected) {
 
                 } else {
-                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 

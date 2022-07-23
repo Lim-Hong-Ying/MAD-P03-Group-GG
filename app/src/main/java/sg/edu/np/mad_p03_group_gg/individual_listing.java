@@ -37,6 +37,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
+import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
 
 public class individual_listing extends AppCompatActivity {
 
@@ -166,6 +168,21 @@ public class individual_listing extends AppCompatActivity {
             }
         });
         // ############# END WILLIAM SECTION ###############
+
+        // ############# KAI ZHE PAYMENT SECTION ###############
+        Button buyButton = findViewById(R.id.buyButton);
+
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
+                checkoutActivityIntent.putExtra("sellerId", sID);
+                checkoutActivityIntent.putExtra("productId", pID);
+                startActivity(checkoutActivityIntent);
+            }
+        });
+        // ############# END WILLIAM SECTION ###############
+
     }
 
     private void createObjectFromFB(String pid, String currentuID) {
@@ -340,7 +357,7 @@ public class individual_listing extends AppCompatActivity {
         liked.child(pID).removeValue();
     }
 
-    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> { //Method to download images
+/*    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> { //Method to download images
         ImageView bitmap;
 
         public ImageDownloader(ImageView bitmap) {
@@ -365,5 +382,5 @@ public class individual_listing extends AppCompatActivity {
         protected void onPostExecute(Bitmap result) {
             bitmap.setImageBitmap(result);
         } //Sets image for bitmap holder
-    }
+    }*/
 }
