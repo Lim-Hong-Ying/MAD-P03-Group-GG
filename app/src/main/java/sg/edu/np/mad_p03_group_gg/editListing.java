@@ -62,6 +62,8 @@ public class editListing extends AppCompatActivity {
     ArrayList<Uri> imageArray = new ArrayList<>();
     ArrayList<String> imageURLs = new ArrayList<>();
 
+    individualListingObject listing = new individualListingObject();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +121,7 @@ public class editListing extends AppCompatActivity {
                 }
                 else { //Builds individualListingObject from data retrieved
                     Log.d("firebase", String.valueOf(task.getResult()));
-                    individualListingObject listing = new individualListingObject();
+
                     DataSnapshot result = task.getResult();
 
                     String listingid = result.getKey();
@@ -140,8 +142,9 @@ public class editListing extends AppCompatActivity {
                     String deliverytype = result.child("deliveryType").getValue(String.class);
                     String deliveryprice = result.child("deliveryPrice").getValue(String.class);
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
+                    String postedTime = result.child("ts").getValue(String.class);
 
-                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime, postedTime);
 
                     EditText titleholder;
                     EditText priceholder;
@@ -617,9 +620,11 @@ public class editListing extends AppCompatActivity {
             deltime = "";
         }
 
+        String postedTime = listing.getTimeStamp();
+
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(pID, title, urls, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime);
+        listing = new individualListingObject(pID, title, urls, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime, postedTime);
         writeToFirebase(listing, pID, sID);
     }
 

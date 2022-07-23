@@ -115,8 +115,9 @@ public class userProfile extends AppCompatActivity {
                             String itemcondition = String.valueOf(result.child("iC").getValue(String.class));
                             String price = String.valueOf(result.child("price").getValue(String.class));
                             Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                            String postedTime = result.child("ts").getValue(String.class);
 
-                            listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved);
+                            listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, postedTime);
                             data.add(listing);
                             adapter.notifyDataSetChanged();
                         }
