@@ -8,10 +8,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +24,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.stripe.android.ApiResultCallback;
 import com.stripe.android.PaymentConfiguration;
-import com.stripe.android.PaymentIntentResult;
 import com.stripe.android.Stripe;
 import com.stripe.android.model.ConfirmPaymentIntentParams;
-import com.stripe.android.model.PaymentIntent;
 import com.stripe.android.model.PaymentMethodCreateParams;
 import com.stripe.android.payments.paymentlauncher.PaymentLauncher;
 import com.stripe.android.payments.paymentlauncher.PaymentResult;
@@ -40,7 +35,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -52,6 +46,10 @@ import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
 
+/**
+ * TODO:
+ * 1) If user payment method is Card, prompt to enter card info again.
+ */
 public class CheckoutActivity extends AppCompatActivity {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private static DatabaseReference databaseReference = database.getReference();
@@ -275,8 +273,7 @@ public class CheckoutActivity extends AppCompatActivity {
                     if (params != null) {
                         ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
                                 .createWithPaymentMethodCreateParams(params, paymentIntentClientSecret);
-
-                        paymentLauncher.confirm(confirmParams);
+                        paymentLauncher.confirm(confirmParams); // Confirm payment
 
                     }
                 }
@@ -293,7 +290,6 @@ public class CheckoutActivity extends AppCompatActivity {
         } else if (paymentResult instanceof PaymentResult.Failed) {
             message = "Failed: " + ((PaymentResult.Failed) paymentResult).getThrowable().getMessage();
         }
-
         displayAlert("PaymentResult: ", message);
     }
 

@@ -3,8 +3,8 @@ package sg.edu.np.mad_p03_group_gg.view.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,14 +13,13 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.stripe.android.PaymentConfiguration;
-import com.stripe.android.model.ConfirmPaymentIntentParams;
 import com.stripe.android.model.PaymentMethodCreateParams;
-import com.stripe.android.payments.paymentlauncher.PaymentLauncher;
 import com.stripe.android.view.CardInputWidget;
 
 import sg.edu.np.mad_p03_group_gg.R;
+import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.tools.RecursiveRadioGroup;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.paymentMethodCallback;
 
 /**
  * TODO:
@@ -29,9 +28,12 @@ import sg.edu.np.mad_p03_group_gg.tools.RecursiveRadioGroup;
  *
  */
 public class PaymentMethodActivity extends AppCompatActivity {
-    private static int selectedPaymentMethodId;
+    private int selectedPaymentMethodId;
     private FirebaseAuth auth;
-    private String paymentMethod;
+    private String userPaymentMethod;
+    private String currentUserId;
+    private RadioButton selectedRadioButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,25 +41,67 @@ public class PaymentMethodActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment_method);
 
         CardInputWidget cardInputWidget = findViewById(R.id.cardInputWidget);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            cardInputWidget.setAutofillHints(View.AUTOFILL_HINT_CREDIT_CARD_NUMBER);
+        }
+
         RecursiveRadioGroup paymentMethodRadios = findViewById(R.id.paymentMethodRadios);
         ImageView closeButton = findViewById(R.id.paymentMethodCloseButton);
         Button confirmButton = findViewById(R.id.confirmButton);
 
+        RadioButton stripeRadioButton = findViewById(R.id.cardPayment);
+        RadioButton paynowButton = findViewById(R.id.paynowPayment);
+        RadioButton cryptoButton = findViewById(R.id.cryptoPayment);
+
         closeButton.setOnClickListener(view -> finish());
 
+        // ======================= Get PaymentMethod from Firebase =======================
+        // Get current user id
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = auth.getCurrentUser();
+        currentUserId = fbUser.getUid();
+
+        FirebaseTools.getCurrentUserPaymentMethod(currentUserId, getApplicationContext(),
+                new paymentMethodCallback() {
+                    @Override
+                    public void userPaymentMethodCallBack(String paymentMethod) {
+                        userPaymentMethod = paymentMethod;
+                    }
+                });
+
+        if (userPaymentMethod == null)
+        {
+            // Set paynow as default if user did not choose payment method
+            paynowButton.setChecked(true);
+        }
+        else if (userPaymentMethod == "Card")
+        {
+            stripeRadioButton.setChecked(true);
+        }
+        else if (userPaymentMethod == "Paynow")
+        {
+            paynowButton.setChecked(true);
+        }
+        else if (userPaymentMethod == "Cryptocurrency")
+        {
+            cryptoButton.setChecked(true);
+        }
 
         paymentMethodRadios.setOnCheckedChangeListener((group, checkedId) -> {
             selectedPaymentMethodId = paymentMethodRadios.getCheckedItemId();
+            selectedRadioButton = findViewById(selectedPaymentMethodId);
 
-            RadioButton selectedRadioButton = findViewById(selectedPaymentMethodId);
-
-            if (selectedRadioButton.getText().equals("Card"))
+            if (selectedPaymentMethodId != -1)
             {
-                cardInputWidget.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                cardInputWidget.setVisibility(View.GONE);
+                if (selectedRadioButton.getText().equals("Card"))
+                {
+                    cardInputWidget.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    cardInputWidget.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -69,22 +113,10 @@ public class PaymentMethodActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Update DB on default Payment Method
 
-                // Get current user id
-                auth = FirebaseAuth.getInstance();
-                FirebaseUser fbUser = auth.getCurrentUser();
-                String currentUserID = fbUser.getUid();
-
-
 
                 Intent intent = new Intent();
 
                 RadioButton selectedRadioButton = findViewById(selectedPaymentMethodId);
-
-                if (selectedRadioButton.equals(null))
-                {
-                    // Set paynow as default if user did not choose payment method
-                    selectedRadioButton = findViewById(R.id.paynowPayment);
-                }
 
                 if (selectedRadioButton.getText().equals("Card"))
                 {
@@ -112,7 +144,4 @@ public class PaymentMethodActivity extends AppCompatActivity {
         });
     }
 
-    private void retrivePaymentMethod() {
-
-    }
 }

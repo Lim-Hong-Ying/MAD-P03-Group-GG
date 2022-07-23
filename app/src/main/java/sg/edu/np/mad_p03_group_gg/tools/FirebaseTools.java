@@ -7,62 +7,85 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
-import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.individualListingObject;
-import sg.edu.np.mad_p03_group_gg.listingObject;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.Callback;
-
-/**
- * This is a utility class and it contains various methods to help retrive data from Firebase and
- * improve re-usability.
- */
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.paymentMethodCallback;
 
 public  class FirebaseTools {
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private static DatabaseReference databaseReference = database.getReference();
 
-    // Retrieve UserID from Authenticated User Session
-    public static @Nullable String getCurrentAuthenticatedUser() {
-        String userID;
+    // Retrieve UserID from Authenticated User Session and get Payment Method of the User
+    public static void getCurrentUserPaymentMethod(String userId, Context context,
+                                                   paymentMethodCallback callback) {
+        databaseReference.child("users").child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(context, "Error: Check your internet connection.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //Builds individualListingObject from data retrieved
+                    DataSnapshot result = task.getResult();
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    String paymentMethod;
+                    try {
+                        paymentMethod = result.child("paymentMethod").getValue(String.class);
+                    }
+                    catch (NullPointerException nullPointerException)
+                    {
+                        // If null. means user haven't choose payment method
+                        paymentMethod = null;
+                    }
 
-        if (firebaseUser != null) {
-            // User is signed in
-            userID = String.valueOf(firebaseUser.getUid());
+                    callback.userPaymentMethodCallBack(paymentMethod);
 
-            return userID;
-        } else {
-            // No user is signed in
-            Log.d("Error:", "Something went wrong, there is no authenticated user.");
-            return null;
-        }
+                }
+            }
+        });
+    }
+
+
+    public static void getStripeConnectId(String sellerId, Context context) {
+        databaseReference.child("users").child(sellerId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(context, "Error: Check your internet connection.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //Builds individualListingObject from data retrieved
+                    DataSnapshot result = task.getResult();
+
+                    String stripeConnectId;
+                    try {
+                        stripeConnectId = result.child("paymentMethod").getValue(String.class);
+                    }
+                    catch (NullPointerException nullPointerException)
+                    {
+                        // If null. means seller haven't onboarded
+                        stripeConnectId = null;
+                    }
+
+                    callback.userPaymentMethodCallBack(paymentMethod);
+
+                }
+            }
+        });
     }
 
     /**
@@ -168,4 +191,5 @@ public  class FirebaseTools {
             }
         });
     }
+
 }
