@@ -49,6 +49,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
@@ -195,6 +197,11 @@ public class individual_listing extends AppCompatActivity {
                 // Send main user data to chat activity
                 intent.putExtra("mainUser", (Parcelable) mainUser);
 
+                // Add seller to friend list
+                databaseReference.child("selectedChatUsers").child(mainUser.getId())
+                        .child(sID).setValue("");
+
+                // Start chat activity
                 individual_listing.this.startActivity(intent);
             }
         });
@@ -299,8 +306,9 @@ public class individual_listing extends AppCompatActivity {
                     String deliverytype = result.child("deliveryType").getValue(String.class);
                     String deliveryprice = result.child("deliveryPrice").getValue(String.class);
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
+                    String TimeStamp = result.child("timeStamp").getValue(String.class);
 
-                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime);
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
 
                     TextView titleholder;
                     TextView priceholder;

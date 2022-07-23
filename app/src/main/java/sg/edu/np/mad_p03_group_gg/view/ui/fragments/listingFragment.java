@@ -178,8 +178,9 @@ public class listingFragment extends Fragment {
                     String itemcondition = datasnap.child("iC").getValue(String.class);
                     String price = datasnap.child("price").getValue(String.class);
                     Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
+                    String timeStamp = datasnap.child("timeStamp").getValue(String.class);
 
-                    listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved);
+                    listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, timeStamp);
                     data.add(listing);
                     adapter.notifyDataSetChanged();
                 }
