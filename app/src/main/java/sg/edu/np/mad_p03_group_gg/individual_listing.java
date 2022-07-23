@@ -55,6 +55,8 @@ import java.time.format.DateTimeFormatter;
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
+import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
+import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
 
 public class individual_listing extends AppCompatActivity {
 
@@ -206,6 +208,21 @@ public class individual_listing extends AppCompatActivity {
             }
         });
         // ############# END WILLIAM SECTION ###############
+
+        // ############# KAI ZHE PAYMENT SECTION ###############
+        Button buyButton = findViewById(R.id.buyButton);
+
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
+                checkoutActivityIntent.putExtra("sellerId", sID);
+                checkoutActivityIntent.putExtra("productId", pID);
+                startActivity(checkoutActivityIntent);
+            }
+        });
+        // ############# END WILLIAM SECTION ###############
+
     }
 
     public void showPopup(View v) {

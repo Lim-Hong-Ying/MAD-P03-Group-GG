@@ -45,6 +45,15 @@
         </receiver>
 
         <activity
+            android:name=".view.ui.PaymentMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".tools.stripe.ConnectWithStripeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ui.CheckoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".successListPage"
             android:exported="false" />
         <activity

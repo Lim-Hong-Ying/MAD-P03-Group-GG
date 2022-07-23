@@ -63,6 +63,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import sg.edu.np.mad_p03_group_gg.tools.stripe.ConnectWithStripeActivity;
+
+/**
+ * TODO:
+ *
+ * Check if seller has a Stripe Connected Account ID
+ *
+ * If not:
+ * Initiate new onboarding flow
+ *
+ * If yes:
+ * Use back the account ID
+ *
+ * Added toggle button to let seller choose to enable their mode of payment.
+ *
+ * Toggle button to check if flow is entered and exited properly.
+ * To at least, enable one payment method. (Check upon clicking create listing button)
+ * By: Kai Zhe
+ */
 public class newlisting extends AppCompatActivity {
 
     ArrayList<Uri> imageArray = new ArrayList<>();
@@ -109,6 +128,12 @@ public class newlisting extends AppCompatActivity {
                 Toast.makeText(newlisting.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
+        // ATTENTION: This was auto-generated to handle app links.
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
+
+        handleIntent(getIntent());
     }
 
     private void activeChecker() {
@@ -300,6 +325,22 @@ public class newlisting extends AppCompatActivity {
                 }
             }
         });
+
+        // ############# KAI ZHE PAYMENT SECTION ###############
+
+        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+
+        stripeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+
+                Intent intent = new Intent(newlisting.this, ConnectWithStripeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // ############# END KAI ZHE PAYMENT SECTION ###############
     }
 
     private void finalCheck() {
@@ -374,9 +415,33 @@ public class newlisting extends AppCompatActivity {
             writeToDatabaseAndFirebase();
         }
 
+            // ############# KAI ZHE PAYMENT SECTION ###############
+            // Check if at least one payment method is selected
+
+            Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+            Switch paynowSwitch = findViewById(R.id.paynowSwitch);
+            Switch cardanoSwitch = findViewById(R.id.cardanoSwitch);
+
+            if (stripeSwitch.isChecked() == false && paynowSwitch.isChecked() == false
+                    && cardanoSwitch.isChecked() == false)
+            {
+                // If all is false prompt user to
+                Toast.makeText(getApplicationContext(),
+                        "Please choose at least one payment method.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else {
+                writeToDatabaseAndFirebase();
+                Intent returnhome = new Intent(view.getContext(), successListPage.class);
+                finish();
+                view.getContext().startActivity(returnhome);
+            }
+            // ############# END KAI ZHE PAYMENT SECTION ###############
+        }
         else {
             Toast.makeText(newlisting.this, "Please enter required information.", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void writeToDatabaseAndFirebase() {
@@ -640,4 +705,26 @@ public class newlisting extends AppCompatActivity {
             }
         }
     });
+
+    /**
+     * Handle app links. To handle refresh_url from Stripe
+     *
+     * By: Kai Zhe
+     * @param intent
+     */
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String appLinkAction = intent.getAction();
+        Uri appLinkData = intent.getData();
+        if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
+            /*String recipeId = appLinkData.getLastPathSegment();
+            Uri appData = Uri.parse("content://com.recipe_app/recipe/").buildUpon()
+                    .appendPath(recipeId).build();
+            showRecipe(appData);*/
+        }
+    }
 }
