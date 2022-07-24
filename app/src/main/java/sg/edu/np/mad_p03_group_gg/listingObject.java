@@ -16,7 +16,7 @@ public class listingObject {
     protected String price; //item price
     protected Boolean reserved; //is item reserved?
     //###ISAAC: TIMESTAMP###
-    private String timeStamp;
+    protected String timeStamp;
 
 
     public listingObject() {
@@ -37,13 +37,7 @@ public class listingObject {
 
 
     }
-    public void setTimeStamp(String timeStamp) {
-        timeStamp = timeStamp;
-    }
 
-    public String getTimeStamp() {
-        return timeStamp;
-    }
 
     public listingObject(String lID, String t, ArrayList<String> tURLs, String sid, String ic, String p, Boolean r, String ts) {
         setlID(lID);
@@ -54,6 +48,14 @@ public class listingObject {
         setPrice(p);
         setReserved(r);
         setTimeStamp(ts);
+    }
+
+    public void setTimeStamp(String ts) {
+        timeStamp = ts;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
     }
 
     public void setlID(String id) {
@@ -120,7 +122,7 @@ public class listingObject {
         return price;
     }
 
-    public void setReserved (Boolean r) {
+    public void setReserved(Boolean r) {
         reserved = r;
     }
 

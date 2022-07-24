@@ -11,7 +11,5 @@
     android:previewLayout="@layout/cashshope_widget"
     android:targetCellHeight="2"
     android:targetCellWidth="6"
-    android:widgetFeatures="configuration_optional "
-
-
+    android:widgetFeatures="configuration_optional"
 />

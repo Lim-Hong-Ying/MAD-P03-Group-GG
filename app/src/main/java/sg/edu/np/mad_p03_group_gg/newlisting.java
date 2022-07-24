@@ -536,10 +536,13 @@ public class newlisting extends AppCompatActivity {
             delprice = "";
             deltime = "";
         }
+        Log.e("Time",TimeStamp);
+
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
         individualListingObject listing = new individualListingObject(pID, title, urls, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime, TimeStamp);
+
         writeToFirebase(listing, pID, sID);
     }
 
@@ -547,6 +550,7 @@ public class newlisting extends AppCompatActivity {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
         DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("users").child(uID).child("listings");
+
 
         db.child(pID).setValue(listing);
 

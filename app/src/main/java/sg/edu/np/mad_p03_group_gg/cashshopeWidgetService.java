@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,7 +90,12 @@ public class cashshopeWidgetService extends RemoteViewsService {
                         String TimeStamp = result.child("timeStamp").getValue(String.class);
                         Log.e("Link",mDataref.child("individual-listing").child(listingid).child("tURLs").child("0").toString());
                         individualListingObject l = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime,TimeStamp);
-                        llist.add(l);
+                        LocalDate CurrentDate = LocalDate.now();
+                        String ts = CurrentDate.toString();
+                        if(l.getTimeStamp().equals(ts)){
+                            llist.add(l);
+                        }
+
                         Log.e("indata", Integer.toString(llist.size()));
 
 
