@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -304,22 +305,33 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void onPaymentResult(PaymentResult paymentResult) {
         String message = "";
+        Boolean isSuccess = false;
+
         if (paymentResult instanceof PaymentResult.Completed) {
             message = "Completed!";
+            isSuccess = true;
         } else if (paymentResult instanceof PaymentResult.Canceled) {
             message = "Canceled!";
         } else if (paymentResult instanceof PaymentResult.Failed) {
             message = "Failed: " + ((PaymentResult.Failed) paymentResult).getThrowable().getMessage();
         }
-        displayAlert("PaymentResult: ", message);
+        displayAlert("PaymentResult: ", message, isSuccess);
     }
 
-    private void displayAlert(@NonNull String title, @Nullable String message) {
+    private void displayAlert(@NonNull String title, @Nullable String message, Boolean isSuccess) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message);
 
-        builder.setPositiveButton("Ok", null);
+        if (isSuccess)
+        {
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    CheckoutActivity.this.finish();
+                }
+            });
+        }
 
         builder.create().show();
     }
