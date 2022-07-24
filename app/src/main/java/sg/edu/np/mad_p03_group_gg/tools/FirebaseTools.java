@@ -271,7 +271,7 @@ public  class FirebaseTools {
      *
      * @param productId
      */
-    public void sendConfirmationMessage(String productId) {
+/*    public void sendConfirmationMessage(String productId) {
         // Get database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app");
         DatabaseReference databaseReference = database.getReference();
@@ -353,6 +353,6 @@ public  class FirebaseTools {
         // Set in chat status to true if message is sent
         databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("True");
 
-    }
+    }*/
 
 }

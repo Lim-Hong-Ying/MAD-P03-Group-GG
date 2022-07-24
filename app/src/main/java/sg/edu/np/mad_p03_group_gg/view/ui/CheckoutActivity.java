@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -72,7 +73,8 @@ public class CheckoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_checkout);
         PaymentConfiguration.init(
                 getApplicationContext(),
-                "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
+                "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa",
+                "acct_1LNubg2X820yavlY"
         );
 
         /**
@@ -85,7 +87,7 @@ public class CheckoutActivity extends AppCompatActivity {
         stripe = new Stripe(
                 this,
                 PaymentConfiguration.getInstance(this).getPublishableKey(),
-                "{{acct_1LNubg2X820yavlY}}"
+                PaymentConfiguration.getInstance(this).getStripeAccountId()
         );
 
         // if payment method == stripe
@@ -114,6 +116,8 @@ public class CheckoutActivity extends AppCompatActivity {
         TextView changePaymentButton = findViewById(R.id.changePaymentButton);
         LinearLayout addressLayout = findViewById(R.id.addressLayout);
         Button checkoutButton = findViewById(R.id.checkoutButton);
+        RadioButton deliveryRadioButton = findViewById(R.id.deliveryRadioButton);
+        RadioButton meetupRadioButton = findViewById(R.id.meetupRadioButton);
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,10 +139,19 @@ public class CheckoutActivity extends AppCompatActivity {
                 deliveryCostTextView.setText("$0");
                 totalPrice =  Integer.parseInt(listingObject.getPrice()) + 0;
             } else {
+                deliveryCostTextView.setText("$" + listingObject.getDeliveryPrice());
                 totalPrice = Integer.parseInt(listingObject.getPrice()) +
                         Integer.parseInt(listingObject.getDeliveryPrice());
             }
             totalPriceTextView.setText("$" + totalPrice);
+
+            // If seller did not enable delivery, set view to GONE
+            if (listingObject.getDelivery() == false)
+            {
+                deliveryRadioButton.setVisibility(View.GONE);
+                addressLayout.setVisibility(View.GONE);
+                meetupRadioButton.setChecked(true); // check the meetup option
+            }
 
             startCheckout(totalPrice);
         });
@@ -151,7 +164,7 @@ public class CheckoutActivity extends AppCompatActivity {
          * If have, use that one, (e.g. retrieve CC info from Firebase)
          */
 
-        // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+        // Get result from PaymentMethod Activity
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -163,7 +176,8 @@ public class CheckoutActivity extends AppCompatActivity {
                         if (paymentMethod.equals("Card"))
                         {
                             params = data.getParcelableExtra("cardInfo");
-
+                            // Set last 4 digits of card (allow user to double check)
+                            paymentDetailsHint.setText("***" + params.getCard().getLast4());
                         }
                     }
                 });
@@ -178,7 +192,6 @@ public class CheckoutActivity extends AppCompatActivity {
                 activityResultLauncher.launch(paymentMethodIntent);
             }
         });
-
 
         // Check which payment method selected and do appropriate functions
         checkoutButton.setOnClickListener(new View.OnClickListener() {
@@ -235,8 +248,10 @@ public class CheckoutActivity extends AppCompatActivity {
                     // Stripe uses smallest currency unit
                     String json = String.format("{"
                             + "\"amount\":\"%s\","
-                            + "\"cust_email\":\"%s\""
-                            + "}", String.valueOf(listingTotalPrice).concat("00"), customerEmail);
+                            + "\"cust_email\":\"%s\","
+                            + "\"stripe_account\":\"%s\""
+                            + "}", String.valueOf(listingTotalPrice).concat("00"), customerEmail,
+                            "acct_1LNubg2X820yavlY");
 
                     RequestBody body = RequestBody.create(mediaType, json);
                     Request request = new Request.Builder()

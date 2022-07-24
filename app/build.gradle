@@ -78,8 +78,6 @@ dependencies {
     // Stripe Android SDK
     implementation 'com.stripe:stripe-android:20.6.2'
 
-    // Notification
-    implementation "androidx.core:core:1.8.0"
 }
 
 

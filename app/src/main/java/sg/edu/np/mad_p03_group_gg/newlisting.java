@@ -522,9 +522,9 @@ public class newlisting extends AppCompatActivity {
                 deliverytime_filled == true && isPaynowFilled == true) {
 
             writeToDatabaseAndFirebase();
-            Intent returnhome = new Intent(getApplicationContext(), successListPage.class);
+/*            Intent returnhome = new Intent(getApplicationContext(), successListPage.class);
             finish();
-            getApplicationContext().startActivity(returnhome);
+            newlisting.this.startActivity(returnhome);*/
         }
         else {
             Toast.makeText(newlisting.this, "Please enter required information.", Toast.LENGTH_SHORT).show();
