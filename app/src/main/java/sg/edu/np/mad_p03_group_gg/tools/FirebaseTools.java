@@ -3,6 +3,7 @@ package sg.edu.np.mad_p03_group_gg.tools;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.individualListingObject;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.Callback;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
@@ -261,6 +263,96 @@ public  class FirebaseTools {
                 }
             }
         });
+    }
+
+    /**
+     * Send message to user to confirm something.
+     * E.g. when payment is done, auto send a chat message to seller.
+     *
+     * @param productId
+     */
+    public void sendConfirmationMessage(String productId) {
+        // Get database reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app");
+        DatabaseReference databaseReference = database.getReference();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get seller id
+                for(DataSnapshot dataSnapshot : snapshot.child("individual-listing").getChildren()) {
+                    String foundPID = dataSnapshot.getKey();
+                    if(productId.equalsIgnoreCase(foundPID)){
+                        sID = dataSnapshot.child("sid").getValue(String.class);
+                        break;
+                    }
+                }
+
+                // Get chatkey
+                for (DataSnapshot dataSnapshotCurrentChat : snapshot.child("chat").getChildren()){
+                    // Get id number of each user
+                    String getUserOne = dataSnapshotCurrentChat.child("user1").getValue(String.class);
+                    String getUserTwo = dataSnapshotCurrentChat.child("user2").getValue(String.class);
+
+                    // If id numbers are the same as main user and selected user's id number
+                    if((TextUtils.equals(getUserOne,sID) && TextUtils.equals(getUserTwo,uID))
+                            || (TextUtils.equals(getUserOne,uID) && TextUtils.equals(getUserTwo, sID))){
+                        chatKey = dataSnapshotCurrentChat.getKey();
+                    }
+                }
+
+                // Create seller and main user Object
+                for (DataSnapshot dataSnapshotUser : snapshot.child("users").getChildren()){
+                    // If id matches main user ID Create main user object
+                    if (TextUtils.equals(dataSnapshotUser.getKey(),uID)){
+                        mainUser = new User(dataSnapshotUser.child("name").getValue(String.class)
+                                ,dataSnapshotUser.child("email").getValue(String.class),uID);
+                    }
+                    // If id matches main SELLER ID Create seller user object
+                    if (TextUtils.equals(dataSnapshotUser.getKey(),sID)){
+                        seller = new User (dataSnapshotUser.child("name").getValue(String.class)
+                                ,dataSnapshotUser.child("email").getValue(String.class)
+                                ,dataSnapshotUser.child("phonenumber").getValue(String.class)
+                                ,dataSnapshotUser.child("userprofilepic").getValue(String.class)
+                                ,sID);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read from db
+            }
+        });
+
+        // Get current time (add 28800000 milliseconds to convert to SGT, if emulator timezone is UTC)
+        String currentTime = String.valueOf(System.currentTimeMillis());
+
+        // Set users
+        databaseReference.child("chat").child(chatKey).child("user1").setValue(mainUserid);
+        databaseReference.child("chat").child(chatKey).child("user2").setValue(getid);
+        // Set message and who sent the message
+        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(getTextMessage);
+        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(mainUserid);
+
+        // If user inchat status is true, set message seen value to True
+        if (inchat){
+            databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("True");
+        }
+        // If other user is not in current chat, set value to false
+        else{
+            databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("False");
+        }
+
+        // Remove text EditText after message is sent
+        messageToSend.setText("");
+
+        // If current user (you) are not already in other user's friend list, add to his friend list
+        databaseReference.child("selectedChatUsers").child(getid).child(mainUser.getId()).setValue("");
+
+        // Set in chat status to true if message is sent
+        databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("True");
+
     }
 
 }

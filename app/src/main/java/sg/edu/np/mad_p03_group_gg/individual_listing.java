@@ -384,7 +384,10 @@ public class individual_listing extends AppCompatActivity {
                     if (sellerid.equals(uID)) {
                         ToggleButton likebutton = findViewById(R.id.button_like);
                         Button chatbutton = findViewById(R.id.button_chat);
+                        Button buyButton = findViewById(R.id.buyButton);
 
+                        // If own listing, cannot buy, like, or chat
+                        buyButton.setVisibility(View.GONE);
                         likebutton.setVisibility(View.GONE);
                         chatbutton.setVisibility(View.GONE);
                     }
