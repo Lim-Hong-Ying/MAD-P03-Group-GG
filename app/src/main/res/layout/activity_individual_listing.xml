@@ -47,6 +47,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/context_menu"
+            android:layout_width="30dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_action_more_vertical" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
@@ -63,12 +73,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageholder"
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPagerMain"
                 android:layout_width="match_parent"
-                android:layout_height="256dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/default_image_icon" />
+                android:layout_height="256dp" />
 
             <TextView
                 android:id="@+id/individual_title"
@@ -211,7 +219,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/roboto"
+                    android:fontFamily="@font/roboto_bold"
                     android:text="Seller name"
                     android:textSize="24sp" />
             </LinearLayout>
