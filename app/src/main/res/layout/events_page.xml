@@ -23,7 +23,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="230dp"
                 android:background="@drawable/temp_background"
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp">
@@ -46,20 +46,6 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"></TextView>
 
-                <EditText
-                    android:id="@+id/searchEvent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:height="50dp"
-                    android:background="@drawable/eventsearch_bg"
-                    android:drawableEnd="@drawable/eventsearchbtn"
-                    android:hint="@string/search_bar_hint"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="5dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"></EditText>
-
             </LinearLayout>
 
             <androidx.appcompat.widget.Toolbar
@@ -72,13 +58,15 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@drawable/back_icon"/>
+
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/profile_icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="right"
                     android:layout_marginRight="20dp"
-                    android:onClick="createEvent"/>
+                    android:background="@drawable/ic_baseline_add_24"
+                    android:contentDescription="Add Icon"
+                    android:onClick="createEvent" />
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
