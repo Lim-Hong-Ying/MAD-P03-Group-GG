@@ -288,16 +288,16 @@ public class HomepageFragment extends Fragment {
 
                                 String listingid = snapshot.getKey();
                                 String titles = snapshot.child("title").getValue(String.class);
-                                String thumbnailurl = snapshot.child("tURL").getValue(String.class);
+                                String thumbnailurl = snapshot.child("tURLs").child("0").getValue(String.class);
                                 String sellerid = snapshot.child("sid").getValue(String.class);
                                 String sellerprofilepicurl = snapshot.child("sppu").getValue(String.class);
                                 String itemcondition = snapshot.child("iC").getValue(String.class);
                                 String price = snapshot.child("price").getValue(String.class);
                                 Boolean reserved = snapshot.child("reserved").getValue(Boolean.class);
-
+                                String TimeStamp = snapshot.child("timeStamp").getValue(String.class);
                                 listingObject listing = new listingObject(listingid, titles,
                                         thumbnailurl, sellerid, sellerprofilepicurl,
-                                        itemcondition, price, reserved);
+                                        itemcondition, price, reserved,TimeStamp);
 
                                 return listing;
                             }

@@ -1,5 +1,6 @@
 package sg.edu.np.mad_p03_group_gg;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,10 +8,13 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,14 +22,24 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.concurrent.TimeUnit;
+
+import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
+import sg.edu.np.mad_p03_group_gg.view.ui.PaymentMethodActivity;
+import sg.edu.np.mad_p03_group_gg.view.userConsent.PrivacyPolicy;
+import sg.edu.np.mad_p03_group_gg.view.userConsent.TermsAndConditions;
 
 public class signupactivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
+    private Boolean isTncAgree = false;
+    private Boolean isPrivacyAgree = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +62,9 @@ public class signupactivity extends AppCompatActivity {
         String ph = PhoneNumber.getText().toString().trim();
         String userName = name.getText().toString().trim();
         String img ="";
+
+        CheckBox tncCheckBox = findViewById(R.id.tncCheckbox);
+        CheckBox privacyCheckBox = findViewById(R.id.privacyCheckbox);
 
         Button signup = findViewById(R.id.button);
         auth=FirebaseAuth.getInstance();
@@ -84,7 +101,68 @@ public class signupactivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * Privacy Policy and Terms & Conditions Conditional Checker
+         *
+         * Ensures that user accpet both agreements before being allowed to create a user
+         * account.
+         */
+        // Get result from PrivacyPolicy Activity
+        ActivityResultLauncher<Intent> privacyResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        isPrivacyAgree = Boolean.parseBoolean(data.getStringExtra("isAgree"));
+                        if (isPrivacyAgree) {
+                            privacyCheckBox.setChecked(true);
+                        }
+                        else {
+                            privacyCheckBox.setChecked(false);
+                        }
+                    }
+                });
+
+
+        privacyCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent privacyIntent = new Intent(signupactivity.this,
+                        PrivacyPolicy.class);
+                privacyResultLauncher.launch(privacyIntent);
+            }
+        });
+
+        // Get result from TermsAndConditions Activity
+        ActivityResultLauncher<Intent> tncResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        isTncAgree = Boolean.parseBoolean(data.getStringExtra("isAgree"));
+                        if (isTncAgree) {
+                            tncCheckBox.setChecked(true);
+                        }
+                        else {
+                            tncCheckBox.setChecked(false);
+                        }
+                    }
+                });
+
+
+        tncCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent tncIntent = new Intent(signupactivity.this,
+                        TermsAndConditions.class);
+                tncResultLauncher.launch(tncIntent);
+            }
+        });
+
     }
+
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString().trim();
         return TextUtils.isEmpty(str);
@@ -128,10 +206,22 @@ public class signupactivity extends AppCompatActivity {
             return false;
         }
 
+        // If user declines privacy policy or t&c, reject account creation and notify user
+        if (isPrivacyAgree == false) {
+            Toast.makeText(signupactivity.this, "Please agree to the privacy policy.",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
+        if (isTncAgree == false) {
+            Toast.makeText(signupactivity.this, "Please agree to the terms and conditions.",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         return true;
     }
+
     public User Register(View v){
         //Get Views
         EditText name = findViewById(R.id.setusername);
@@ -173,6 +263,7 @@ public class signupactivity extends AppCompatActivity {
                 }
             }
         });
+
         return u;
     }
 

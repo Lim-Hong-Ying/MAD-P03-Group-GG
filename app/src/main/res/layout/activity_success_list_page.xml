@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/successcheck" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/successHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -32,27 +32,38 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/successLeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/roboto"
-        android:text="You may now return to homepage."
+        android:text="You may now view your shiny new listing or return to homepage."
         android:textAlignment="center"
-        android:textSize="24sp"
         android:textColor="@color/black"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/successHeader" />
 
     <Button
         android:id="@+id/back_to_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Back to homepage"
         android:background="@drawable/sign_in_button"
+        android:text="Back to homepage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/view_listing" />
+
+    <Button
+        android:id="@+id/view_listing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/sign_in_button"
+        android:text="View listing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/successLeading" />
 </androidx.constraintlayout.widget.ConstraintLayout>

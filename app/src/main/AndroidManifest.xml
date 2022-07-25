@@ -17,6 +17,46 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".view.userConsent.PrivacyPolicy"
+            android:exported="false" />
+        <activity
+            android:name=".view.userConsent.TermsAndConditions"
+            android:exported="false" />
+        <activity
+            android:name=".editListing"
+            android:exported="false" />
+        <activity
+            android:name=".userProfile"
+            android:exported="false" />
+        <activity
+            android:name=".ChatAddUser"
+            android:exported="false" />
+        <activity
+            android:name=".changeaccdetails"
+            android:exported="false" />
+        <activity
+            android:name=".deleteaccount"
+            android:exported="false" />
+
+        <receiver
+            android:name=".CashshopeWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/cashshope_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".view.ui.PaymentMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ui.CheckoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".successListPage"
             android:exported="false" />
         <activity
@@ -33,7 +73,7 @@
             android:exported="true" />
         <activity
             android:name=".newlisting"
-            android:exported="true" />
+            android:exported="true"></activity>
         <activity
             android:name=".forget_password_activitiy"
             android:exported="false" />

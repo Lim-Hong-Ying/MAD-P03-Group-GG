@@ -49,7 +49,7 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false); // To disable appname title
 
         searchField = findViewById(R.id.searchField);
-        ImageView searchPageCloseButton = findViewById(R.id.searchPageCloseButton);
+        ImageView searchPageCloseButton = findViewById(R.id.paymentMethodCloseButton);
 
         // Get user query from intent
         Intent fromSearchView = getIntent();
@@ -152,10 +152,11 @@ public class SearchActivity extends AppCompatActivity {
                                 String itemcondition = snapshot.child("iC").getValue(String.class);
                                 String price = snapshot.child("price").getValue(String.class);
                                 Boolean reserved = snapshot.child("reserved").getValue(Boolean.class);
+                                String TImeStamp = snapshot.child("timeStamp").getValue(String.class);
 
                                 listingObject listing = new listingObject(listingid, titles,
                                         thumbnailurl, sellerid, sellerprofilepicurl,
-                                        itemcondition, price, reserved);
+                                        itemcondition, price, reserved,TImeStamp);
 
                                 return listing;
                             }

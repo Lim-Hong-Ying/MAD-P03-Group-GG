@@ -93,7 +93,7 @@ public class listingFragment extends Fragment {
                 if (connected) {
 
                 } else {
-                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -111,7 +111,7 @@ public class listingFragment extends Fragment {
     }
 
     private void initialCheckSharedPreferences() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
 
@@ -125,7 +125,7 @@ public class listingFragment extends Fragment {
     private void viewChanger(View view, ArrayList<listingObject> data) { //Changes view for listing
         ToggleButton viewMode = view.findViewById(R.id.view_mode);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
 
@@ -142,7 +142,7 @@ public class listingFragment extends Fragment {
         viewMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Cashopee", MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("Cashopee", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 if (b == false) {
@@ -169,14 +169,18 @@ public class listingFragment extends Fragment {
                 for (DataSnapshot datasnap : snapshot.getChildren()) {
                     String listingid = datasnap.getKey();
                     String titles = datasnap.child("title").getValue(String.class);
-                    String thumbnailurl = datasnap.child("tURL").getValue(String.class);
+                    long thumbnailurlsize = datasnap.child("tURLs").getChildrenCount();
+                    ArrayList<String> tURLs = new ArrayList<>();
+                    for (int i = 0; i < thumbnailurlsize; i++) {
+                        tURLs.add(datasnap.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                    }
                     String sellerid = datasnap.child("sid").getValue(String.class);
-                    String sellerprofilepicurl = datasnap.child("sppu").getValue(String.class);
                     String itemcondition = datasnap.child("iC").getValue(String.class);
                     String price = datasnap.child("price").getValue(String.class);
                     Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
+                    String timeStamp = datasnap.child("timeStamp").getValue(String.class);
 
-                    listingObject listing = new listingObject(listingid, titles, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved);
+                    listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, timeStamp);
                     data.add(listing);
                     adapter.notifyDataSetChanged();
                 }

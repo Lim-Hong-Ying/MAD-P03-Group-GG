@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    tools:context=".view.ui.MainActivity"
+    android:background="@drawable/img2"
+
+
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="397dp"
+                    android:layout_height="489dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0">
+
+                    <TextView
+                        android:id="@+id/appname"
+                        android:layout_width="232dp"
+                        android:layout_height="107dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="sans-serif"
+                        android:text="Confirm User"
+                        android:textColor="@color/black"
+                        android:textSize="48dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+                    <EditText
+                        android:id="@+id/ccredentialemail"
+                        android:layout_width="335dp"
+                        android:layout_height="57dp"
+
+
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/inpu_text"
+                        android:hint="Email"
+                        android:inputType="textEmailAddress"
+                        android:paddingLeft="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/appname"></EditText>
+
+                    <EditText
+                        android:id="@+id/repassword"
+                        android:layout_width="335dp"
+                        android:layout_height="57dp"
+
+
+                        android:layout_marginTop="32dp"
+                        android:background="@drawable/inpu_text"
+                        android:hint="Password"
+                        android:inputType="textEmailAddress"
+                        android:paddingLeft="20dp"
+                        app:layout_constraintEnd_toEndOf="@+id/ccredentialemail"
+                        app:layout_constraintStart_toStartOf="@+id/ccredentialemail"
+                        app:layout_constraintTop_toBottomOf="@+id/ccredentialemail"></EditText>
+
+                    <Button
+                        android:id="@+id/changedtls"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginTop="32dp"
+                        android:background="@drawable/sign_in_button"
+                        android:text="Continue"
+                        app:layout_constraintEnd_toEndOf="@+id/repassword"
+                        app:layout_constraintStart_toStartOf="@+id/repassword"
+                        app:layout_constraintTop_toBottomOf="@+id/repassword"></Button>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
