@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import sg.edu.np.mad_p03_group_gg.view.ui.fragments.HomepageFragment;
 
+// NOTE: EventEditActivity no longer in use for stage 2
 public class EventEditActivity extends AppCompatActivity
 {
     private EditText eventNameET, locationNameET;

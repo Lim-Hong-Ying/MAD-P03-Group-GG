@@ -32,6 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="70dp"
+                    android:onClick="test"
                     android:text="@string/eventToolbar_heading"
                     android:textColor="@color/white"
                     android:textSize="30sp"

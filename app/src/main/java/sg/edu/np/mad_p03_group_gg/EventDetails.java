@@ -24,6 +24,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -58,9 +59,14 @@ public class EventDetails extends AppCompatActivity {
         editable = fromEventPage.getBooleanExtra("Editable", false);
         // Check if user is trying to create a new event
         newEvent = fromEventPage.getBooleanExtra("NewEvent", false);
+        // Initialise views
         initDetails();
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // If user is editing or viewing an event, initialise event
+        // If user is editing or viewing an event, initialise selected event's details
         if (!newEvent){
             selectedEvent = Event.getEventForID(eventID);
             eventName.setText(selectedEvent.getName());
@@ -70,15 +76,19 @@ public class EventDetails extends AppCompatActivity {
             eventDesc.setText(selectedEvent.getDesc());
             currentName = eventName.getText().toString();
         }
+        else{
+            // Set default date displayed to be current date
+            // Format month number to show two digits
+            DecimalFormat formatter = new DecimalFormat("00");
+            String monthString = formatter.format(month + 1);
+            String sDate = year + "-" + monthString + "-" + day;
+            eventDate.setText(sDate);
+
+        }
         // If user is viewing an event, button will be invisible
         if (!editable && !newEvent){
             greenBtn.setVisibility(View.INVISIBLE);
         }
-
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         // If user is editing the page
         if (editable){
@@ -241,8 +251,8 @@ public class EventDetails extends AppCompatActivity {
                     }
                     catch (Exception e){}
 
+                    // Convert time from 24h to 12h format
                     String time;
-                    // Convert time to 12h format
                     try{
                         time = LocalTime.parse(eventTime.getText().toString(),
                                 DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH))
@@ -278,8 +288,8 @@ public class EventDetails extends AppCompatActivity {
                         cv.put(CalendarContract.Events.CALENDAR_ID, 1);
                         cv.put(CalendarContract.Events.EVENT_TIMEZONE, Calendar.getInstance().getTimeZone().getID());
                         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, cv);}
+                    // Display toast message if user did not allow permissions to access calendar for the app (Events will be unable to sync with Google Calendar)
                     catch(Exception e){Toast.makeText(EventDetails.this, "Allow permissions to sync with Google Calendar", Toast.LENGTH_LONG).show();}
-
                     Toast.makeText(EventDetails.this, "New Event Created!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -299,7 +309,7 @@ public class EventDetails extends AppCompatActivity {
     }
 
     // Initialises views
-    public void initDetails(){
+    private void initDetails(){
         greenBtn = findViewById(R.id.greenBtn);
         eventName = findViewById(R.id.eventName);
         eventLocation = findViewById(R.id.eventLocation);
@@ -311,7 +321,7 @@ public class EventDetails extends AppCompatActivity {
     }
 
     // Make inputs focusable (editable)
-    public void setFocusable(){
+    private void setFocusable(){
         eventName.setFocusableInTouchMode(true);
         eventLocation.setFocusableInTouchMode(true);
         selectDate.setFocusableInTouchMode(true);
@@ -320,7 +330,7 @@ public class EventDetails extends AppCompatActivity {
     }
 
     // Setting time button to 12 hour format
-    public void checkAmOrPm(int hour, int min){
+    private void checkAmOrPm(int hour, int min){
         String am_Pm;
         if (hour > 11) {
             am_Pm = "PM";
@@ -347,10 +357,10 @@ public class EventDetails extends AppCompatActivity {
     private int ListSelectedCalendars(String eventtitle) {
         Uri eventUri;
         if (android.os.Build.VERSION.SDK_INT <= 7) {
-            // the old way
+            // For older version
             eventUri = Uri.parse("content://calendar/events");
         } else {
-            // the new way
+            // For newer version
             eventUri = Uri.parse("content://com.android.calendar/events");
         }
         int result = 0;
@@ -391,7 +401,7 @@ public class EventDetails extends AppCompatActivity {
         }
 
         String t;
-        // Convert time to 12h format
+        // Convert time from 24h to 12h format
         try{
             t = LocalTime.parse(eventTime.getText().toString(),
                     DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH))
@@ -419,6 +429,7 @@ public class EventDetails extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // Insert updated values into Google Calendar
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.TITLE, eventName.getText().toString());
         values.put(CalendarContract.Events.EVENT_LOCATION, eventLocation.getText().toString());

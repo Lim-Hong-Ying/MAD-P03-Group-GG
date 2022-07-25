@@ -212,8 +212,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#F6CC9A"
-        android:onClick="newEventAction"
-        android:text="New Event"
+        android:text="Events"
         android:textColor="#135995"
         android:textSize="20sp"
         android:textStyle="bold" />

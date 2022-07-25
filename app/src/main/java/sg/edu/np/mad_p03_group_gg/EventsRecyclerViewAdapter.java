@@ -92,15 +92,18 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                                editEvent.putExtra("Editable", true);
                                view.getContext().startActivity(editEvent);
                                return true;
-                               // If delete event is clicked, remove event from list, firebase, google calendar
+                               // If delete event is clicked, remove event from list, firebase and google calendar
                            case R.id.delete:
                                Event.eventsList.remove(e);
+                               // Get current userID
                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                userId = user.getUid();
                                EventEditActivity.removeDataFromFireBase(userId, id);
                                notifyDataSetChanged();
                                EventsPage.noOfEvent(Event.eventsList);
-                               try{DeleteCalendarEntry(ListSelectedCalendars(e.getName()));}catch (Exception e){Toast.makeText(view.getContext(), "Allow permissions to sync with Google Calendar", Toast.LENGTH_LONG).show();}
+                               try{DeleteCalendarEntry(ListSelectedCalendars(e.getName()));}
+                               // Display toast message if user doesn't allow permissions to access calendar (Events cannot be sync with Google Calendar)
+                               catch (Exception e){Toast.makeText(view.getContext(), "Allow permissions to sync with Google Calendar", Toast.LENGTH_LONG).show();}
                                Toast.makeText(view.getContext(), "Event Deleted!", Toast.LENGTH_SHORT).show();
                                return true;
                            default:
@@ -135,7 +138,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     }
 
     // Get month name from list
-    public String getMonthName(int monthNo){
+    private String getMonthName(int monthNo){
         ArrayList<String> monthList = new ArrayList<>();
         monthList.add("JAN");
         monthList.add("FEB");
@@ -156,10 +159,10 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     private int ListSelectedCalendars(String eventtitle) {
         Uri eventUri;
         if (android.os.Build.VERSION.SDK_INT <= 7) {
-            // the old way
+            // For older version
             eventUri = Uri.parse("content://calendar/events");
         } else {
-            // the new way
+            // For newer version
             eventUri = Uri.parse("content://com.android.calendar/events");
         }
         int result = 0;

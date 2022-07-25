@@ -22,19 +22,17 @@
 
         <ImageView
             android:id="@+id/closeBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:contentDescription="CloseBtn"
-            android:elevation="30dp"
-            android:src="@drawable/round_cancle_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></ImageView>
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back_icon" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/greenBtn"
-            android:layout_width="match_parent"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:backgroundTint="#00bb5a"
@@ -194,7 +192,7 @@
                                         android:layout_height="match_parent"
                                         android:layout_marginStart="5dp"
                                         android:gravity="center"
-                                        android:text="12:00 AM"
+                                        android:text="12:00 PM"
                                         android:textColor="@android:color/holo_green_dark"
                                         android:textSize="16sp"></TextView>
 

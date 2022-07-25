@@ -31,7 +31,6 @@ public class EventsPage extends AppCompatActivity {
         eventTV = findViewById(R.id.eventTV);
         eventRV = findViewById(R.id.eventRecyclerView);
         initRecyclerView();
-        //filterEvent(Event.eventsList);
         noOfEvent(Event.eventsList);
         backBtn = findViewById(R.id.backBtn);
         // Closes activity when back button is clicked
@@ -55,12 +54,13 @@ public class EventsPage extends AppCompatActivity {
             @Override
             public int compare(Event event1, Event event2) {
                 int sComp = event1.getDate().compareTo(event2.getDate());
+                // If two events have different dates, compare date only
                 if (sComp != 0){
-                    Log.e("Different event Date", "Event date different");
                     return sComp;
                 }
-                Log.e("Same event Date", "Event date same");
+                // If two events have same dates, compare time as well
                 try {
+                    // Format time string
                     return new SimpleDateFormat("hh:mm a").parse(event1.getTime()).compareTo(new SimpleDateFormat("hh:mm a").parse(event2.getTime()));
                 } catch (ParseException e) {
                     return 0;
@@ -70,7 +70,7 @@ public class EventsPage extends AppCompatActivity {
     }
 
     // Initialise recycler view
-    public void initRecyclerView(){
+    private void initRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         eventsRecyclerViewAdapter = new EventsRecyclerViewAdapter(Event.eventsList, this);
         eventRV.setLayoutManager(linearLayoutManager);
@@ -78,10 +78,11 @@ public class EventsPage extends AppCompatActivity {
         eventsRecyclerViewAdapter.notifyDataSetChanged();
     }
 
-    // Count number of events created
+    // Count number of events created by user
     public static void noOfEvent(ArrayList<Event> eventsList){
         String eventNumberText;
         int count = eventsList.size();
+        // Set text based on number of events created
         if (count == 0){
             eventNumberText = "No Event planned currently";
         }
@@ -102,20 +103,9 @@ public class EventsPage extends AppCompatActivity {
         newEvent.putExtra("NewEvent", true);
         startActivity(newEvent);
     }
-
-    /*
-    public void filterEvent(ArrayList<Event> eventsList){
-        for(Event event : eventsList){
-            Log.e("Event Date", event.getDate().toString());
-            Log.e("Today", LocalDateTime.now().toString());
-            if (event.getDate().equals(LocalDateTime.now())){
-                continue;
-            }
-            else{
-                eventsList.remove(event);
-            }
-        }
+    // Temporary only
+    public void test(View view){
+        Intent test = new Intent(EventsPage.this, WeekViewActivity.class);
+        startActivity(test);
     }
-
-     */
 }
