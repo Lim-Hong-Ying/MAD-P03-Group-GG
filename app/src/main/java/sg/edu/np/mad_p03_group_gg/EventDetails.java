@@ -90,8 +90,8 @@ public class EventDetails extends AppCompatActivity {
             greenBtn.setVisibility(View.INVISIBLE);
         }
 
-        // If user is editing the page
-        if (editable){
+        // If user is editing or creating an event
+        if (editable || newEvent){
             // Display selected date using calendar
             selectDate.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -134,169 +134,126 @@ public class EventDetails extends AppCompatActivity {
             });
             // Allow inputs to be focusable (editable)
             setFocusable();
-            greenBtn.setText("Save Changes");
-            // When button is clicked, save changes to event
-            greenBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Save edited event details into firebase
-                    EventEditActivity.removeDataFromFireBase(userId, eventID);
-                    EventEditActivity.addDataToFireBase(userId, eventID, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString(), eventDesc.getText().toString());
-                    // Convert date string to LocalDate to store inside Event object
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    String d = eventDate.getText().toString();
-                    LocalDate date = LocalDate.parse(d,dtf);
-                    // Check that selected date has not past
-                    if (date.isBefore(LocalDate.now())){
-                        eventDate.setError("Select a valid date");
-                        return;
-                    }
-                    Event editedEvent = new Event(eventID, eventName.getText().toString(), eventLocation.getText().toString(), date, eventTime.getText().toString(), eventDesc.getText().toString());
-                    // Replace previous event with edited event
-                    for (Event e : Event.eventsList){
-                        if (e.getID() == eventID){
-                            Event.eventsList.set(Event.eventsList.indexOf(e), editedEvent);
+            //
+            if (editable){
+                greenBtn.setText("Save Changes");
+                // When button is clicked, save changes to event
+                greenBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Save edited event details into firebase
+                        EventEditActivity.removeDataFromFireBase(userId, eventID);
+                        EventEditActivity.addDataToFireBase(userId, eventID, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString(), eventDesc.getText().toString());
+                        // Convert date string to LocalDate to store inside Event object
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        String d = eventDate.getText().toString();
+                        LocalDate date = LocalDate.parse(d,dtf);
+                        // Check that selected date has not past
+                        if (date.isBefore(LocalDate.now())){
+                            eventDate.setError("Select a valid date");
+                            return;
                         }
-                    }
-                    // Update event details to Google Calendar
-                    try{UpdateCalendarEntry(ListSelectedCalendars(currentName));}catch (Exception e){Toast.makeText(EventDetails.this, "Allow permissions to sync with Google Calendar", Toast.LENGTH_LONG).show();}
-                    Toast.makeText(EventDetails.this, "Changes Saved!", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            });
-        }
-
-        // If user is creating a new event
-        else if (newEvent){
-            // Display selected date using calendar
-            selectDate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DatePickerDialog dialog = new DatePickerDialog(EventDetails.this, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            month += 1;
-                            mth = Integer.toString(month);
-                            if (month < 10){
-                                sMonth = "0" + mth;
+                        Event editedEvent = new Event(eventID, eventName.getText().toString(), eventLocation.getText().toString(), date, eventTime.getText().toString(), eventDesc.getText().toString());
+                        // Replace previous event with edited event
+                        for (Event e : Event.eventsList){
+                            if (e.getID() == eventID){
+                                Event.eventsList.set(Event.eventsList.indexOf(e), editedEvent);
                             }
-                            else{
-                                sMonth = mth;
-                            }
-                            String date = year + "-" + sMonth + "-" + day;
-                            eventDate.setText(date);
                         }
-                    }, year, month, day);
-                    dialog.show();
-                }
-            });
-            // Display selected time
-            selectTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMin) {
-                            hour = selectedHour;
-                            min = selectedMin;
-                            // Convert 24h to 12h format
-                            checkAmOrPm(hour, min);
+                        // Update event details to Google Calendar
+                        try{UpdateCalendarEntry(ListSelectedCalendars(currentName));}catch (Exception e){Toast.makeText(EventDetails.this, "Allow permissions to sync with Google Calendar", Toast.LENGTH_LONG).show();}
+                        Toast.makeText(EventDetails.this, "Changes Saved!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+            }
+            // If user is creating a new event
+            else if (newEvent){
+                greenBtn.setText("Create Event");
+                // When button is clicked, save the newly created event
+                greenBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Give new event an ID
+                        int id = 1;
+                        if (Event.eventsList.size() != 0){
+                            Event previousEvent = Event.eventsList.get(Event.eventsList.size() - 1);
+                            id = previousEvent.getID() + 1;
                         }
-                    };
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), onTimeSetListener, hour, min, true);
-                    timePickerDialog.setTitle("Select Time");
-                    timePickerDialog.show();
-                }
-            });
 
-            // Allow inputs to be focusable (editable)
-            setFocusable();
-            greenBtn.setText("Create Event");
-            // When button is clicked, save the newly created event
-            greenBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Give new event an ID
-                    int id = 1;
-                    if (Event.eventsList.size() != 0){
-                        Event previousEvent = Event.eventsList.get(Event.eventsList.size() - 1);
-                        id = previousEvent.getID() + 1;
+                        // Format date string to LocalDate to store inside Event object
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        String d = eventDate.getText().toString();
+                        LocalDate date = LocalDate.parse(d,dtf);
+                        // Check that selected date has not past
+                        if (date.isBefore(LocalDate.now())){
+                            eventDate.setError("Select a valid date");
+                            return;
+                        }
+                        Event event = new Event(id, eventName.getText().toString(), eventLocation.getText().toString(), date, eventTime.getText().toString(), eventDesc.getText().toString());
+                        // Add newly created event to eventList
+                        Event.eventsList.add(event);
+                        // Add newly created event to Firebase
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        userId = user.getUid();
+                        EventEditActivity.addDataToFireBase(userId, id, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString(), eventDesc.getText().toString());
+
+                        ContentResolver cr = EventDetails.this.getContentResolver();
+                        ContentValues cv = new ContentValues();
+                        // Add newly created event to Google Calendar
+                        try {
+                            cv.put(CalendarContract.Events.CALENDAR_ID, eventID);
+                            cv.put(CalendarContract.Events.TITLE, eventName.getText().toString());
+                            cv.put(CalendarContract.Events.DESCRIPTION, eventDesc.getText().toString());
+                            cv.put(CalendarContract.Events.EVENT_LOCATION, eventLocation.getText().toString());
+                        }
+                        catch (Exception e){}
+
+                        // Convert time from 24h to 12h format
+                        String time;
+                        try{
+                            time = LocalTime.parse(eventTime.getText().toString(),
+                                    DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH))
+                                    .format(DateTimeFormatter.ofPattern("HH:mm"));
+                        }catch (DateTimeParseException e){
+                            time = LocalTime.parse(eventTime.getText().toString(),
+                                    DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH))
+                                    .format(DateTimeFormatter.ofPattern("HH:mm"));
+                        }
+
+                        // Split time string to get hour and minute
+                        String[] arrOfTime = time.split(":");
+                        int hour = Integer.parseInt(arrOfTime[0]);
+                        int min = Integer.parseInt(arrOfTime[1]);
+
+                        // Set date and time for google calendar
+                        Calendar cal = Calendar.getInstance();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            Date date1 = sdf.parse(eventDate.getText().toString());
+                            cal.setTime(date1);
+                            cal.set(Calendar.HOUR_OF_DAY, hour);
+                            cal.set(Calendar.MINUTE, min);
+                        }
+                        catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        try{
+                            // Initialise event details into Google Calendar
+                            cv.put(CalendarContract.Events.DTSTART, cal.getTimeInMillis());
+                            cv.put(CalendarContract.Events.DTEND, cal.getTimeInMillis());
+                            cv.put(CalendarContract.Events.CALENDAR_ID, 1);
+                            cv.put(CalendarContract.Events.EVENT_TIMEZONE, Calendar.getInstance().getTimeZone().getID());
+                            Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, cv);}
+                        // Display toast message if user did not allow permissions to access calendar for the app (Events will be unable to sync with Google Calendar)
+                        catch(Exception e){Toast.makeText(EventDetails.this, "Allow permissions to sync with Google Calendar", Toast.LENGTH_LONG).show();}
+                        Toast.makeText(EventDetails.this, "New Event Created!", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
-
-                    // Format date string to LocalDate to store inside Event object
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    String d = eventDate.getText().toString();
-                    LocalDate date = LocalDate.parse(d,dtf);
-                    // Check that selected date has not past
-                    if (date.isBefore(LocalDate.now())){
-                        eventDate.setError("Select a valid date");
-                        return;
-                    }
-                    Event event = new Event(id, eventName.getText().toString(), eventLocation.getText().toString(), date, eventTime.getText().toString(), eventDesc.getText().toString());
-                    // Add newly created event to eventList
-                    Event.eventsList.add(event);
-                    // Add newly created event to Firebase
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    userId = user.getUid();
-                    EventEditActivity.addDataToFireBase(userId, id, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString(), eventDesc.getText().toString());
-
-                    ContentResolver cr = EventDetails.this.getContentResolver();
-                    ContentValues cv = new ContentValues();
-                    // Add newly created event to Google Calendar
-                    try {
-                        cv.put(CalendarContract.Events.CALENDAR_ID, eventID);
-                        cv.put(CalendarContract.Events.TITLE, eventName.getText().toString());
-                        cv.put(CalendarContract.Events.DESCRIPTION, eventDesc.getText().toString());
-                        cv.put(CalendarContract.Events.EVENT_LOCATION, eventLocation.getText().toString());
-                    }
-                    catch (Exception e){}
-
-                    // Convert time from 24h to 12h format
-                    String time;
-                    try{
-                        time = LocalTime.parse(eventTime.getText().toString(),
-                                DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH))
-                                .format(DateTimeFormatter.ofPattern("HH:mm"));
-                    }catch (DateTimeParseException e){
-                        time = LocalTime.parse(eventTime.getText().toString(),
-                                DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH))
-                                .format(DateTimeFormatter.ofPattern("HH:mm"));
-                    }
-
-                    // Split time string to get hour and minute
-                    String[] arrOfTime = time.split(":");
-                    int hour = Integer.parseInt(arrOfTime[0]);
-                    int min = Integer.parseInt(arrOfTime[1]);
-
-                    // Set date and time for google calendar
-                    Calendar cal = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    try {
-                        Date date1 = sdf.parse(eventDate.getText().toString());
-                        cal.setTime(date1);
-                        cal.set(Calendar.HOUR_OF_DAY, hour);
-                        cal.set(Calendar.MINUTE, min);
-                    }
-                    catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    try{
-                        // Initialise event details into Google Calendar
-                        cv.put(CalendarContract.Events.DTSTART, cal.getTimeInMillis());
-                        cv.put(CalendarContract.Events.DTEND, cal.getTimeInMillis());
-                        cv.put(CalendarContract.Events.CALENDAR_ID, 1);
-                        cv.put(CalendarContract.Events.EVENT_TIMEZONE, Calendar.getInstance().getTimeZone().getID());
-                        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, cv);}
-                    // Display toast message if user did not allow permissions to access calendar for the app (Events will be unable to sync with Google Calendar)
-                    catch(Exception e){Toast.makeText(EventDetails.this, "Allow permissions to sync with Google Calendar", Toast.LENGTH_LONG).show();}
-                    Toast.makeText(EventDetails.this, "New Event Created!", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            });
-
+                });
+            }
         }
-
         // When closeBtn is clicked, close activity
         closeBtn = findViewById(R.id.closeBtn);
         closeBtn.setOnClickListener(new View.OnClickListener() {
@@ -305,7 +262,6 @@ public class EventDetails extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     // Initialises views

@@ -39,7 +39,7 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         }
         initWidgets();
         setWeekView();
-        setOnClickListener();
+        //setOnClickListener();
         ImageView closeBtn = findViewById(R.id.weeklyCloseButton);
         // Removes activity from stack when button is clicked
         closeBtn.setOnClickListener(view -> {
