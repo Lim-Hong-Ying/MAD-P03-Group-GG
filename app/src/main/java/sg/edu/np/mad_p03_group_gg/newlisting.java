@@ -26,7 +26,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,23 +46,15 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stripe.android.PaymentConfiguration;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.stripe.android.Stripe;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
 import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 
 /**
@@ -84,12 +75,12 @@ import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
  * By: Kai Zhe
  */
 public class newlisting extends AppCompatActivity {
-    private static final String BACKEND_URL = "https://cashshope.japaneast.cloudapp.azure.com/";
-    private OkHttpClient httpClient = new OkHttpClient();
+    private static FirebaseDatabase database = FirebaseDatabase
+            .getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private static DatabaseReference databaseReference = database.getReference();
     private FirebaseAuth auth;
     private String currentUserId;
-    private String stripeAccountId;
-
+    final StripeDialog stripeDialog = new StripeDialog(newlisting.this);
     ArrayList<Uri> imageArray = new ArrayList<>();
     ArrayList<String> imageURLs = new ArrayList<>();
 
@@ -97,6 +88,8 @@ public class newlisting extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newlisting);
+
+        // ############# KAI ZHE PAYMENT SECTION ###############
 
         // Get current user id
         auth = FirebaseAuth.getInstance();
@@ -109,11 +102,14 @@ public class newlisting extends AppCompatActivity {
                 "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
         );
 
+        // ############# END OF KAI ZHE PAYMENT SECTION ###############
+
         DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
+
                 if (connected) {
                     activeChecker();
 
@@ -144,11 +140,6 @@ public class newlisting extends AppCompatActivity {
                 Toast.makeText(newlisting.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
             }
         });
-        // ATTENTION: This was auto-generated to handle app links.
-        Intent appLinkIntent = getIntent();
-        handleIntent(appLinkIntent);
-        String appLinkAction = appLinkIntent.getAction();
-        Uri appLinkData = appLinkIntent.getData();
     }
 
     private void activeChecker() {
@@ -164,6 +155,7 @@ public class newlisting extends AppCompatActivity {
         EditText deltime_input = findViewById(R.id.input_deliverytime);
         Switch meeting_toggle = findViewById(R.id.meet_toggle);
         Switch delivery_toggle = findViewById(R.id.del_toggle);
+        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
 
         address_input.setVisibility(View.GONE);
         deltype_input.setVisibility(View.GONE);
@@ -342,7 +334,7 @@ public class newlisting extends AppCompatActivity {
         });
 
         // ############# KAI ZHE PAYMENT SECTION ###############
-        EditText paynowPhoneInput = findViewById(R.id.paynowId);
+        /*EditText paynowPhoneInput = findViewById(R.id.paynowId);
 
         paynowPhoneInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -361,58 +353,44 @@ public class newlisting extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
 
             }
-        });
+        });*/
 
-        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
-        final StripeDialog stripeDialog = new StripeDialog(newlisting.this);
 
+        // Check if user has already onboarded, i.e. has stripeAccountId and
+        // account is not restricted (check payout true or false)
         stripeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b == true)
                 {
-                    stripeDialog.startStripeAlertDialog();
-
-                    WeakReference<Activity> weakActivity = new WeakReference<>(newlisting.this);
-                    Request request = new Request.Builder()
-                            .url(BACKEND_URL + "onboard")
-                            .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ""))
-                            .build();
-                    httpClient.newCall(request)
-                            .enqueue(new Callback() {
-                                @Override
-                                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                                    // Request failed
-                                    Log.d("Error", e.getMessage());
-                                }
-
-                                @Override
-                                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-                                    final Activity activity = weakActivity.get();
-                                    if (activity == null) {
-                                        return;
-                                    }
-                                    if (!response.isSuccessful() || response.body() == null) {
-                                        // Request failed
-                                    } else {
-                                        String body = response.body().string();
-                                        try {
-                                            JSONObject responseJson = new JSONObject(body);
-                                            stripeAccountId = responseJson.getString("account_id");
-                                            String url = responseJson.getJSONObject("url").getString("url");
-                                            Log.d("url", url);
-                                            Log.d("accountId", stripeAccountId);
-                                            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                                            CustomTabsIntent customTabsIntent = builder.build();
-                                            stripeDialog.dismissDialog();
-                                            customTabsIntent.launchUrl(newlisting.this, Uri.parse(url));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
+                    // Retrieve User's stripeAccountId
+                    StripeUtils.getStripeAccountId(currentUserId, new ConnectStripeCallback() {
+                        @Override
+                        public void stripeAccountIdCallback(String stripeAccountId) {
+                            if (stripeAccountId != null)
+                            {
+                                StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                                    @Override
+                                    public void isOnboardCallback(Boolean isOnboard) {
+                                        // If isOnboard is true, means user completed onboarding and able to
+                                        // receive payouts (check Stripe Dashboard)
+                                        if (isOnboard == false)
+                                        {
+                                            StripeUtils.resumeOnboard(stripeDialog, newlisting.this,
+                                                    stripeAccountId);
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
+                            else
+                            {
+                                // If no stripeAccountId, generate a new one and onboard user
+                                StripeUtils.onboardUser(stripeDialog, newlisting.this,
+                                        currentUserId);
+                            }
+
+                        }
+                    });
                 }
             }
         });
@@ -430,7 +408,7 @@ public class newlisting extends AppCompatActivity {
         EditText delprice_input = findViewById(R.id.input_deliveryprice);
         EditText deltime_input = findViewById(R.id.input_deliverytime);
 
-        EditText paynowPhoneInput = findViewById(R.id.paynowId);
+        //EditText paynowPhoneInput = findViewById(R.id.paynowId);
 
         Switch meeting_toggle = findViewById(R.id.meet_toggle);
         Switch delivery_toggle = findViewById(R.id.del_toggle);
@@ -447,7 +425,7 @@ public class newlisting extends AppCompatActivity {
         Boolean deliverytype_filled = false;
         Boolean deliveryprice_filled = false;
         Boolean deliverytime_filled = false;
-        Boolean isPaynowFilled = false;
+        //Boolean isPaynowFilled = false;
 
         if (imageArray.size() > 0) {
             image_selected = true;
@@ -495,17 +473,51 @@ public class newlisting extends AppCompatActivity {
             deliverytime_filled = true;
         }
 
-        if (TextUtils.isEmpty(paynowPhoneInput.getText().toString()) == false)
+        /*if (TextUtils.isEmpty(paynowPhoneInput.getText().toString()) == false)
         {
             isPaynowFilled = true;
-        }
+        }*/
 
         if (image_selected == true && title_filled == true && price_filled == true &&
                 itemcondition_selected == true && desc_filled == true && meetup_filled == true &&
                 deliverytype_filled == true && deliveryprice_filled == true &&
-                deliverytime_filled == true && isPaynowFilled == true) {
+                deliverytime_filled == true) {
 
-            writeToDatabaseAndFirebase();
+            if (stripeSwitch.isChecked() == true)
+            {
+                // Check again
+                StripeUtils.getStripeAccountId(currentUserId, new ConnectStripeCallback() {
+                    @Override
+                    public void stripeAccountIdCallback(String stripeAccountId) {
+                        StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                            @Override
+                            public void isOnboardCallback(Boolean isOnboard) {
+                                // Check if onboarding is completed, call Accounts api to check info
+                                if (isOnboard)
+                                {
+                                    newlisting.this.runOnUiThread(() -> {
+                                        // If onboarding is completed, write to Firebase
+                                        writeToDatabaseAndFirebase();
+                                    });
+
+                                }
+                                else
+                                {
+                                    // Ask user to perform onboarding again
+                                    Toast.makeText(newlisting.this,
+                                            "Please complete the Stripe onboarding process.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            else
+            {
+                writeToDatabaseAndFirebase();
+            }
+
 /*            Intent returnhome = new Intent(getApplicationContext(), successListPage.class);
             finish();
             newlisting.this.startActivity(returnhome);*/
@@ -778,25 +790,5 @@ public class newlisting extends AppCompatActivity {
         }
     });
 
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        handleIntent(intent);
-    }
 
-    // Onboarding flow exited properly, check if account is complete.
-    private void handleIntent(Intent intent) {
-        String appLinkAction = intent.getAction();
-        Uri appLinkData = intent.getData();
-
-        // Check if account is complete with payment info
-
-        // if no give return url ask
-
-        /*if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
-            String recipeId = appLinkData.getLastPathSegment();
-            Uri appData = Uri.parse("content://com.recipe_app/recipe/").buildUpon()
-                    .appendPath(recipeId).build();
-            showRecipe(appData);
-        }*/
-    }
 }

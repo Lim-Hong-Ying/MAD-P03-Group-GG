@@ -128,6 +128,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="4"
+                                    android:checked="true"
                                     android:fontFamily="@font/roboto"
                                     android:layoutDirection="rtl"
                                     android:text="Card"
@@ -138,7 +139,7 @@
                                 android:id="@+id/cardInputWidget"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:visibility="gone" />
+                                android:visibility="visible" />
                         </LinearLayout>
 
                     </androidx.cardview.widget.CardView>
@@ -149,6 +150,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="24dp"
+                        android:visibility="gone"
                         app:cardCornerRadius="10dp">
 
                         <LinearLayout
@@ -186,6 +188,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="24dp"
+                        android:visibility="gone"
                         app:cardCornerRadius="10dp">
 
                         <LinearLayout

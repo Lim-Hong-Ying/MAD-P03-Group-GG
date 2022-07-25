@@ -24,14 +24,25 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.individualListingObject;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.Callback;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.ThumbnailCallback;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.paymentMethodCallback;
 
@@ -63,35 +74,6 @@ public  class FirebaseTools {
                     }
 
                     callback.userPaymentMethodCallBack(paymentMethod);
-
-                }
-            }
-        });
-    }
-
-
-    public static void getStripeConnectId(String sellerId, Context context,
-                                          ConnectStripeCallback callback) {
-        databaseReference.child("users").child(sellerId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(context, "Error: Check your internet connection.", Toast.LENGTH_SHORT).show();
-                } else {
-                    //Builds individualListingObject from data retrieved
-                    DataSnapshot result = task.getResult();
-
-                    String stripeConnectId;
-                    try {
-                        stripeConnectId = result.child("paymentMethod").getValue(String.class);
-                    }
-                    catch (NullPointerException nullPointerException)
-                    {
-                        // If null means seller haven't onboarded
-                        stripeConnectId = null;
-                    }
-
-                    callback.connectIdCallback(stripeConnectId);
 
                 }
             }
@@ -275,29 +257,9 @@ public  class FirebaseTools {
     public static void sendConfirmationMessage(String sID, String uID, String message) {
 
         databaseReference.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Get seller id
-                /*for(DataSnapshot dataSnapshot : snapshot.child("individual-listing").getChildren()) {
-                    String foundPID = dataSnapshot.getKey();
-                    if(pID.equalsIgnoreCase(foundPID)){
-                        sID = dataSnapshot.child("sid").getValue(String.class);
-                        break;
-                    }
-                }*/
-
                 String chatKey = null;
-
-                // Setting chat key
-                if(chatKey.isEmpty()) {
-                    // ChatKey increment by 1 for each chat. Default chat key is 1 (for first 2 users)
-                    chatKey = "1";
-
-                    if (snapshot.hasChild("chat")) {
-                        chatKey = String.valueOf(snapshot.child("chat").getChildrenCount() + 1);
-                    }
-                }
 
                 // Get chatkey
                 for (DataSnapshot dataSnapshotCurrentChat : snapshot.child("chat").getChildren()){
@@ -312,35 +274,46 @@ public  class FirebaseTools {
                     }
                 }
 
+                // Setting chat key
+                if(chatKey == null) {
+                    // ChatKey increment by 1 for each chat. Default chat key is 1 (for first 2 users)
+                    chatKey = "1";
+
+                    if (snapshot.hasChild("chat")) {
+                        chatKey = String.valueOf(snapshot.child("chat").getChildrenCount() + 1);
+                    }
+                }
+
                 Boolean inChat = Boolean.parseBoolean(snapshot.child("chat").child(chatKey).child(sID).child("inChat").getValue(String.class));
 
                 // Get current time (add 28800000 milliseconds to convert to SGT, if emulator timezone is UTC)
                 String currentTime = String.valueOf(System.currentTimeMillis());
 
+                DatabaseReference ref = databaseReference.push();
+
                 // If user inchat status is true, set message seen value to True
                 if (inChat){
-                    databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("True");
+                    ref.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("True");
                 }
                 // If other user is not in current chat, set value to false
                 else{
-                    databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("False");
+                    ref.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("False");
                 }
 
                 // Set users
-                databaseReference.child("chat").child(chatKey).child("user1").setValue(uID);
-                databaseReference.child("chat").child(chatKey).child("user2").setValue(sID);
+                ref.child("chat").child(chatKey).child("user1").setValue(uID);
+                ref.child("chat").child(chatKey).child("user2").setValue(sID);
 
                 // Set message and who sent the message
-                databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(message);
-                databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(uID);
+                ref.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(message);
+                ref.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(uID);
 
 
                 // If current user (you) are not already in other user's friend list, add to his friend list
-                databaseReference.child("selectedChatUsers").child(sID).child(uID).setValue("");
+                ref.child("selectedChatUsers").child(sID).child(uID).setValue("");
 
                 // Set in chat status to true if message is sent
-                databaseReference.child("chat").child(chatKey).child(uID).child("inChat").setValue("True");
-
+                ref.child("chat").child(chatKey).child(uID).child("inChat").setValue("True");
             }
 
             @Override

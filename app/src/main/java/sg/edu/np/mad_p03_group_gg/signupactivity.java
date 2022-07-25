@@ -101,6 +101,12 @@ public class signupactivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * Privacy Policy and Terms & Conditions Conditional Checker
+         *
+         * Ensures that user accpet both agreements before being allowed to create a user
+         * account.
+         */
         // Get result from PrivacyPolicy Activity
         ActivityResultLauncher<Intent> privacyResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -200,6 +206,7 @@ public class signupactivity extends AppCompatActivity {
             return false;
         }
 
+        // If user declines privacy policy or t&c, reject account creation and notify user
         if (isPrivacyAgree == false) {
             Toast.makeText(signupactivity.this, "Please agree to the privacy policy.",
                     Toast.LENGTH_SHORT).show();

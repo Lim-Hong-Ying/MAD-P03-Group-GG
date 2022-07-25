@@ -53,6 +53,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
@@ -212,16 +214,46 @@ public class individual_listing extends AppCompatActivity {
         // ############# KAI ZHE PAYMENT SECTION ###############
         Button buyButton = findViewById(R.id.buyButton);
 
-        buyButton.setOnClickListener(new View.OnClickListener() {
+        databaseReference.child("individual-listing").child(pID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onClick(View view) {
-                Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
-                checkoutActivityIntent.putExtra("sellerId", sID);
-                checkoutActivityIntent.putExtra("productId", pID);
-                startActivity(checkoutActivityIntent);
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                    String sellerId = task.getResult().child("sid").getValue(String.class);
+
+                    // If no Stripe URL, don't let user checkout
+                    StripeUtils.getStripeAccountId(sellerId, new ConnectStripeCallback() {
+                        @Override
+                        public void stripeAccountIdCallback(String stripeAccountId) {
+
+                            if (stripeAccountId != null) {
+                                buyButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
+                                        checkoutActivityIntent.putExtra("sellerId", sellerId);
+                                        checkoutActivityIntent.putExtra("productId", pID);
+                                        checkoutActivityIntent.putExtra("stripeAccountId", stripeAccountId);
+                                        startActivity(checkoutActivityIntent);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                buyButton.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
             }
         });
-        // ############# END WILLIAM SECTION ###############
+
+
+
+        // ############# END KAI ZHE SECTION ###############
 
     }
 

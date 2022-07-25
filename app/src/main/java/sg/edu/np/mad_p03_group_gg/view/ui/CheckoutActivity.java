@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,7 +19,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,6 +55,8 @@ import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.newlisting;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
 
 /**
  * TODO:
@@ -67,47 +72,15 @@ public class CheckoutActivity extends AppCompatActivity {
     private PaymentMethodCreateParams params;
     private String paymentMethod;
     private FirebaseAuth auth;
-    private Stripe stripe;
     private String sellerId;
     private String userId;
+    private String stripeAccountId;
     private final StripeDialog stripeDialog = new StripeDialog(CheckoutActivity.this);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
-        PaymentConfiguration.init(
-                getApplicationContext(),
-                "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa",
-                "acct_1LNubg2X820yavlY"
-        );
-
-        /**
-         * TODO: Get Connected Stripe Account (Seller Account) ID from Firebase
-         * Get seller Id from listingObject,
-         * Then get onboarding id from User on Firebase
-         *
-         */
-
-        stripe = new Stripe(
-                this,
-                PaymentConfiguration.getInstance(this).getPublishableKey(),
-                PaymentConfiguration.getInstance(this).getStripeAccountId()
-        );
-
-        // if payment method == stripe
-        // Start checkout session (create paymentIntent to get clientSecret)
-        paymentLauncher = PaymentLauncher.Companion.create(
-                this,
-                PaymentConfiguration.getInstance(this).getPublishableKey(),
-                PaymentConfiguration.getInstance(this).getStripeAccountId(),
-                this::onPaymentResult
-        );
-
-        // Get Intent from Individual Listing Activity
-        sellerId = getIntent().getStringExtra("sellerId");
-        String productId = getIntent().getStringExtra("productId");
 
         ImageView closeButton = findViewById(R.id.paymentMethodCloseButton);
         TextView listingTitleView = findViewById(R.id.listingTitle);
@@ -121,9 +94,21 @@ public class CheckoutActivity extends AppCompatActivity {
         TextView paymentDetailsHint = findViewById(R.id.paymentDetailsHint);
         TextView changePaymentButton = findViewById(R.id.changePaymentButton);
         LinearLayout addressLayout = findViewById(R.id.addressLayout);
-        Button checkoutButton = findViewById(R.id.checkoutButton);
+
+        RadioGroup deliveryRadioGroup = findViewById(R.id.deliveryRadioGroup);
         RadioButton deliveryRadioButton = findViewById(R.id.deliveryRadioButton);
         RadioButton meetupRadioButton = findViewById(R.id.meetupRadioButton);
+        ImageView changeAddressButton = findViewById(R.id.changeAddressButton);
+
+        // Get Intent from Individual Listing Activity
+        sellerId = getIntent().getStringExtra("sellerId");
+        stripeAccountId = getIntent().getStringExtra("stripeAccountId");
+        String productId = getIntent().getStringExtra("productId");
+
+        // Get current user id
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = auth.getCurrentUser();
+        userId = fbUser.getUid();
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,43 +117,70 @@ public class CheckoutActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseTools.createListingObjectFromFirebase(productId, this, listingObject -> {
-            listingTitleView.setText(listingObject.getTitle());
-            listingPriceView.setText("$" + listingObject.getPrice());
+        PaymentConfiguration.init(
+                getApplicationContext(),
+                "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa",
+                stripeAccountId
+        );
 
-            new ImageDownloader(listingPictureView).execute(listingObject.gettURLs().get(0));
+        // if payment method == stripe
+        // Start checkout session (create paymentIntent to get clientSecret)
+        paymentLauncher = PaymentLauncher.Companion.create(
+                this,
+                PaymentConfiguration.getInstance(this).getPublishableKey(),
+                PaymentConfiguration.getInstance(this).getStripeAccountId(),
+                this::onPaymentResult
+        );
 
-            listingTitlePriceCard.setText(listingObject.getTitle());
-            listingCostPriceCard.setText("$" + listingObject.getPrice());
-            int totalPrice = 0;
-            if (listingObject.getDeliveryPrice().equals("")) {
-                deliveryCostTextView.setText("$0");
-                totalPrice =  Integer.parseInt(listingObject.getPrice()) + 0;
-            } else {
-                deliveryCostTextView.setText("$" + listingObject.getDeliveryPrice());
-                totalPrice = Integer.parseInt(listingObject.getPrice()) +
-                        Integer.parseInt(listingObject.getDeliveryPrice());
+
+        databaseReference.child("users").child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    StripeUtils.getStripeAccountId(sellerId, new ConnectStripeCallback() {
+                        @Override
+                        public void stripeAccountIdCallback(String stripeAccountId) {
+                            FirebaseTools.createListingObjectFromFirebase(productId,
+                                    CheckoutActivity.this, listingObject -> {
+                                        listingTitleView.setText(listingObject.getTitle());
+                                        listingPriceView.setText("$" + listingObject.getPrice());
+
+                                        new ImageDownloader(listingPictureView).execute(listingObject.gettURLs().get(0));
+
+                                        listingTitlePriceCard.setText(listingObject.getTitle());
+                                        listingCostPriceCard.setText("$" + listingObject.getPrice());
+                                        int totalPrice = 0;
+                                        if (listingObject.getDeliveryPrice().equals("")) {
+                                            deliveryCostTextView.setText("$0");
+                                            totalPrice =  Integer.parseInt(listingObject.getPrice()) + 0;
+                                        } else {
+                                            deliveryCostTextView.setText("$" + listingObject.getDeliveryPrice());
+                                            totalPrice = Integer.parseInt(listingObject.getPrice()) +
+                                                    Integer.parseInt(listingObject.getDeliveryPrice());
+                                        }
+                                        totalPriceTextView.setText("$" + totalPrice);
+
+                                        // If seller did not enable delivery, set view to GONE
+                                        if (listingObject.getDelivery() == false)
+                                        {
+                                            deliveryRadioButton.setVisibility(View.GONE);
+                                            addressLayout.setVisibility(View.GONE);
+                                            meetupRadioButton.setChecked(true); // check the meetup option
+                                        }
+
+                                        String customerEmail = task.getResult().child("email").getValue(String.class);
+                                        startCheckout(totalPrice, customerEmail, stripeAccountId);
+
+                                    });
+                        }
+                    });
+
+                }
             }
-            totalPriceTextView.setText("$" + totalPrice);
-
-            // If seller did not enable delivery, set view to GONE
-            if (listingObject.getDelivery() == false)
-            {
-                deliveryRadioButton.setVisibility(View.GONE);
-                addressLayout.setVisibility(View.GONE);
-                meetupRadioButton.setChecked(true); // check the meetup option
-            }
-
-            startCheckout(totalPrice);
         });
-
-        /**
-         * TO-DO:
-         *
-         * Check if user already has payment method
-         *
-         * If have, use that one, (e.g. retrieve CC info from Firebase)
-         */
 
         // Get result from PaymentMethod Activity
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -199,22 +211,10 @@ public class CheckoutActivity extends AppCompatActivity {
             }
         });
 
-        // Check which payment method selected and do appropriate functions
-        checkoutButton.setOnClickListener(new View.OnClickListener() {
+        changeAddressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (paymentMethod.equals("Card"))
-                {
-                    // If stripe do nothing, as it is handled by startCheckout()
-                }
-                else if (paymentMethod.equals("Paynow"))
-                {
-                    // If it's Paynow, launch Paynow Activity
-                }
-                else
-                {
-                    // If it's Cardano, launch Cardano Activity
-                }
+
             }
         });
 
@@ -227,81 +227,85 @@ public class CheckoutActivity extends AppCompatActivity {
      * 2) Send POST request to backend to create payment intent
      * 3) Get client secret from payment intent
      *
-     * @param listingTotalPrice
+     * @param totalPrice
+     * @param customerEmail
+     * @param stripeAccountId
      */
-    private void startCheckout(int listingTotalPrice) {
+    private void startCheckout(int totalPrice, String customerEmail, String stripeAccountId) {
 
-        // Get current user id
-        auth = FirebaseAuth.getInstance();
-        FirebaseUser fbUser = auth.getCurrentUser();
-        userId = fbUser.getUid();
+        // Create a PaymentIntent by calling the sample server's /create-payment-intent endpoint.
+        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
 
-        databaseReference.child("users").child(userId).get().addOnCompleteListener(
-                new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    String customerEmail = task.getResult().child("email").getValue(String.class);
+        // Stripe uses smallest currency unit, therefore need to multiply by 100
+        String json = String.format("{"
+                        + "\"amount\":\"%s\","
+                        + "\"cust_email\":\"%s\","
+                        + "\"stripe_account\":\"%s\""
+                        + "}", String.valueOf(totalPrice * 100), customerEmail,
+                stripeAccountId);
 
-                    // Request a PaymentIntent from your server and store its client secret in paymentIntentClientSecret
+        RequestBody body = RequestBody.create(mediaType, json);
+        Request request = new Request.Builder()
+                .url(BACKEND_URL + "create-payment-intent")
+                .post(body)
+                .build();
 
-                    // Create a PaymentIntent by calling the sample server's /create-payment-intent endpoint.
-                    MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+        httpClient.newCall(request)
+                .enqueue(new okhttp3.Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        // Request failed
+                        Log.d("Error", e.getMessage());
+                    }
 
-                    // Stripe uses smallest currency unit
-                    String json = String.format("{"
-                            + "\"amount\":\"%s\","
-                            + "\"cust_email\":\"%s\","
-                            + "\"stripe_account\":\"%s\""
-                            + "}", String.valueOf(listingTotalPrice).concat("00"), customerEmail,
-                            "acct_1LNubg2X820yavlY");
-
-                    RequestBody body = RequestBody.create(mediaType, json);
-                    Request request = new Request.Builder()
-                            .url(BACKEND_URL + "create-payment-intent")
-                            .post(body)
-                            .build();
-
-                    httpClient.newCall(request)
-                            .enqueue(new okhttp3.Callback() {
-                                @Override
-                                public void onFailure(Call call, IOException e) {
-                                    // Request failed
-                                    Log.d("Error", e.getMessage());
-                                }
-
-                                @Override
-                                public void onResponse(Call call, Response response) throws IOException {
-                                    String body = response.body().string();
-                                    try {
-                                        JSONObject responseJson = new JSONObject(body);
-                                        paymentIntentClientSecret = responseJson.getString("client_secret");
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                }
-            }
-        });
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String body = response.body().string();
+                        try {
+                            JSONObject responseJson = new JSONObject(body);
+                            paymentIntentClientSecret = responseJson.getString("client_secret");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
         Button checkoutButton = findViewById(R.id.checkoutButton);
 
-        // Check which payment method selected and do appropriate functions
+        RadioGroup radioGroup = findViewById(R.id.deliveryRadioGroup);
+
+        // Ensure got client secret and card parameters before proceeding
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stripeDialog.startStripeAlertDialog();
-                if (paymentMethod.equals("Card"))
-                {
-                    if (params != null) {
-                        ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
-                                .createWithPaymentMethodCreateParams(params, paymentIntentClientSecret);
-                        paymentLauncher.confirm(confirmParams); // Confirm payment
 
+                if (radioGroup.getCheckedRadioButtonId() == -1)
+                {
+                    Toast.makeText(CheckoutActivity.this,
+                            "Please select one delivery method.",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+
+                    if (paymentMethod != null)
+                    {
+                        if (params != null) {
+                            stripeDialog.startStripeAlertDialog();
+                            ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
+                                    .createWithPaymentMethodCreateParams(params, paymentIntentClientSecret);
+                            paymentLauncher.confirm(confirmParams); // Confirm payment
+                        }
+                        else {
+                            Toast.makeText(CheckoutActivity.this,
+                                    "Please key in your payment information again.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        Toast.makeText(CheckoutActivity.this,
+                                "Please key in your payment information again.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -315,8 +319,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
         if (paymentResult instanceof PaymentResult.Completed) {
             message = "Completed!";
-            String textMessage = "Hi, a payment has been made by the user, XXX, please confirm.";
-            FirebaseTools.sendConfirmationMessage(textMessage, userId,  sellerId); // inform seller of a payment
             isSuccess = true;
         } else if (paymentResult instanceof PaymentResult.Canceled) {
             message = "Canceled!";
@@ -337,6 +339,10 @@ public class CheckoutActivity extends AppCompatActivity {
 
                 if (isSuccess)
                 {
+
+                    String textMessage = "Hi, a payment has been made, please confirm.";
+
+                    //FirebaseTools.sendConfirmationMessage(userId,  sellerId, textMessage); // inform seller of a payment
                     CheckoutActivity.this.finish();
                 }
             }

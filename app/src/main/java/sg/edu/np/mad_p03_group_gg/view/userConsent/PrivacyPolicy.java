@@ -23,9 +23,12 @@ public class PrivacyPolicy extends AppCompatActivity {
         Button declineButton = findViewById(R.id.privacyDeclineButton);
 
         WebView webView = findViewById(R.id.privacyWebView);
+
+        // Prevent webpage from redirecting user out of the activity's webview
         webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading (WebView view, String url){
-                //True if the host application wants to leave the current WebView and handle the url itself, otherwise return false.
+                //True if the host application wants to leave the current WebView and handle the
+                // url itself, otherwise return false.
                 return false;
             }
         });
@@ -60,9 +63,14 @@ public class PrivacyPolicy extends AppCompatActivity {
         });
     }
 
+    /**
+     * Handles back button event
+     *
+     * If user did not press decline but press back button, return false regardless, as user
+     * did not conset to the agreements
+     */
     @Override
     public void onBackPressed() {
-        // Remember the user's press of the back key action
         intent.putExtra("isAgree", "false");
         setResult(RESULT_OK, intent);
         finish();
