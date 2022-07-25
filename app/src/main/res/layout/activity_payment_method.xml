@@ -229,7 +229,7 @@
         android:backgroundTint="#A2A1FF"
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
-        android:text="CHECKOUT"
+        android:text="CONFIRM"
         android:textSize="16sp"
         app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"

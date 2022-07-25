@@ -268,23 +268,34 @@ public  class FirebaseTools {
     /**
      * Send message to user to confirm something.
      * E.g. when payment is done, auto send a chat message to seller.
-     *
-     * @param productId
+     * @param sID
+     * @param uID
+     * @param message
      */
-/*    public void sendConfirmationMessage(String productId) {
-        // Get database reference
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app");
-        DatabaseReference databaseReference = database.getReference();
+    public static void sendConfirmationMessage(String sID, String uID, String message) {
 
         databaseReference.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get seller id
-                for(DataSnapshot dataSnapshot : snapshot.child("individual-listing").getChildren()) {
+                /*for(DataSnapshot dataSnapshot : snapshot.child("individual-listing").getChildren()) {
                     String foundPID = dataSnapshot.getKey();
-                    if(productId.equalsIgnoreCase(foundPID)){
+                    if(pID.equalsIgnoreCase(foundPID)){
                         sID = dataSnapshot.child("sid").getValue(String.class);
                         break;
+                    }
+                }*/
+
+                String chatKey = null;
+
+                // Setting chat key
+                if(chatKey.isEmpty()) {
+                    // ChatKey increment by 1 for each chat. Default chat key is 1 (for first 2 users)
+                    chatKey = "1";
+
+                    if (snapshot.hasChild("chat")) {
+                        chatKey = String.valueOf(snapshot.child("chat").getChildrenCount() + 1);
                     }
                 }
 
@@ -301,22 +312,35 @@ public  class FirebaseTools {
                     }
                 }
 
-                // Create seller and main user Object
-                for (DataSnapshot dataSnapshotUser : snapshot.child("users").getChildren()){
-                    // If id matches main user ID Create main user object
-                    if (TextUtils.equals(dataSnapshotUser.getKey(),uID)){
-                        mainUser = new User(dataSnapshotUser.child("name").getValue(String.class)
-                                ,dataSnapshotUser.child("email").getValue(String.class),uID);
-                    }
-                    // If id matches main SELLER ID Create seller user object
-                    if (TextUtils.equals(dataSnapshotUser.getKey(),sID)){
-                        seller = new User (dataSnapshotUser.child("name").getValue(String.class)
-                                ,dataSnapshotUser.child("email").getValue(String.class)
-                                ,dataSnapshotUser.child("phonenumber").getValue(String.class)
-                                ,dataSnapshotUser.child("userprofilepic").getValue(String.class)
-                                ,sID);
-                    }
+                Boolean inChat = Boolean.parseBoolean(snapshot.child("chat").child(chatKey).child(sID).child("inChat").getValue(String.class));
+
+                // Get current time (add 28800000 milliseconds to convert to SGT, if emulator timezone is UTC)
+                String currentTime = String.valueOf(System.currentTimeMillis());
+
+                // If user inchat status is true, set message seen value to True
+                if (inChat){
+                    databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("True");
                 }
+                // If other user is not in current chat, set value to false
+                else{
+                    databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("False");
+                }
+
+                // Set users
+                databaseReference.child("chat").child(chatKey).child("user1").setValue(uID);
+                databaseReference.child("chat").child(chatKey).child("user2").setValue(sID);
+
+                // Set message and who sent the message
+                databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(message);
+                databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(uID);
+
+
+                // If current user (you) are not already in other user's friend list, add to his friend list
+                databaseReference.child("selectedChatUsers").child(sID).child(uID).setValue("");
+
+                // Set in chat status to true if message is sent
+                databaseReference.child("chat").child(chatKey).child(uID).child("inChat").setValue("True");
+
             }
 
             @Override
@@ -324,35 +348,6 @@ public  class FirebaseTools {
                 // Failed to read from db
             }
         });
-
-        // Get current time (add 28800000 milliseconds to convert to SGT, if emulator timezone is UTC)
-        String currentTime = String.valueOf(System.currentTimeMillis());
-
-        // Set users
-        databaseReference.child("chat").child(chatKey).child("user1").setValue(mainUserid);
-        databaseReference.child("chat").child(chatKey).child("user2").setValue(getid);
-        // Set message and who sent the message
-        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(getTextMessage);
-        databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(mainUserid);
-
-        // If user inchat status is true, set message seen value to True
-        if (inchat){
-            databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("True");
-        }
-        // If other user is not in current chat, set value to false
-        else{
-            databaseReference.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("False");
-        }
-
-        // Remove text EditText after message is sent
-        messageToSend.setText("");
-
-        // If current user (you) are not already in other user's friend list, add to his friend list
-        databaseReference.child("selectedChatUsers").child(getid).child(mainUser.getId()).setValue("");
-
-        // Set in chat status to true if message is sent
-        databaseReference.child("chat").child(chatKey).child(mainUser.getId()).child("inChat").setValue("True");
-
-    }*/
+    }
 
 }

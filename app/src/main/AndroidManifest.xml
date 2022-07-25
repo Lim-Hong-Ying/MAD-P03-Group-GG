@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".view.userConsent.PrivacyPolicy"
+            android:exported="false" />
+        <activity
+            android:name=".view.userConsent.TermsAndConditions"
+            android:exported="false" />
+        <activity
             android:name=".editListing"
             android:exported="false" />
         <activity
@@ -48,9 +54,6 @@
             android:name=".view.ui.PaymentMethodActivity"
             android:exported="false" />
         <activity
-            android:name=".tools.stripe.ConnectWithStripeActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.ui.CheckoutActivity"
             android:exported="false" />
         <activity
@@ -70,7 +73,19 @@
             android:exported="true" />
         <activity
             android:name=".newlisting"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="cashshope.japaneast.cloudapp.azure.com"
+                    android:pathPattern="/return"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".forget_password_activitiy"
             android:exported="false" />
@@ -108,4 +123,5 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 </manifest>

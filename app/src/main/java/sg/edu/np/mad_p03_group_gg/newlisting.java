@@ -5,9 +5,7 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -19,7 +17,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -34,11 +31,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,18 +52,10 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -77,8 +64,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
-import sg.edu.np.mad_p03_group_gg.tools.stripe.ConnectWithStripeActivity;
 import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 
 /**
@@ -103,6 +88,7 @@ public class newlisting extends AppCompatActivity {
     private OkHttpClient httpClient = new OkHttpClient();
     private FirebaseAuth auth;
     private String currentUserId;
+    private String stripeAccountId;
 
     ArrayList<Uri> imageArray = new ArrayList<>();
     ArrayList<String> imageURLs = new ArrayList<>();
@@ -111,6 +97,11 @@ public class newlisting extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newlisting);
+
+        // Get current user id
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = auth.getCurrentUser();
+        currentUserId = fbUser.getUid();
 
         // Stripe
         PaymentConfiguration.init(
@@ -142,13 +133,7 @@ public class newlisting extends AppCompatActivity {
                         }
                     });
 
-                    // Get current user id
-                    auth = FirebaseAuth.getInstance();
-                    FirebaseUser fbUser = auth.getCurrentUser();
-                    currentUserId = fbUser.getUid();
-
-                }
-                else {
+                } else {
                     Toast.makeText(newlisting.this, "No internet connection.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -161,10 +146,9 @@ public class newlisting extends AppCompatActivity {
         });
         // ATTENTION: This was auto-generated to handle app links.
         Intent appLinkIntent = getIntent();
+        handleIntent(appLinkIntent);
         String appLinkAction = appLinkIntent.getAction();
         Uri appLinkData = appLinkIntent.getData();
-
-        handleIntent(getIntent());
     }
 
     private void activeChecker() {
@@ -404,7 +388,6 @@ public class newlisting extends AppCompatActivity {
 
                                 @Override
                                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                                    stripeDialog.dismissDialog();
 
                                     final Activity activity = weakActivity.get();
                                     if (activity == null) {
@@ -416,12 +399,13 @@ public class newlisting extends AppCompatActivity {
                                         String body = response.body().string();
                                         try {
                                             JSONObject responseJson = new JSONObject(body);
-                                            String accountId = responseJson.getString("account_id");
+                                            stripeAccountId = responseJson.getString("account_id");
                                             String url = responseJson.getJSONObject("url").getString("url");
                                             Log.d("url", url);
-                                            Log.d("accountId", accountId);
+                                            Log.d("accountId", stripeAccountId);
                                             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                                             CustomTabsIntent customTabsIntent = builder.build();
+                                            stripeDialog.dismissDialog();
                                             customTabsIntent.launchUrl(newlisting.this, Uri.parse(url));
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -794,25 +778,25 @@ public class newlisting extends AppCompatActivity {
         }
     });
 
-    /**
-     * Handle app links. To handle refresh_url from Stripe
-     *
-     * By: Kai Zhe
-     * @param intent
-     */
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntent(intent);
     }
 
+    // Onboarding flow exited properly, check if account is complete.
     private void handleIntent(Intent intent) {
         String appLinkAction = intent.getAction();
         Uri appLinkData = intent.getData();
-        if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
-            /*String recipeId = appLinkData.getLastPathSegment();
+
+        // Check if account is complete with payment info
+
+        // if no give return url ask
+
+        /*if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
+            String recipeId = appLinkData.getLastPathSegment();
             Uri appData = Uri.parse("content://com.recipe_app/recipe/").buildUpon()
                     .appendPath(recipeId).build();
-            showRecipe(appData);*/
-        }
+            showRecipe(appData);
+        }*/
     }
 }

@@ -49,6 +49,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.User;
+import sg.edu.np.mad_p03_group_gg.newlisting;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
 
@@ -67,6 +68,10 @@ public class CheckoutActivity extends AppCompatActivity {
     private String paymentMethod;
     private FirebaseAuth auth;
     private Stripe stripe;
+    private String sellerId;
+    private String userId;
+    private final StripeDialog stripeDialog = new StripeDialog(CheckoutActivity.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +106,7 @@ public class CheckoutActivity extends AppCompatActivity {
         );
 
         // Get Intent from Individual Listing Activity
-        String sellerId = getIntent().getStringExtra("sellerId");
+        sellerId = getIntent().getStringExtra("sellerId");
         String productId = getIntent().getStringExtra("productId");
 
         ImageView closeButton = findViewById(R.id.paymentMethodCloseButton);
@@ -229,9 +234,9 @@ public class CheckoutActivity extends AppCompatActivity {
         // Get current user id
         auth = FirebaseAuth.getInstance();
         FirebaseUser fbUser = auth.getCurrentUser();
-        String currentUserID = fbUser.getUid();
+        userId = fbUser.getUid();
 
-        databaseReference.child("users").child(currentUserID).get().addOnCompleteListener(
+        databaseReference.child("users").child(userId).get().addOnCompleteListener(
                 new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -274,7 +279,6 @@ public class CheckoutActivity extends AppCompatActivity {
                                     try {
                                         JSONObject responseJson = new JSONObject(body);
                                         paymentIntentClientSecret = responseJson.getString("client_secret");
-                                        Log.d("ClientSecret", paymentIntentClientSecret);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -290,6 +294,7 @@ public class CheckoutActivity extends AppCompatActivity {
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stripeDialog.startStripeAlertDialog();
                 if (paymentMethod.equals("Card"))
                 {
                     if (params != null) {
@@ -304,11 +309,14 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void onPaymentResult(PaymentResult paymentResult) {
+        stripeDialog.dismissDialog();
         String message = "";
         Boolean isSuccess = false;
 
         if (paymentResult instanceof PaymentResult.Completed) {
             message = "Completed!";
+            String textMessage = "Hi, a payment has been made by the user, XXX, please confirm.";
+            FirebaseTools.sendConfirmationMessage(textMessage, userId,  sellerId); // inform seller of a payment
             isSuccess = true;
         } else if (paymentResult instanceof PaymentResult.Canceled) {
             message = "Canceled!";
@@ -323,15 +331,16 @@ public class CheckoutActivity extends AppCompatActivity {
                 .setTitle(title)
                 .setMessage(message);
 
-        if (isSuccess)
-        {
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (isSuccess)
+                {
                     CheckoutActivity.this.finish();
                 }
-            });
-        }
+            }
+        });
 
         builder.create().show();
     }
