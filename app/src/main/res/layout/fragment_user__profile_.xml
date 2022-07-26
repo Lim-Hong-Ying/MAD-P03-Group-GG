@@ -234,19 +234,12 @@
 
                     </LinearLayout>
 
-                    <CheckBox
-                        android:id="@+id/checkBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-
-                        android:text="2 Factor Authentication" />
-
                     <Button
                         android:id="@+id/editprofilebutton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/sign_in_button"
                         android:text="Edit Profile" />
