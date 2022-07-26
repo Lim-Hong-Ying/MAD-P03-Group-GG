@@ -54,6 +54,7 @@ public class changeaccdetails extends AppCompatActivity {
                 if (isEmail(Email) && isPhone(Phonenumber) && isText(Username) && isEmail(EmailCredentials) && isText(PasswordCredentials) && isPasswordSame(Changepassword,Cnfrmpassword) && isText(Changepassword) && isText(Cnfrmpassword)) {
 
                     AuthCredential credential = EmailAuthProvider.getCredential(EmailCredentials.getText().toString(), PasswordCredentials.getText().toString());
+
                     user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

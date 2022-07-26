@@ -506,6 +506,8 @@ public class newlisting extends AppCompatActivity {
             delprice = "";
             deltime = "";
         }
+        Log.e("Time",TimeStamp);
+
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
@@ -517,6 +519,7 @@ public class newlisting extends AppCompatActivity {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
         DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("users").child(sID).child("listings");
+
 
         db.child(pID).setValue(listing);
 

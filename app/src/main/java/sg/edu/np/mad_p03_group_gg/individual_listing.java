@@ -67,6 +67,7 @@ public class individual_listing extends AppCompatActivity {
     private String pID;
     private individualListingObject listing = new individualListingObject();
 
+
     String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
     FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
 
