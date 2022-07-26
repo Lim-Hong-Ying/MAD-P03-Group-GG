@@ -192,22 +192,25 @@ public class cashshopewidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
 
+
         for (int i = 0; i < appWidgetIds.length; ++i) {
             Intent serviceIntent = new Intent(context,cashshopeWidgetService.class);
 
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,appWidgetIds[i]);
             serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));//Distinguish between different instances
             RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.cashshope_widget);
+
             views.setRemoteAdapter(R.id.gridpics,serviceIntent);
             // create intent template for onclicklistner for entry in widget
-            Intent clickIntent = new Intent(context,cashshopewidget.class);//Sub class of broadcast, if Action_App_Widge_update call, a update will run
-            clickIntent.setAction(ACTION_REFRESH);
-            PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context,0,clickIntent,0);
+           Intent clickIntent = new Intent(context,cashshopewidget.class);//Sub class of broadcast, if Action_App_Widge_update call, a update will run
+           clickIntent.setAction(ACTION_REFRESH);
+           PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context,0,clickIntent,0);
 
             views.setEmptyView(R.id.gridpics,R.id.cashshope_widgetempty);
-            views.setPendingIntentTemplate(R.id.gridpics,clickPendingIntent);
+            views.setOnClickPendingIntent(R.id.refreshbutton,clickPendingIntent);
+
             appWidgetManager.updateAppWidget(appWidgetIds[i], views);
-            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.gridpics);
+           appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.gridpics);
 
             Log.e("Test","providerd entered");
 
@@ -227,6 +230,7 @@ public class cashshopewidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         if(ACTION_REFRESH.equals(intent.getAction())){
+            Log.e("Actionrefresh","providerd entered");
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,AppWidgetManager.INVALID_APPWIDGET_ID);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,R.id.gridpics);

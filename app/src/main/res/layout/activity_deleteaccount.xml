@@ -86,7 +86,7 @@
                         android:layout_marginTop="32dp"
                         android:background="@drawable/inpu_text"
                         android:hint="Password"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textPassword"
                         android:paddingLeft="20dp"
                         app:layout_constraintEnd_toEndOf="@+id/ccredentialemail"
                         app:layout_constraintStart_toStartOf="@+id/ccredentialemail"
