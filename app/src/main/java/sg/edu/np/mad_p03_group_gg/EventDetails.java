@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -141,6 +142,18 @@ public class EventDetails extends AppCompatActivity {
                 greenBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Validation for event name and location
+                        if (TextUtils.isEmpty(eventName.getText().toString())){
+                            eventName.setError("Enter an Event Name");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(eventLocation.getText().toString())){
+                            eventLocation.setError("Enter a location");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(eventDesc.getText().toString())){
+                            eventDesc.setError("Enter description");
+                        }
                         // Save edited event details into firebase
                         EventEditActivity.removeDataFromFireBase(userId, eventID);
                         EventEditActivity.addDataToFireBase(userId, eventID, eventName.getText().toString(), eventLocation.getText().toString(), eventTime.getText().toString(), eventDate.getText().toString(), eventDesc.getText().toString());
@@ -174,6 +187,19 @@ public class EventDetails extends AppCompatActivity {
                 greenBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Validation for event name and location
+                        if (TextUtils.isEmpty(eventName.getText().toString())){
+                            eventName.setError("Enter an Event Name");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(eventLocation.getText().toString())){
+                            eventLocation.setError("Enter a location");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(eventDesc.getText().toString())){
+                            eventDesc.setError("Enter description");
+                            return;
+                        }
                         // Give new event an ID
                         int id = 1;
                         if (Event.eventsList.size() != 0){
