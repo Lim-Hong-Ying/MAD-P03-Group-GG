@@ -351,26 +351,45 @@
                             android:id="@+id/addressLayout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:visibility="visible">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
-                            <TextView
-                                android:id="@+id/addressTextView"
+                            <EditText
+                                android:id="@+id/editName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:text="Enter Address"
-                                android:textSize="20sp" />
+                                android:ems="10"
+                                android:hint="Name"
+                                android:inputType="textPersonName"
+                                android:minHeight="48dp" />
 
-                            <ImageView
-                                android:id="@+id/changeAddressButton"
+                            <EditText
+                                android:id="@+id/editAddressLine1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="10"
-                                android:minWidth="48dp"
-                                android:minHeight="48dp"
-                                app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
+                                android:ems="10"
+                                android:hint="Address Line"
+                                android:inputType="textPersonName"
+                                android:minHeight="48dp" />
+
+                            <EditText
+                                android:id="@+id/editAddressLine2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="Unit Number"
+                                android:inputType="textPersonName"
+                                android:minHeight="48dp" />
+
+                            <EditText
+                                android:id="@+id/editPostalCode"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="Postal Code"
+                                android:inputType="number"
+                                android:maxLength="6"
+                                android:minHeight="48dp" />
                         </LinearLayout>
 
                     </RadioGroup>

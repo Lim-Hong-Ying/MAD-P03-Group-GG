@@ -503,10 +503,14 @@ public class newlisting extends AppCompatActivity {
                                 }
                                 else
                                 {
-                                    // Ask user to perform onboarding again
-                                    Toast.makeText(newlisting.this,
-                                            "Please complete the Stripe onboarding process.",
-                                            Toast.LENGTH_SHORT).show();
+                                    newlisting.this.runOnUiThread(() -> {
+                                        // Ask user to perform onboarding again
+                                        Toast.makeText(newlisting.this,
+                                                "Please complete the Stripe onboarding process.",
+                                                Toast.LENGTH_SHORT).show();
+                                        stripeSwitch.setChecked(false);
+                                    });
+
                                 }
                             }
                         });
