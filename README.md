@@ -95,3 +95,12 @@ Feeling fancy today? Customize your profile!
    - Press the "+" button to create a new listing.
    - Press the 👤 button to access your user account profile.
    - Click on any of the listing cards to view detailed information on the listing.
+
+## Disclaimer
+Before you proceed, do read and agree to our ![Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), as well as ![Privacy Policy](https://westwq.github.io/MADPrivacy/).
+
+Do note that Cashshope is provided as is to you, the user, and the app is only currently available to users in Singapore. We are NOT liable for any claims against us. We do not store any confidential information such as credit card details or shipping addresses on our servers, other than your user information in which you have provided during the initial sign-up process. Confidential information as mentioned above is managed and processed by our payment service provider, Stripe. </br>
+
+When you use Stripe for buying and selling of goods, including as a payment method, or to receive funds, you agree to Stripe's ![term of services](https://stripe.com/en-sg/customer-portal/legal).
+
+Finally, should you wish to terminate your service with us, feel free to follow the instructions above to delete your account via the your user profile page.
