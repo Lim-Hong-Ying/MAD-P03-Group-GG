@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".listingsPage"
+            android:exported="false" />
+        <activity
+            android:name=".categoryPage"
+            android:exported="false" />
+        <activity
             android:name=".editListing"
             android:exported="false" />
         <activity
@@ -104,4 +110,5 @@
         <service android:name=".cashshopeWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
+
 </manifest>

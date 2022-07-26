@@ -3,18 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_deleteaccount.xml" value="0.1" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_event_edit.xml" value="0.1314596554850408" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_forget_password_activitiy.xml" value="0.1314596554850408" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_individual_listing.xml" value="0.1314596554850408" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_loginpage.xml" value="0.12375339981867634" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_user_profile.xml" value="0.12375339981867634" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/calendar_cell.xml" value="0.1314596554850408" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/cashshope_widget.xml" value="0.16666666666666666" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_listing.xml" value="0.1314596554850408" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_user__profile_.xml" value="0.12375339981867634" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_wish_list.xml" value="0.1314596554850408" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/widgetitem.xml" value="0.10731081658828559" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_shape_half_circle_half_rectengle.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
@@ -22,6 +10,7 @@
         <entry key="app/src/main/res/drawable/shopeeBanner1_background.xml" value="0.2985" />
         <entry key="app/src/main/res/drawable/shopeebanner1_background.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/sign_in_button.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_category_page.xml" value="0.4" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/activity_chat_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_displaysettings.xml" value="0.1734375" />
@@ -31,6 +20,7 @@
         <entry key="app/src/main/res/layout/activity_individual_listing.xml" value="0.3458333333333333" />
         <entry key="app/src/main/res/layout/activity_listings.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_listings2.xml" value="0.1734375" />
+        <entry key="app/src/main/res/layout/activity_listings_page.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/activity_loginpage.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_month_view.xml" value="0.1" />
@@ -52,11 +42,7 @@
         <entry key="app/src/main/res/layout/listing_grid.xml" value="0.26403985507246375" />
         <entry key="app/src/main/res/layout/pager_item.xml" value="0.3380208333333333" />
         <entry key="app/src/main/res/layout/slideintext.xml" value="0.3333333333333333" />
-        <entry key="app/src/main/res/layout/view_pager_holder.xml" value="0.23324275362318841" />
-        <entry key="app/src/main/res/menu/image_chooser.xml" value="0.2125" />
-        <entry key="app/src/main/res/menu/individual_listing.xml" value="0.34479166666666666" />
-        <entry key="app/src/main/res/menu/individual_listing_buyer.xml" value="0.34479166666666666" />
-        <entry key="app/src/main/res/menu/individual_listing_seller.xml" value="0.21354166666666666" />
+        <entry key="app/src/main/res/menu/individual_listing_seller.xml" value="0.3458333333333333" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.14" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/shopeeBanner1.xml" value="0.196" />
