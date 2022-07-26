@@ -34,7 +34,7 @@
                     android:layout_marginTop="70dp"
                     android:onClick="test"
                     android:text="@string/eventToolbar_heading"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="30sp"
                     android:textStyle="bold"></TextView>
 
@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/dashboard_sub_title"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20sp"></TextView>
 
             </LinearLayout>

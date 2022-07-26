@@ -35,7 +35,7 @@
             android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
-            android:backgroundTint="#00bb5a"
+            android:contentDescription="Button"
             android:elevation="10dp"
             android:textColor="@android:color/white"
             app:cornerRadius="20dp"
@@ -93,6 +93,7 @@
                         android:focusable="false"
                         android:hint="Event Name"
                         android:maxLines="1"
+                        android:minHeight="48dp"
                         android:textColor="@android:color/black"
                         android:textSize="28sp"
                         android:textStyle="bold"></EditText>
@@ -216,7 +217,7 @@
                     <EditText
                         android:id="@+id/eventDesc"
                         android:layout_width="match_parent"
-                        android:layout_height="38dp"
+                        android:layout_height="48dp"
                         android:layout_marginTop="5dp"
                         android:background="#FFFFFF"
                         android:focusable="false"

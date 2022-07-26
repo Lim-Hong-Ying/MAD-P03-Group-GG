@@ -208,7 +208,8 @@
                         android:paddingRight="10sp"
                         android:text="8:00 AM"
                         android:textColor="@color/theme_blue"
-                        android:textSize="20sp">
+                        android:textSize="20sp"
+                        tools:ignore="TouchTargetSizeCheck">
 
                     </TextView>
                 </LinearLayout>
