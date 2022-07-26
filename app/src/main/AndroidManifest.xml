@@ -26,6 +26,43 @@
             android:name=".EventsPage"
             android:exported="false" />
         <activity
+            android:name=".listingsPage"
+            android:exported="false" />
+        <activity
+            android:name=".categoryPage"
+            android:exported="false" />
+        <activity
+            android:name=".editListing"
+            android:exported="false" />
+        <activity
+            android:name=".userProfile"
+            android:exported="false" />
+        <activity
+            android:name=".ChatAddUser"
+            android:exported="false" />
+        <activity
+            android:name=".changeaccdetails"
+            android:exported="false" />
+        <activity
+            android:name=".deleteaccount"
+            android:exported="false" />
+
+        <receiver
+            android:name=".cashshopewidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="AUTO_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/cashshope_widget_info" />
+        </receiver>
+
+        <activity
             android:name=".successListPage"
             android:exported="false" />
         <activity
@@ -79,6 +116,8 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <service android:name=".cashshopeWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>

@@ -71,7 +71,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/appname"></TextView>
 
             <EditText
-                android:id="@+id/fgtemail"
+                android:id="@+id/ccredentialemail"
                 android:layout_width="0dp"
                 android:layout_height="59dp"
                 android:layout_marginStart="30dp"
@@ -102,7 +102,7 @@
                 android:paddingLeft="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fgtemail"></EditText>
+                app:layout_constraintTop_toBottomOf="@+id/ccredentialemail"></EditText>
 
             <TextView
                 android:id="@+id/siginerror"
@@ -117,7 +117,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/password_toggle" />
 
             <Button
-                android:id="@+id/fgt_pswrd_btn"
+                android:id="@+id/changedtls"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
 
@@ -150,9 +150,9 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:text="Forget Password"
-                app:layout_constraintEnd_toEndOf="@+id/fgt_pswrd_btn"
-                app:layout_constraintStart_toStartOf="@+id/fgt_pswrd_btn"
-                app:layout_constraintTop_toBottomOf="@+id/fgt_pswrd_btn" />
+                app:layout_constraintEnd_toEndOf="@+id/changedtls"
+                app:layout_constraintStart_toStartOf="@+id/changedtls"
+                app:layout_constraintTop_toBottomOf="@+id/changedtls" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

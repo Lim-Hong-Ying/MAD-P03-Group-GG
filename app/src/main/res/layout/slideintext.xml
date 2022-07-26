@@ -78,13 +78,13 @@
             android:hint="Password"
             android:paddingLeft="20dp"
             android:inputType="textPassword"
-            app:layout_constraintBottom_toTopOf="@+id/fgt_pswrd_btn"
+            app:layout_constraintBottom_toTopOf="@+id/changedtls"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/username"></EditText>
 
         <Button
-            android:id="@+id/fgt_pswrd_btn"
+            android:id="@+id/changedtls"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 

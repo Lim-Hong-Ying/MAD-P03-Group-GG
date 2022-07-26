@@ -8,4 +8,7 @@
     <string name="search_bar_hint">search for an event...</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="appwidget_text">Latest Listings</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">View the today listings here!</string>
 </resources>

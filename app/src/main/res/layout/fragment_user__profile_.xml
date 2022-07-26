@@ -5,8 +5,8 @@
     android:id="@+id/Username"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ui.fragments.User_Profile_Fragment"
     android:background="@drawable/img2"
+    tools:context=".view.ui.fragments.User_Profile_Fragment"
 
     >
 
@@ -17,12 +17,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout2"
@@ -32,6 +31,100 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/event_card"
+
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginStart="32dp"
+                                android:layout_marginEnd="24dp"
+                                android:layout_marginBottom="32dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/listing_card">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/num_ofevents"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_horizontal"
+                                        android:text="1"
+                                        android:textColor="@color/black"
+                                        android:textSize="50sp"
+                                        android:textStyle="bold"
+
+                                        >
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_horizontal"
+                                        android:text="Event(s) today"
+                                        android:textSize="20sp">
+
+                                    </TextView>
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/listing_card"
+
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="32dp"
+                                android:layout_marginBottom="32dp"
+                                android:padding="100dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/listing_numbers"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_horizontal"
+                                        android:text="0"
+                                        android:textColor="@color/black"
+                                        android:textSize="50sp"
+                                        android:textStyle="bold">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_horizontal"
+                                        android:text="WishList Items"
+                                        android:textSize="20sp">
+
+                                    </TextView>
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -69,50 +162,12 @@
                             android:textSize="30sp"></TextView>
                     </LinearLayout>
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/event_card"
-
-                        android:layout_width="200dp"
-                        android:layout_height="100dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="270dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/num_ofevents"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:text="1"
-                                android:textColor="@color/black"
-                                android:textSize="50sp"
-                                android:textStyle="bold"
-
-                                >
-
-                            </TextView>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:text="Event(s) today"
-                                android:textSize="20sp">
-
-                            </TextView>
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
 
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="360dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="374dp"
+                    android:layout_height="454dp"
                     android:layout_gravity="center"
                     android:background="@color/white"
 
@@ -137,7 +192,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <EditText
+                        <TextView
                             android:id="@+id/user_profile_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -164,7 +219,7 @@
 
                             android:src="@android:drawable/ic_menu_call" />
 
-                        <EditText
+                        <TextView
                             android:id="@+id/User_Profile_phonenumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -172,35 +227,57 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="20dp"
                             android:paddingTop="50dp"
-                            android:textStyle="bold"
+                            android:textSize="17sp"
 
-                            android:textSize="17sp" />
+                            android:textStyle="bold" />
 
 
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/editprofilebutton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/sign_in_button"
+                        android:text="Edit Profile" />
+
+                    <Button
                         android:id="@+id/log_out"
 
 
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="40px"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/sign_in_button"
+
+
+                        android:gravity="center"
+                        android:text="Log out"></Button>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/Delete_Account"
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"
+                        android:background="@drawable/deletebutton"
 
 
-
-                        android:background="@drawable/sign_in_button"
-                        android:text="Log out"></Button>
+                        android:text="Delete Account"
+                        android:textColor="@color/white" />
 
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
-
-
-
 
 
 </FrameLayout>
