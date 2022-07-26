@@ -429,7 +429,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
                     String textMessage = "Hi, a payment has been made, please confirm.";
 
-                    sendConfirmationMessage(sellerId,  userId, textMessage); // inform seller of a payment
+                    //sendConfirmationMessage(sellerId,  userId, textMessage); // inform seller of a payment
                     CheckoutActivity.this.finish();
                 }
             }
@@ -512,7 +512,6 @@ public class CheckoutActivity extends AppCompatActivity {
                         try {
                             JSONObject responseJson = new JSONObject(body);
                             paymentIntentClientSecret = responseJson.getString("client_secret");
-
                             CheckoutActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -529,7 +528,28 @@ public class CheckoutActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Send message to user to confirm something.
+     * E.g. when payment is done, auto send a chat message to seller.
+     * @param sID
+     * @param uID
+     * @param message
+     */
+    /**
     private void sendConfirmationMessage(String sID, String uID, String message) {
+
+
+        databaseReference.child("chat").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+
+
+                String getUserOne = task.getResult().getChild().child("user1").getValue(String.class);
+                String getUserTwo = dataSnapshotCurrentChat.child("user2").getValue(String.class);
+
+                chatKey = task.getResult().child()
+            }
+        });
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -610,4 +630,5 @@ public class CheckoutActivity extends AppCompatActivity {
         ref.child("selectedChatUsers").child(sID).child(uID).setValue("");
 
     }
+     **/
 }

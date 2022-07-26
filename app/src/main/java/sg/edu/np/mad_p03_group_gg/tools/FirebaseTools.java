@@ -248,12 +248,4 @@ public  class FirebaseTools {
         });
     }
 
-    /**
-     * Send message to user to confirm something.
-     * E.g. when payment is done, auto send a chat message to seller.
-     * @param sID
-     * @param uID
-     * @param message
-     */
-
 }
