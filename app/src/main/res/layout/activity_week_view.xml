@@ -6,10 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".WeekViewActivity"
 
 
-    >
+    tools:context=".WeekViewActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -87,10 +86,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="00dp"
         android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
-        android:paddingTop="10sp"
         android:background="@color/white"
-        >
+        android:orientation="horizontal"
+        android:paddingTop="10sp">
 
         <Button
             android:layout_width="0dp"
@@ -130,9 +128,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@color/white"
-        >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
@@ -206,27 +203,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/white"
-        />
+        android:background="@color/white" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#F6CC9A"
-        android:onClick="newEventAction"
-        android:text="New Event"
+        android:text="Events"
         android:textColor="#135995"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <ListView
-        android:id="@+id/eventListView"
+        android:id="@+id/eventView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:background="@color/white"
-        />
+        android:background="@color/white" />
 
 
 </LinearLayout>

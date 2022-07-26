@@ -44,12 +44,17 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import sg.edu.np.mad_p03_group_gg.ChatList;
 import sg.edu.np.mad_p03_group_gg.Event;
+import sg.edu.np.mad_p03_group_gg.EventsPage;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
 import sg.edu.np.mad_p03_group_gg.individual_listing;
@@ -85,7 +90,7 @@ public class HomepageFragment extends Fragment {
     private RecyclerView newListingsRecycler;
 
     // Initialises event details for meeting planner
-    private String name, location, time, date;
+    private String name, location, time, date, desc;
     public static String userId;
 
     public HomepageFragment() {
@@ -190,7 +195,7 @@ public class HomepageFragment extends Fragment {
 
         meetingPlannerCardView.setOnClickListener(v -> {
             // When clicked, will bring to meeting planner page which displays all listings
-            Intent meetingPlannerIntent = new Intent(this.getContext(), WeekViewActivity.class);
+            Intent meetingPlannerIntent = new Intent(this.getContext(), EventsPage.class);
             startActivity(meetingPlannerIntent);
         });
 
@@ -258,8 +263,30 @@ public class HomepageFragment extends Fragment {
                     time = snapshot.child("time").getValue(String.class);
                     date = snapshot.child("date").getValue(String.class);
                     LocalDate dt = LocalDate.parse(date, dtf);
-                    Event event = new Event(eventId, name, location, dt, time);
-                    Event.eventsList.add(event);
+                    desc = snapshot.child("description").getValue(String.class);
+                    // Only display current events
+                    if (dt.isAfter(LocalDate.now()) || dt.isEqual(LocalDate.now())){
+                        Event event = new Event(eventId, name, location, dt, time, desc);
+                        Event.eventsList.add(event);
+                    }
+                    else {
+                        continue;
+                    }
+
+                    Collections.sort(Event.eventsList, new Comparator<Event>() {
+                        @Override
+                        public int compare(Event event1, Event event2) {
+                            if (event1.getDate() == event2.getDate()){
+                                Log.e("Same event Date", "Event date same");
+                                try {
+                                    return new SimpleDateFormat("hh:mm a").parse(event1.getTime()).compareTo(new SimpleDateFormat("hh:mm a").parse(event2.getTime()));
+                                } catch (ParseException e) {
+                                    return 0;
+                                }
+                            }
+                            return event1.getDate().compareTo(event2.getDate());
+                        }
+                    });
                 }
             }
 
