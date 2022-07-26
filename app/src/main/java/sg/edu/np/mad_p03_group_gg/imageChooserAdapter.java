@@ -41,12 +41,12 @@ public class imageChooserAdapter extends RecyclerView.Adapter<imageChooserViewho
         Uri image = data.get(position);
 
         Picasso.get().load(image).into(holder.imageHolder); //External library to download images
-        holder.imageHolder.setOnClickListener(new View.OnClickListener() {
+        /*holder.imageHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showPopup(view, position);
             }
-        });
+        });*/
         //holder.imageHolder.setImageURI(image);
     }
 

@@ -21,12 +21,14 @@ public class successListPage extends AppCompatActivity {
         String pID = listingInfo.getString("pID");
         String type = listingInfo.getString("type");
 
-        if (type == "edit") {
-            TextView successHeader = findViewById(R.id.successHeader);
-            TextView successLeading = findViewById(R.id.successLeading);
+        switch (type) {
+            case "edit":
+                TextView successHeader = findViewById(R.id.successHeader);
+                TextView successLeading = findViewById(R.id.successLeading);
 
-            successHeader.setText("Successfully edited!");
-            successLeading.setText("You may now view your listing or return to homepage.");
+                successHeader.setText("Successfully edited!");
+                successLeading.setText("You may now view your listing or return to homepage.");
+                break;
         }
 
         Button viewListing = findViewById(R.id.view_listing);

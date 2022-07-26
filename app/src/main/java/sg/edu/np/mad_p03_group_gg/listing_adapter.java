@@ -63,7 +63,6 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         if (listing.gettURLs().size() != 0) {
             Picasso.get().load(listing.gettURLs().get(0)).into(holder.listing_image); //External library to download images
         }
-        //new ImageDownloader(holder.listing_image).execute(listing.gettURL());
 
         holder.listing_title.setText(listing.getTitle());
         holder.price.setText("$" + listing.getPrice());
@@ -87,7 +86,6 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
                 holder.seller_username.setText(sid);
                 if (!SPPU.isEmpty()) {
                     Picasso.get().load(SPPU).into(holder.seller_image); //External library to download images
-                    //new ImageDownloader(holder.seller_image).execute(SPPU);
                 }
             }
         });
@@ -107,33 +105,6 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
     @Override
     public int getItemCount() {
         return data.size();
-    }
-
-    private class ImageDownloader extends AsyncTask<String, Void, Bitmap> { //Method to download images
-        ImageView bitmap;
-
-        public ImageDownloader(ImageView bitmap) {
-            this.bitmap = bitmap;
-        } //Downloads image
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            String url = strings[0];
-            Bitmap image = null;
-            try {
-                InputStream input = new java.net.URL(url).openStream();
-                image = BitmapFactory.decodeStream(input);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return image;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bitmap.setImageBitmap(result);
-        } //Sets image for bitmap holder
     }
 }
 
