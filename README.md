@@ -122,4 +122,4 @@ Do note that Cashshope is provided as is to you, the user, and the app is only c
 
 When you use Stripe for buying and selling of goods, including as a payment method, or to receive funds, you agree to Stripe's [Term of Services](https://stripe.com/en-sg/customer-portal/legal).
 
-Finally, should you wish to terminate your service with us, feel free to follow the instructions above to delete your account via the your user profile page.
+Finally, should you wish to terminate your service with us, feel free to follow the instructions above to delete your account via the user profile page.
