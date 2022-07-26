@@ -118,7 +118,7 @@ In order to pay with a valid debit or credit card:
 ## Disclaimer
 Before you proceed with our service, do read and agree to our [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), as well as [Privacy Policy](https://westwq.github.io/MADPrivacy/).
 
-Do note that Cashshope is provided as is to you, the user, and the app is only currently available to users in Singapore. We are NOT liable for any claims against us. We do not store any confidential information such as credit card details or shipping addresses on our servers, other than your user information in which you have provided during the initial sign-up process. Confidential information as mentioned above is managed and processed by our payment service provider, Stripe. </br>
+Do note that Cashshope is provided as is to you, the user, and the app is only currently available to users in Singapore. We are NOT liable for any claims or issues occured between the seller and the buyer, proceed at your own risk when your purchase or sell goods on Cashshope. We do not store any confidential information such as credit card details or shipping addresses on our servers, other than your user information in which you have provided during the initial sign-up process. Confidential information as mentioned above is managed and processed by our payment service provider, Stripe. </br>
 
 When you use Stripe for buying and selling of goods, including as a payment method, or to receive funds, you agree to Stripe's [Term of Services](https://stripe.com/en-sg/customer-portal/legal).
 
