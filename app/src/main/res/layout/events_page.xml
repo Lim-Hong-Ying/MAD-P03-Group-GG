@@ -1,5 +1,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F0E3"
@@ -32,7 +33,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="70dp"
-                    android:onClick="test"
                     android:text="@string/eventToolbar_heading"
                     android:textColor="@color/black"
                     android:textSize="30sp"
@@ -54,13 +54,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:title="@string/event_title">
+
                 <ImageView
                     android:id="@+id/backBtn"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/back_icon"/>
+                    android:background="@drawable/back_icon" />
 
                 <ImageView
+                    android:id="@+id/addEventBtn"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="right"
@@ -68,24 +70,27 @@
                     android:background="@drawable/ic_baseline_add_24"
                     android:contentDescription="Add Icon"
                     android:onClick="createEvent" />
+
+                <ImageView
+                    android:id="@+id/calendarBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:contentDescription="Calendar Icon"
+                    android:onClick="calendar"
+                    app:srcCompat="@drawable/ic_baseline_calendar_today_24"
+                    tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
-
-
-
-
-
-    <!--    will be implementing recycler view insted of nested scroll view-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/eventRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-
     </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

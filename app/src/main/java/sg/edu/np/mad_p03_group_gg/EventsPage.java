@@ -104,7 +104,7 @@ public class EventsPage extends AppCompatActivity {
         startActivity(newEvent);
     }
     // Temporary only
-    public void test(View view){
+    public void calendar(View view){
         Intent test = new Intent(EventsPage.this, WeekViewActivity.class);
         startActivity(test);
     }

@@ -39,7 +39,6 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         }
         initWidgets();
         setWeekView();
-        //setOnClickListener();
         ImageView closeBtn = findViewById(R.id.weeklyCloseButton);
         // Removes activity from stack when button is clicked
         closeBtn.setOnClickListener(view -> {
@@ -117,34 +116,9 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         eventListView.setAdapter(eventAdapter);
     }
 
-    // Direct to EventEdit activity for creation of event
-    public void newEventAction(View view)
-    {
-        startActivity(new Intent(this, EventEditActivity.class));
-    }
-
     // Direct to monthly calendar view
     public void monthlyAction(View view)
     {
         startActivity(new Intent(this, MonthViewActivity.class));
-    }
-
-    // Direct to Event edit activity when editing event
-    private void setOnClickListener(){
-        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Get selected event
-                Event selectedEvent = (Event) eventListView.getItemAtPosition(position);
-                Intent editEvent = new Intent(getApplicationContext(), EventEditActivity.class);
-                // Pass eventID to EventEdit activity
-                editEvent.putExtra("eventEdit", selectedEvent.getID());
-                startActivity(editEvent);
-            }
-        });
-    }
-
-    public void testing(View view){
-        startActivity(new Intent(this, EventsPage.class));
     }
 }
