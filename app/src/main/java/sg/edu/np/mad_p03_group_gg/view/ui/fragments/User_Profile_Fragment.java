@@ -352,11 +352,16 @@ public class User_Profile_Fragment extends Fragment {
         EditProfilebtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent change = new Intent(getActivity(),changeaccdetails.class);
-                Log.e("Username",user.getName());
-                Log.e("Phonenumber",user.getPhonenumber());
-                change.putExtra("User",user);
-                startActivity(change);
+                // catch errors or failures
+                try {
+                    Intent change = new Intent(getActivity(), changeaccdetails.class);
+                    //Put user object into an intent
+                    change.putExtra("User", user);
+                    startActivity(change);
+                }
+                catch(Exception e){
+                    Toast.makeText(getContext(), "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
+                }
             }
             
         });

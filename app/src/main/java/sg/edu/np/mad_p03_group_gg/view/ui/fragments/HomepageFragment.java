@@ -55,6 +55,7 @@ import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
 import sg.edu.np.mad_p03_group_gg.individual_listing;
 import sg.edu.np.mad_p03_group_gg.listingObject;
 import sg.edu.np.mad_p03_group_gg.listing_adapter;
+import sg.edu.np.mad_p03_group_gg.listingsPage;
 import sg.edu.np.mad_p03_group_gg.models.AdBannerImage;
 import sg.edu.np.mad_p03_group_gg.tools.FirebaseTools;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
@@ -177,7 +178,9 @@ public class HomepageFragment extends Fragment {
         ImageView likedPageButton = view.findViewById(R.id.likedPageButton);
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
-            replaceFragment(new listingFragment());
+            //replaceFragment(new listingFragment());
+            Intent listingsPage = new Intent(this.getContext(), listingsPage.class);
+            startActivity(listingsPage);
         });
 
         chatButtonView.setOnClickListener(v -> {

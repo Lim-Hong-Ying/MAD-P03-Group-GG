@@ -96,6 +96,9 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/inpu_text.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/sign_in_button.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_category_page.xml" value="0.4" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.19067028985507245" />
+        <entry key="app/src/main/res/layout/activity_chat_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_displaysettings.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/activity_event_edit.xml" value="0.20520833333333333" />
         <entry key="app/src/main/res/layout/activity_forget_password_activitiy.xml" value="0.15534420289855072" />
@@ -103,6 +106,7 @@
         <entry key="app/src/main/res/layout/activity_individual_listing.xml" value="0.3458333333333333" />
         <entry key="app/src/main/res/layout/activity_listings.xml" value="0.3458333333333333" />
         <entry key="app/src/main/res/layout/activity_listings2.xml" value="0.1734375" />
+        <entry key="app/src/main/res/layout/activity_listings_page.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/activity_loginpage.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3458333333333333" />
         <entry key="app/src/main/res/layout/activity_newlisting.xml" value="0.34270833333333334" />
@@ -110,6 +114,12 @@
         <entry key="app/src/main/res/layout/activity_splash_page.xml" value="0.13333333333333333" />
         <entry key="app/src/main/res/layout/listing_card.xml" value="0.264" />
         <entry key="app/src/main/res/layout/slideintext.xml" value="0.3333333333333333" />
+        <entry key="app/src/main/res/menu/individual_listing_seller.xml" value="0.3458333333333333" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.14" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/shopeeBanner1.xml" value="0.196" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/shopeebanner1.xml" value="0.2075" />
+        <entry key="app/src/main/res/xml/activity_search.xml" value="0.24048913043478262" />
       </map>
     </option>
   </component>

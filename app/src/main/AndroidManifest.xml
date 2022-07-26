@@ -21,6 +21,10 @@
             android:exported="false" />
         <activity
             android:name=".view.userConsent.TermsAndConditions"
+            android:name=".listingsPage"
+            android:exported="false" />
+        <activity
+            android:name=".categoryPage"
             android:exported="false" />
         <activity
             android:name=".editListing"
@@ -39,7 +43,7 @@
             android:exported="false" />
 
         <receiver
-            android:name=".CashshopeWidget"
+            android:name=".cashshopewidget"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -110,6 +114,8 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <service android:name=".cashshopeWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>
