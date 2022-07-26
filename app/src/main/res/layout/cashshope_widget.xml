@@ -13,41 +13,62 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
 >
+
         <LinearLayout
+            android:id="@+id/widgettext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:text="Today Items in store"
-                android:textSize="24dp"
-                ></TextView>
+                android:textSize="24dp"></TextView>
+
             <TextView
                 android:id="@+id/Wishlist_counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="20dp"
-                >
+                android:paddingRight="20dp">
 
             </TextView>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/refreshbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Refresh" />
+            </LinearLayout>
 
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@tools:sample/avatars" />
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-        <ListView
-            android:id="@+id/gridpics"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+
+            <ListView
+                android:id="@+id/gridpics"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp">
 
 
-        </ListView>
+            </ListView>
         </FrameLayout>
         </LinearLayout>
 
