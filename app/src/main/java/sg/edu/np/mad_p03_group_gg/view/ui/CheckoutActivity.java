@@ -30,10 +30,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.stripe.android.PaymentConfiguration;
-import com.stripe.android.model.ConfirmPaymentIntentParams;
 import com.stripe.android.model.PaymentMethodCreateParams;
 import com.stripe.android.payments.paymentlauncher.PaymentLauncher;
 import com.stripe.android.payments.paymentlauncher.PaymentResult;
@@ -56,20 +57,20 @@ import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
 import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
 
 public class CheckoutActivity extends AppCompatActivity {
-    private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
-    private static DatabaseReference databaseReference = database.getReference();
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private static final DatabaseReference databaseReference = database.getReference();
     private static final String BACKEND_URL = "https://cashshope.japaneast.cloudapp.azure.com/";
     private String paymentIntentClientSecret;
     private PaymentLauncher paymentLauncher;
-    private OkHttpClient httpClient = new OkHttpClient();
+    private final OkHttpClient httpClient = new OkHttpClient();
     private PaymentMethodCreateParams params;
     private String paymentMethod;
-    private FirebaseAuth auth;
-    private String userId;
     private String stripeAccountId;
-    private Boolean isAddressValid = false;
     private String json;
-    private Boolean isCallback = false;
+    private String userId;
+    private String sellerId;
+    private String chatKey;
+    private Boolean inchat;
     private int totalPrice = 0;
     private final StripeDialog stripeDialog = new StripeDialog(CheckoutActivity.this);
 
@@ -86,7 +87,6 @@ public class CheckoutActivity extends AppCompatActivity {
         TextView listingCostPriceCard = findViewById(R.id.listingCostPriceCard);
         TextView deliveryCostTextView = findViewById(R.id.deliveryCostTextView);
         TextView totalPriceTextView = findViewById(R.id.totalPriceTextView);
-        ImageView paymentMethodLogo = findViewById(R.id.paymentMethodLogo);
         TextView paymentDetailsHint = findViewById(R.id.paymentDetailsHint);
         TextView changePaymentButton = findViewById(R.id.changePaymentButton);
         LinearLayout addressLayout = findViewById(R.id.addressLayout);
@@ -97,20 +97,17 @@ public class CheckoutActivity extends AppCompatActivity {
         RadioButton meetupRadioButton = findViewById(R.id.meetupRadioButton);
 
         // Get Intent from Individual Listing Activity
+        sellerId = getIntent().getStringExtra("sellerId");
         stripeAccountId = getIntent().getStringExtra("stripeAccountId");
         String productId = getIntent().getStringExtra("productId");
 
         // Get current user id
-        auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser fbUser = auth.getCurrentUser();
+        assert fbUser != null;
         userId = fbUser.getUid();
 
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        closeButton.setOnClickListener(view -> finish());
 
         PaymentConfiguration.init(
                 getApplicationContext(),
@@ -128,48 +125,45 @@ public class CheckoutActivity extends AppCompatActivity {
         );
 
 
-        databaseReference.child("users").child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    FirebaseTools.createListingObjectFromFirebase(productId,
-                            CheckoutActivity.this, listingObject -> {
-                                listingTitleView.setText(listingObject.getTitle());
-                                listingPriceView.setText("$" + listingObject.getPrice());
+        databaseReference.child("users").child(userId).get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.e("firebase", "Error getting data", task.getException());
+            }
+            else {
+                FirebaseTools.createListingObjectFromFirebase(productId,
+                        CheckoutActivity.this, listingObject -> {
+                            listingTitleView.setText(listingObject.getTitle());
+                            listingPriceView.setText("$" + listingObject.getPrice());
 
-                                new ImageDownloader(listingPictureView).execute(listingObject.gettURLs().get(0));
-                                listingTitlePriceCard.setText(listingObject.getTitle());
-                                listingCostPriceCard.setText("$" + listingObject.getPrice());
-                                if (listingObject.getDeliveryPrice().equals("")) {
-                                    deliveryCostTextView.setText("$0");
-                                    totalPrice = Integer.parseInt(listingObject.getPrice()) + 0;
-                                } else {
-                                    deliveryCostTextView.setText("$" + listingObject.getDeliveryPrice());
-                                    totalPrice = Integer.parseInt(listingObject.getPrice()) +
-                                            Integer.parseInt(listingObject.getDeliveryPrice());
+                            new ImageDownloader(listingPictureView).execute(listingObject.gettURLs().get(0));
+                            listingTitlePriceCard.setText(listingObject.getTitle());
+                            listingCostPriceCard.setText("$" + listingObject.getPrice());
+                            if (listingObject.getDeliveryPrice().equals("")) {
+                                deliveryCostTextView.setText("$0");
+                                totalPrice = Integer.parseInt(listingObject.getPrice()) + 0;
+                            } else {
+                                deliveryCostTextView.setText("$" + listingObject.getDeliveryPrice());
+                                totalPrice = Integer.parseInt(listingObject.getPrice()) +
+                                        Integer.parseInt(listingObject.getDeliveryPrice());
+                            }
+                            totalPriceTextView.setText("$" + totalPrice);
+
+                            // If seller did not enable delivery, set view to GONE
+                            if (!listingObject.getDelivery()) {
+                                deliveryRadioButton.setVisibility(View.GONE);
+                                addressLayout.setVisibility(View.GONE);
+                                meetupRadioButton.setChecked(true); // check the meetup option
+                            }
+
+                            String customerEmail = task.getResult().child("email").getValue(String.class);
+
+                            checkoutButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    startCheckout(totalPrice, customerEmail, stripeAccountId);
                                 }
-                                totalPriceTextView.setText("$" + totalPrice);
-
-                                // If seller did not enable delivery, set view to GONE
-                                if (listingObject.getDelivery() == false) {
-                                    deliveryRadioButton.setVisibility(View.GONE);
-                                    addressLayout.setVisibility(View.GONE);
-                                    meetupRadioButton.setChecked(true); // check the meetup option
-                                }
-
-                                String customerEmail = task.getResult().child("email").getValue(String.class);
-
-                                checkoutButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        startCheckout(totalPrice, customerEmail, stripeAccountId);
-                                    }
-                                });
                             });
-                }
+                        });
             }
         });
 
@@ -321,7 +315,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private void startCheckout(int totalPrice, String customerEmail, String stripeAccountId){
 
         if (paymentMethod != null) {
-            isAddressValid = validateDeliveryAddress();
+            Boolean isAddressValid = validateDeliveryAddress();
 
 
             if (isAddressValid)
@@ -435,7 +429,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
                     String textMessage = "Hi, a payment has been made, please confirm.";
 
-                    //FirebaseTools.sendConfirmationMessage(userId,  sellerId, textMessage); // inform seller of a payment
+                    sendConfirmationMessage(sellerId,  userId, textMessage); // inform seller of a payment
                     CheckoutActivity.this.finish();
                 }
             }
@@ -533,5 +527,87 @@ public class CheckoutActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void sendConfirmationMessage(String sID, String uID, String message) {
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get chatkey
+                for (DataSnapshot dataSnapshotCurrentChat : snapshot.child("chat").getChildren()){
+                    // Get id number of each user
+                    String getUserOne = dataSnapshotCurrentChat.child("user1").getValue(String.class);
+                    String getUserTwo = dataSnapshotCurrentChat.child("user2").getValue(String.class);
+
+                    // If id numbers are the same as main user and selected user's id number
+                    if((TextUtils.equals(getUserOne,sID) && TextUtils.equals(getUserTwo,uID))
+                            || (TextUtils.equals(getUserOne,uID) && TextUtils.equals(getUserTwo, sID))){
+                        chatKey = dataSnapshotCurrentChat.getKey();
+                    }
+                }
+
+                // Setting chat key
+                if(chatKey == null) {
+                    // ChatKey increment by 1 for each chat. Default chat key is 1 (for first 2 users)
+                    chatKey = "1";
+
+                    if (snapshot.hasChild("chat")) {
+                        chatKey = String.valueOf(snapshot.child("chat").getChildrenCount() + 1);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read from db
+            }
+        });
+
+        // Set current inChat status to fale (Not currently in chat)
+        if (!TextUtils.isEmpty(chatKey)){
+            databaseReference.child("chat").child(chatKey).child(uID).child("inChat").setValue("False");
+        }
+
+        databaseReference.child("chat").child(chatKey).child(sID).child("inChat").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    inchat = task.getResult().getValue(Boolean.class);
+
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                }
+            }
+        });
+
+        // Get current time (add 28800000 milliseconds to convert to SGT, if emulator timezone is UTC)
+        String currentTime = String.valueOf(System.currentTimeMillis());
+
+        DatabaseReference ref = databaseReference.push();
+
+        // If user inchat status is true, set message seen value to True
+        if (inchat){
+            ref.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("True");
+        }
+        // If other user is not in current chat, set value to false
+        else{
+            ref.child("chat").child(chatKey).child("messages").child(currentTime).child("seen").setValue("False");
+        }
+
+        // Set users
+        ref.child("chat").child(chatKey).child("user1").setValue(uID);
+        ref.child("chat").child(chatKey).child("user2").setValue(sID);
+
+        // Set message and who sent the message
+        ref.child("chat").child(chatKey).child("messages").child(currentTime).child("msg").setValue(message);
+        ref.child("chat").child(chatKey).child("messages").child(currentTime).child("id").setValue(uID);
+
+
+        // If current user (you) are not already in other user's friend list, add to his friend list
+        ref.child("selectedChatUsers").child(sID).child(uID).setValue("");
+
     }
 }
