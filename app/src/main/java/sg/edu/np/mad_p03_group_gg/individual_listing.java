@@ -55,6 +55,7 @@ import java.time.format.DateTimeFormatter;
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
 import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
@@ -230,16 +231,38 @@ public class individual_listing extends AppCompatActivity {
                         public void stripeAccountIdCallback(String stripeAccountId) {
 
                             if (stripeAccountId != null) {
-                                buyButton.setOnClickListener(new View.OnClickListener() {
+
+                                // If have stripe account id, check if onboarding is completed,
+                                // otherwise don't show buy button
+                                StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
                                     @Override
-                                    public void onClick(View view) {
-                                        Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
-                                        checkoutActivityIntent.putExtra("sellerId", sellerId);
-                                        checkoutActivityIntent.putExtra("productId", pID);
-                                        checkoutActivityIntent.putExtra("stripeAccountId", stripeAccountId);
-                                        startActivity(checkoutActivityIntent);
+                                    public void isOnboardCallback(Boolean isOnboard) {
+
+                                        if (isOnboard) {
+                                            individual_listing.this.runOnUiThread(() -> {
+                                                buyButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
+                                                        checkoutActivityIntent.putExtra("sellerId", sellerId);
+                                                        checkoutActivityIntent.putExtra("productId", pID);
+                                                        checkoutActivityIntent.putExtra("stripeAccountId", stripeAccountId);
+                                                        startActivity(checkoutActivityIntent);
+                                                    }
+                                                });
+                                            });
+                                        }
+                                        else
+                                        {
+                                            individual_listing.this.runOnUiThread(() -> {
+                                                buyButton.setVisibility(View.GONE);
+                                            });
+                                        }
+
                                     }
                                 });
+
+
                             }
                             else
                             {

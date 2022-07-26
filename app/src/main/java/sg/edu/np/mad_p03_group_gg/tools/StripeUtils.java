@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -14,6 +15,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.stripe.android.model.ConfirmPaymentIntentParams;
+import com.stripe.android.model.PaymentMethodCreateParams;
+import com.stripe.android.payments.paymentlauncher.PaymentLauncher;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -32,6 +36,7 @@ import okhttp3.Response;
 import sg.edu.np.mad_p03_group_gg.newlisting;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
+import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 import sg.edu.np.mad_p03_group_gg.view.ui.fragments.User_Profile_Fragment;
@@ -311,5 +316,21 @@ public class StripeUtils {
                         }
                     }
                 });
+    }
+
+    public static void confirmPayment(PaymentMethodCreateParams params, StripeDialog stripeDialog,
+                                      String paymentIntentClientSecret, PaymentLauncher paymentLauncher,
+                                      Context context)
+    {
+        if (params != null) {
+            stripeDialog.startStripeAlertDialog();
+            ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
+                    .createWithPaymentMethodCreateParams(params, paymentIntentClientSecret);
+            paymentLauncher.confirm(confirmParams); // Confirm payment
+        } else {
+            Toast.makeText(context,
+                    "Please key in your payment information again.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
