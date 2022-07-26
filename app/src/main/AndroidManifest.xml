@@ -20,6 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADP03GroupGG">
         <activity
+            android:name=".view.userConsent.PrivacyPolicy"
+            android:exported="false" />
+        <activity
+            android:name=".view.userConsent.TermsAndConditions"
             android:name=".EventDetails"
             android:exported="false" />
         <activity
@@ -63,6 +67,12 @@
         </receiver>
 
         <activity
+            android:name=".view.ui.PaymentMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ui.CheckoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".successListPage"
             android:exported="false" />
         <activity
@@ -79,7 +89,7 @@
             android:exported="true" />
         <activity
             android:name=".newlisting"
-            android:exported="true" />
+            android:exported="true"></activity>
         <activity
             android:name=".forget_password_activitiy"
             android:exported="false" />

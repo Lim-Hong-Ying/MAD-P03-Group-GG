@@ -53,8 +53,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
+import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
+import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
 
 public class individual_listing extends AppCompatActivity {
 
@@ -207,6 +212,73 @@ public class individual_listing extends AppCompatActivity {
             }
         });
         // ############# END WILLIAM SECTION ###############
+
+        // ############# KAI ZHE PAYMENT SECTION ###############
+        Button buyButton = findViewById(R.id.buyButton);
+
+        databaseReference.child("individual-listing").child(pID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                    String sellerId = task.getResult().child("sid").getValue(String.class);
+
+                    // If no Stripe URL, don't let user checkout
+                    StripeUtils.getStripeAccountId(sellerId, new ConnectStripeCallback() {
+                        @Override
+                        public void stripeAccountIdCallback(String stripeAccountId) {
+
+                            if (stripeAccountId != null) {
+
+                                // If have stripe account id, check if onboarding is completed,
+                                // otherwise don't show buy button
+                                StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                                    @Override
+                                    public void isOnboardCallback(Boolean isOnboard) {
+
+                                        if (isOnboard) {
+                                            individual_listing.this.runOnUiThread(() -> {
+                                                buyButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
+                                                        checkoutActivityIntent.putExtra("sellerId", sellerId);
+                                                        checkoutActivityIntent.putExtra("productId", pID);
+                                                        checkoutActivityIntent.putExtra("stripeAccountId", stripeAccountId);
+                                                        startActivity(checkoutActivityIntent);
+                                                    }
+                                                });
+                                            });
+                                        }
+                                        else
+                                        {
+                                            individual_listing.this.runOnUiThread(() -> {
+                                                buyButton.setVisibility(View.GONE);
+                                            });
+                                        }
+
+                                    }
+                                });
+
+
+                            }
+                            else
+                            {
+                                buyButton.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+
+
+        // ############# END KAI ZHE SECTION ###############
+
     }
 
     public void showPopup(View v) {
@@ -365,7 +437,10 @@ public class individual_listing extends AppCompatActivity {
                     if (sellerid.equals(uID)) {
                         ToggleButton likebutton = findViewById(R.id.button_like);
                         Button chatbutton = findViewById(R.id.button_chat);
+                        Button buyButton = findViewById(R.id.buyButton);
 
+                        // If own listing, cannot buy, like, or chat
+                        buyButton.setVisibility(View.GONE);
                         likebutton.setVisibility(View.GONE);
                         chatbutton.setVisibility(View.GONE);
                     }

@@ -1,8 +1,10 @@
 package sg.edu.np.mad_p03_group_gg.view.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -53,5 +55,16 @@ public class MainActivity extends AppCompatActivity {
         // Find the frame layout for replacing fragments
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit(); // Apply changes
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_baseline_warning_24)
+                .setTitle("Exiting App")
+                .setMessage("Do you want to exit Cashshope?")
+                .setPositiveButton("Yes", (dialog, which) -> finish())
+                .setNegativeButton("No", null)
+                .show();
     }
 }

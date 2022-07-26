@@ -5,9 +5,7 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -19,7 +17,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -33,11 +30,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,21 +45,42 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.Stripe;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
+import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
+
+/**
+ * TODO:
+ *
+ * Check if seller has a Stripe Connected Account ID
+ *
+ * If not:
+ * Initiate new onboarding flow
+ *
+ * If yes:
+ * Use back the account ID
+ *
+ * Added toggle button to let seller choose to enable their mode of payment.
+ *
+ * Toggle button to check if flow is entered and exited properly.
+ * To at least, enable one payment method. (Check upon clicking create listing button)
+ * By: Kai Zhe
+ */
 public class newlisting extends AppCompatActivity {
-
+    private static FirebaseDatabase database = FirebaseDatabase
+            .getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private static DatabaseReference databaseReference = database.getReference();
+    private FirebaseAuth auth;
+    private String currentUserId;
+    final StripeDialog stripeDialog = new StripeDialog(newlisting.this);
     ArrayList<Uri> imageArray = new ArrayList<>();
     ArrayList<String> imageURLs = new ArrayList<>();
     imageChooserAdapter adapter = null;
@@ -76,11 +92,27 @@ public class newlisting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newlisting);
 
+        // ############# KAI ZHE PAYMENT SECTION ###############
+
+        // Get current user id
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = auth.getCurrentUser();
+        currentUserId = fbUser.getUid();
+
+        // Stripe
+        PaymentConfiguration.init(
+                getApplicationContext(),
+                "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
+        );
+
+        // ############# END OF KAI ZHE PAYMENT SECTION ###############
+
         DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
+
                 if (connected) {
                     activeChecker();
 
@@ -99,9 +131,8 @@ public class newlisting extends AppCompatActivity {
                             finalCheck();
                         }
                     });
-                }
 
-                else {
+                } else {
                     Toast.makeText(newlisting.this, "No internet connection.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -127,6 +158,7 @@ public class newlisting extends AppCompatActivity {
         EditText deltime_input = findViewById(R.id.input_deliverytime);
         Switch meeting_toggle = findViewById(R.id.meet_toggle);
         Switch delivery_toggle = findViewById(R.id.del_toggle);
+        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
 
         address_input.setVisibility(View.GONE);
         deltype_input.setVisibility(View.GONE);
@@ -303,6 +335,70 @@ public class newlisting extends AppCompatActivity {
                 }
             }
         });
+
+        // ############# KAI ZHE PAYMENT SECTION ###############
+        /*EditText paynowPhoneInput = findViewById(R.id.paynowId);
+
+        paynowPhoneInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (TextUtils.isEmpty(paynowPhoneInput.getText().toString())) {
+                    paynowPhoneInput.setError("Enter a valid Paynow-registered phone number.");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });*/
+
+
+        // Check if user has already onboarded, i.e. has stripeAccountId and
+        // account is not restricted (check payout true or false)
+        stripeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b == true)
+                {
+                    // Retrieve User's stripeAccountId
+                    StripeUtils.getStripeAccountId(currentUserId, new ConnectStripeCallback() {
+                        @Override
+                        public void stripeAccountIdCallback(String stripeAccountId) {
+                            if (stripeAccountId != null)
+                            {
+                                StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                                    @Override
+                                    public void isOnboardCallback(Boolean isOnboard) {
+                                        // If isOnboard is true, means user completed onboarding and able to
+                                        // receive payouts (check Stripe Dashboard)
+                                        if (isOnboard == false)
+                                        {
+                                            StripeUtils.resumeOnboard(stripeDialog, newlisting.this,
+                                                    stripeAccountId);
+                                        }
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                // If no stripeAccountId, generate a new one and onboard user
+                                StripeUtils.onboardUser(stripeDialog, newlisting.this,
+                                        currentUserId);
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+
+        // ############# END KAI ZHE PAYMENT SECTION ###############
     }
 
     private void finalCheck() {
@@ -314,8 +410,14 @@ public class newlisting extends AppCompatActivity {
         EditText deltype_input = findViewById(R.id.input_deliverytype);
         EditText delprice_input = findViewById(R.id.input_deliveryprice);
         EditText deltime_input = findViewById(R.id.input_deliverytime);
+
+        //EditText paynowPhoneInput = findViewById(R.id.paynowId);
+
         Switch meeting_toggle = findViewById(R.id.meet_toggle);
         Switch delivery_toggle = findViewById(R.id.del_toggle);
+
+        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+        Switch cardanoSwitch = findViewById(R.id.cardanoSwitch);
 
         Boolean image_selected = false;
         Boolean title_filled = false;
@@ -326,6 +428,7 @@ public class newlisting extends AppCompatActivity {
         Boolean deliverytype_filled = false;
         Boolean deliveryprice_filled = false;
         Boolean deliverytime_filled = false;
+        //Boolean isPaynowFilled = false;
 
         if (imageArray.size() > 0) {
             image_selected = true;
@@ -373,13 +476,63 @@ public class newlisting extends AppCompatActivity {
             deliverytime_filled = true;
         }
 
-        if (image_selected == true && title_filled == true && price_filled == true && itemcondition_selected == true && desc_filled == true && meetup_filled == true && deliverytype_filled == true && deliveryprice_filled == true && deliverytime_filled == true) {
-            writeToDatabaseAndFirebase();
-        }
+        /*if (TextUtils.isEmpty(paynowPhoneInput.getText().toString()) == false)
+        {
+            isPaynowFilled = true;
+        }*/
 
+        if (image_selected == true && title_filled == true && price_filled == true &&
+                itemcondition_selected == true && desc_filled == true && meetup_filled == true &&
+                deliverytype_filled == true && deliveryprice_filled == true &&
+                deliverytime_filled == true) {
+
+            if (stripeSwitch.isChecked() == true)
+            {
+                // Check again
+                StripeUtils.getStripeAccountId(currentUserId, new ConnectStripeCallback() {
+                    @Override
+                    public void stripeAccountIdCallback(String stripeAccountId) {
+                        StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                            @Override
+                            public void isOnboardCallback(Boolean isOnboard) {
+                                // Check if onboarding is completed, call Accounts api to check info
+                                if (isOnboard)
+                                {
+                                    newlisting.this.runOnUiThread(() -> {
+                                        // If onboarding is completed, write to Firebase
+                                        writeToDatabaseAndFirebase();
+                                    });
+
+                                }
+                                else
+                                {
+                                    newlisting.this.runOnUiThread(() -> {
+                                        // Ask user to perform onboarding again
+                                        Toast.makeText(newlisting.this,
+                                                "Please complete the Stripe onboarding process.",
+                                                Toast.LENGTH_SHORT).show();
+                                        stripeSwitch.setChecked(false);
+                                    });
+
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            else
+            {
+                writeToDatabaseAndFirebase();
+            }
+
+/*            Intent returnhome = new Intent(getApplicationContext(), successListPage.class);
+            finish();
+            newlisting.this.startActivity(returnhome);*/
+        }
         else {
             Toast.makeText(newlisting.this, "Please enter required information.", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void writeToDatabaseAndFirebase() {
@@ -608,4 +761,6 @@ public class newlisting extends AppCompatActivity {
             }
         }
     });
+
+
 }
