@@ -359,24 +359,27 @@ public class User_Profile_Fragment extends Fragment {
             }
         });
 
+        try {
+            //Allow Edit Account info
+            EditProfilebtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // catch errors or failures
+                    try {
+                        Intent change = new Intent(getActivity(), changeaccdetails.class);
+                        //Put user object into an intent
+                        change.putExtra("User", user);
+                        startActivity(change);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-        //Allow Edit Account info
-        EditProfilebtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                // catch errors or failures
-                try {
-                    Intent change = new Intent(getActivity(), changeaccdetails.class);
-                    //Put user object into an intent
-                    change.putExtra("User", user);
-                    startActivity(change);
-                }
-                catch(Exception e){
-                    Toast.makeText(getContext(), "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
-                }
-            }
-            
-        });
+            });
+        }
+        catch(Exception e){
+            Toast.makeText(getContext(),"Something went wrong, please check your internet collection",Toast.LENGTH_SHORT).show();
+        }
         
 
 
