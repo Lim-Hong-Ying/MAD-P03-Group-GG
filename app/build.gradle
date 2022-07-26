@@ -10,8 +10,8 @@ android {
         applicationId "sg.edu.np.mad_p03_group_gg"
         minSdk 21
         targetSdk 32
-        versionCode 4
-        versionName '1.4'
+        versionCode 5
+        versionName 'v2.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.debug
