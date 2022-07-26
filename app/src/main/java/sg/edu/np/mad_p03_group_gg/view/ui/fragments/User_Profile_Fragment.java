@@ -362,12 +362,9 @@ public class User_Profile_Fragment extends Fragment {
                         Toast.makeText(getContext(), "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
                     }
                 }
-            }
-            
-        });
-
             });
         }
+
         catch(Exception e){
             Toast.makeText(getContext(),"Something went wrong, please check your internet collection",Toast.LENGTH_SHORT).show();
         }

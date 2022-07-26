@@ -24,6 +24,8 @@
             android:exported="false" />
         <activity
             android:name=".view.userConsent.TermsAndConditions"
+            android:exported="false" />
+        <activity
             android:name=".EventDetails"
             android:exported="false" />
         <activity
