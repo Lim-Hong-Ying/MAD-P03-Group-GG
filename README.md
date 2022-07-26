@@ -95,6 +95,25 @@ Feeling fancy today? Customize your profile!
    - Press the "+" button to create a new listing.
    - Press the 👤 button to access your user account profile.
    - Click on any of the listing cards to view detailed information on the listing.
+4. To delete your User Account, please note that this action is **IRREVERSIBLE**.
+   - Press the 👤 button to access your user account profile page.
+   - Press the red "Delete Account" button to delete your account.
+   - All your records and data stored on Cashshope's server will be deleted and it is non-recoverable.
+
+### For Sellers
+In order to allow your buyers to purchase your items via debit or credit card:
+- You must enable the "Stripe" option whenever you create a new listing, as our payments are managed by Stripe.
+- If it is your first time enabling the "Stripe" option, you will be required to go through a mandatory onboarding process with Stripe to ensure that Stripe has what it needs to know, including the items that you are selling, and to verify that you are indeed a valid person, through the verification of official identity documents such as an Identify Card, Driving License, or SingPass.
+- After the onboarding process, you may proceed to list your item for sale, and you will receive payment to your bank account or card that you have connected to Stripe during the onboarding process, when a purchase has been made by a buyer.
+- If you did not fill in the required information, you will be required to resume the onboarding process before you are able to create a listing, or otherwise, your listing will be created but buyers will not be able to checkout through Stripe.
+
+### For Buyers
+In order to pay with a valid debit or credit card:
+- Select a listing that has a "Buy Now" button.
+- Click on the "Buy Now" button and you will be brought to the Checkout page.
+- Validate and key in the required information including card details and delivery method.
+- Click on the Checkout button to complete the purchase.
+- Should the financial instituition in which your card has been registered with (card issuer), requires additional verification such as 3D Secure, you will be prompted by Stripe to perform additional actions.
 
 ## Disclaimer
 Before you proceed with our service, do read and agree to our [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), as well as [Privacy Policy](https://westwq.github.io/MADPrivacy/).
