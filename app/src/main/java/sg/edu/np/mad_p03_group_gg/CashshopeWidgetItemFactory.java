@@ -107,7 +107,7 @@ import java.util.concurrent.CountDownLatch;
                         Log.e("ComTImeStamp",ts);
                         Log.e("Timestamp",TimeStamp.toString());
 
-                        if(result.child("timeStamp").getValue(String.class)==ts) {
+                        if(TimeStamp.toString().equals(ts)) {
                             individualListingObject l = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
                             llist.add(l);
                         }
