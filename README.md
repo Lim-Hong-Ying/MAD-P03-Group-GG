@@ -99,7 +99,7 @@ Feeling fancy today? Customize your profile!
    - Press the 👤 button to access your user account profile page.
    - Press the red "Delete Account" button to delete your account.
    - All your records and data stored on Cashshope's server will be deleted and it is non-recoverable.
-5. Chat Guide
+5. Chat Guide <br>
    Chat List:
    - Press the "+" button to add other users to your chat list.
    - Press and hold on a user in your chat list to remove them from your list (you can always add them back).
