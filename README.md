@@ -99,6 +99,19 @@ Feeling fancy today? Customize your profile!
    - Press the 👤 button to access your user account profile page.
    - Press the red "Delete Account" button to delete your account.
    - All your records and data stored on Cashshope's server will be deleted and it is non-recoverable.
+5. Chat Guide
+   Chat List:
+   - Press the "+" button to add other users to your chat list.
+   - Press and hold on a user in your chat list to remove them from your list (you can always add them back).
+   - Press the search 🔍 bar to search for any users in your chat list.
+   - Number of unseen messages will be displayed for each chat
+   Chat:
+   - Type a message and press ➢ button to send
+   - Press the "+" button to send a picture from your phone's gallery
+   - Status of the other user will be displayed at the top, below their name
+   Things to note:
+   - If you are in any chat page your status would be changed to "online".
+   - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.
 
 ### For Sellers
 In order to allow your buyers to purchase your items via debit or credit card:
