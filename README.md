@@ -32,7 +32,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc), [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions & Privacy Policy Activity, Stripe Onboarding for Seller, Stripe Checkout Activity, Payment Method Activity, StripeUtils Class for API Management, Stripe Backend Server Endpoint, Stripe Express Dashboard for Sellers|
 |Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, Play Store app updates|
 |Ooi Jun Heng Ryan|Meeting Planner page, WeekView and MonthView calendars, Event pages|
-|William Francis Siah|Chat function (Chat List, Chat page, MemoryData etc.), Linking Individual Listing to Chat page|
+|William Francis Siah|Chat Activity, ChatList Activity, ChatAddUser Activity, ChatInfo, MessageList, MemoryData, RecyclerViewInterface, Linking Individual Listing to Chat page, Chat Guide|
 |Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations|
 
 ## Features
