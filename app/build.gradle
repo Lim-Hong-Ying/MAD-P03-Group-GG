@@ -40,7 +40,7 @@ android {
 
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:30.1.0')
+    implementation platform('com.google.firebase:firebase-bom:30.3.1')
     implementation 'com.google.firebase:firebase-storage'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.1'
@@ -48,8 +48,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:20.0.5'
     implementation 'com.google.firebase:firebase-auth:21.0.4'
     implementation 'com.firebaseui:firebase-ui-database:8.0.1'
-    // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:30.1.0')
+    // App check library
+    implementation 'com.google.firebase:firebase-appcheck-playintegrity'
+    implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0'
+
 
     // Declare the dependency for the Cloud Storage library
     // When using the BoM, you don't specify versions in Firebase library dependencies
