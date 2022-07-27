@@ -15,6 +15,7 @@ public class individualListingObject extends listingObject {
     private int price; //item price
     private Boolean reserved; //is item reserved?*/
     private String description; //item description
+    private String category;
     private String location; //deal location
     private Boolean delivery; //is delivery available?
     private String deliveryType; //if yes, what kind
@@ -56,6 +57,25 @@ public class individualListingObject extends listingObject {
         setReserved(r);*/
         super(lid, t, tURLs, sid, ic, p, r, ts);
         setDescription(desc);
+        setLocation(l);
+        setDelivery(d);
+        setDeliveryType(dt);
+        setDeliveryPrice(dp);
+        setDeliveryTime(dtime);
+    }
+
+    public individualListingObject(String lid, String t, ArrayList<String> tURLs, String sid, String ic, String p, Boolean r, String desc, String category, String l, Boolean d, String dt, String dp, String dtime, String ts) {
+        /*setlID(lID);
+        setTitle(t);
+        settURL(turl);
+        setSID(sid);
+        setSPPU(sppu);
+        setiC(ic);
+        setPrice(p);
+        setReserved(r);*/
+        super(lid, t, tURLs, sid, ic, p, r, ts);
+        setDescription(desc);
+        setCategory(category);
         setLocation(l);
         setDelivery(d);
         setDeliveryType(dt);
@@ -138,6 +158,14 @@ public class individualListingObject extends listingObject {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setCategory(String s) {
+        category = s;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public void setLocation(String s) {

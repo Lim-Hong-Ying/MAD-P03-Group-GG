@@ -13,12 +13,14 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -152,6 +154,7 @@ public class newlisting extends AppCompatActivity {
         RadioButton condition_input_new = findViewById(R.id.input_condition_new);
         RadioButton condition_input_used = findViewById(R.id.input_condition_used);
         EditText desc_input = findViewById(R.id.input_description);
+        Spinner categorySpinner = findViewById(R.id.category_spinner);
         EditText address_input = findViewById(R.id.input_address);
         EditText deltype_input = findViewById(R.id.input_deliverytype);
         EditText delprice_input = findViewById(R.id.input_deliveryprice);
@@ -230,6 +233,10 @@ public class newlisting extends AppCompatActivity {
 
             }
         });
+
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.newlisting_categories, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(arrayAdapter);
 
         meeting_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

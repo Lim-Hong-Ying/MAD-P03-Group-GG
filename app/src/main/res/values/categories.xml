@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories">
+        <item>All listings</item>
+        <item>Electronics</item>
+        <item>Education</item>
+        <item>Automobiles</item>
+        <item>Furniture</item>
+        <item>Fashion</item>
+        <item>Services</item>
+        <item>Jobs</item>
+        <item>Property</item>
+        <item>Sports</item>
+        <item>Pets</item>
+        <item>Free items</item>
+    </string-array>
+</resources>
