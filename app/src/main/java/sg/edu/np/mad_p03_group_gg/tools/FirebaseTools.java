@@ -219,6 +219,7 @@ public  class FirebaseTools {
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String category = result.child("category").getValue(String.class);
                     String desc = result.child("description").getValue(String.class);
                     String location = result.child("location").getValue(String.class);
                     Boolean delivery = result.child("delivery").getValue(Boolean.class);
@@ -237,7 +238,7 @@ public  class FirebaseTools {
                     }
 
                     individualListing = new individualListingObject(listingid, title, tURLs, sellerid,
-                            itemcondition, price, reserved, desc, location,
+                            itemcondition, price, reserved, category, desc, location,
                             delivery, deliverytype, deliveryprice, deliverytime, timeStamp);
 
                     callback.listingObjectCallback(individualListing);

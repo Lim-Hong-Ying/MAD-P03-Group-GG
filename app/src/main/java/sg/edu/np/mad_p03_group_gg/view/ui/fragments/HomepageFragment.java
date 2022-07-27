@@ -185,8 +185,8 @@ public class HomepageFragment extends Fragment {
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
             //replaceFragment(new listingFragment());
-            Intent categoryPage = new Intent(this.getContext(), categoryPage.class);
-            startActivity(categoryPage);
+            Intent listingsPage = new Intent(this.getContext(), listingsPage.class);
+            startActivity(listingsPage);
         });
 
         chatButtonView.setOnClickListener(v -> {
@@ -319,16 +319,19 @@ public class HomepageFragment extends Fragment {
 
                                 String listingid = snapshot.getKey();
                                 String titles = snapshot.child("title").getValue(String.class);
-                                String thumbnailurl = snapshot.child("tURLs").child("0").getValue(String.class);
+                                long thumbnailurlsize = snapshot.child("tURLs").getChildrenCount();
+                                ArrayList<String> tURLs = new ArrayList<>();
+                                for (int i = 0; i < thumbnailurlsize; i++) {
+                                    tURLs.add(snapshot.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                                }
                                 String sellerid = snapshot.child("sid").getValue(String.class);
                                 String sellerprofilepicurl = snapshot.child("sppu").getValue(String.class);
                                 String itemcondition = snapshot.child("iC").getValue(String.class);
                                 String price = snapshot.child("price").getValue(String.class);
                                 Boolean reserved = snapshot.child("reserved").getValue(Boolean.class);
                                 String TimeStamp = snapshot.child("timeStamp").getValue(String.class);
-                                listingObject listing = new listingObject(listingid, titles,
-                                        thumbnailurl, sellerid, sellerprofilepicurl,
-                                        itemcondition, price, reserved,TimeStamp);
+                                listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, TimeStamp);
+
 
                                 return listing;
                             }
@@ -422,7 +425,7 @@ public class HomepageFragment extends Fragment {
             listingItemConditionView.setText(model.getiC());
 
             // The Glide library is used for easy application of images into their respective views.
-            Glide.with(getActivity().getApplicationContext()).load(model.gettURL()).into(listingImageView);
+            Glide.with(getActivity().getApplicationContext()).load(model.gettURLs().get(0)).into(listingImageView);
         }
     }
 

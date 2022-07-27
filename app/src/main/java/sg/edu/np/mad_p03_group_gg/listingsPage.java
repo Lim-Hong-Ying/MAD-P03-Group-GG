@@ -11,8 +11,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -33,6 +36,8 @@ public class listingsPage extends AppCompatActivity {
     DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category");
     String category = null;
 
+    listing_adapter adapter = null;
+
     ArrayList<listingObject> data = new ArrayList<>();
 
     @Override
@@ -40,18 +45,37 @@ public class listingsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listings_page);
 
-        Bundle categoryInfo = getIntent().getExtras();
-        category = categoryInfo.getString("category");
-        db2 = db2.child(category);
+        //Bundle categoryInfo = getIntent().getExtras();
+        //category = categoryInfo.getString("category");
+        //db2 = db2.child(category);
+
+        Spinner categorySpinner = findViewById(R.id.category_spinner);
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(arrayAdapter);
+        category = categorySpinner.getSelectedItem().toString();
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                category = categorySpinner.getSelectedItem().toString();
+                db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category").child(category);
+                data.clear();
+                retrieveFromFirebase();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
-
-                } else {
+                if (!connected && data.size() == 0) {
                     Toast.makeText(listingsPage.this, "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -125,9 +149,9 @@ public class listingsPage extends AppCompatActivity {
     }
 
     private void retrieveFromFirebase() { //Retrieves data from Firebase
-        listing_adapter adapter = recyclerViewStarter();
-
-        if (category.isEmpty()) {
+        recyclerViewStarter();
+        Log.e("category", category);
+        if (category.equals("All listings")) {
             db.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -192,6 +216,10 @@ public class listingsPage extends AppCompatActivity {
                             }
                         }
                     }
+
+                    else {
+                        Toast.makeText(listingsPage.this, "No listings here!", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
@@ -202,9 +230,9 @@ public class listingsPage extends AppCompatActivity {
         }
     }
 
-    private listing_adapter recyclerViewStarter() { //Starts recyclerview
+    private void recyclerViewStarter() { //Starts recyclerview
         RecyclerView listingRecycler = findViewById(R.id.listing_recycler);
-        listing_adapter adapter = new listing_adapter(data);
+        adapter = new listing_adapter(data);
 
         SharedPreferences sharedPreferences = listingsPage.this.getSharedPreferences("Cashopee", MODE_PRIVATE);
 
@@ -225,7 +253,5 @@ public class listingsPage extends AppCompatActivity {
                 listingRecycler.setAdapter(adapter);
                 break;
         }
-
-        return adapter;
     }
 }

@@ -85,12 +85,17 @@ import java.util.concurrent.CountDownLatch;
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
-                    String thumbnailurl = result.child("tURLs").child("0").getValue(String.class);
+                    long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                    ArrayList<String> tURLs = new ArrayList<>();
+                    for (int i = 0; i < thumbnailurlsize; i++) {
+                        tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                    }
                     String sellerid = result.child("sid").getValue(String.class);
                     String sellerprofilepicurl = result.child("sppu").getValue(String.class);
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String category = result.child("category").getValue(String.class);
                     String desc = result.child("description").getValue(String.class);
                     String location = result.child("location").getValue(String.class);
                     Boolean delivery = result.child("delivery").getValue(Boolean.class);
@@ -108,7 +113,7 @@ import java.util.concurrent.CountDownLatch;
                         Log.e("Timestamp",TimeStamp.toString());
 
                         if(TimeStamp.toString().equals(ts)) {
-                            individualListingObject l = new individualListingObject(listingid, title, thumbnailurl, sellerid, sellerprofilepicurl, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
+                            individualListingObject l = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, category, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
                             llist.add(l);
                         }
 
@@ -240,7 +245,7 @@ import java.util.concurrent.CountDownLatch;
 //                    .into(awt2);
             views.setTextViewText(R.id.widgetprice,"$" + llist.get(i).price);
             try {
-                URL url = new URL(llist.get(i).tURL);
+                URL url = new URL(llist.get(i).gettURLs().get(0));
                 Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
                 views.setImageViewBitmap(R.id.cashshope_widget_picture,image);

@@ -360,17 +360,16 @@ public class individual_listing extends AppCompatActivity {
 
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
-                    //String thumbnailurl = result.child("tURL").getValue(String.class);
                     long thumbnailurlsize = result.child("tURLs").getChildrenCount();
                     ArrayList<String> tURLs = new ArrayList<>();
                     for (int i = 0; i < thumbnailurlsize; i++) {
                         tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
                     }
                     String sellerid = result.child("sid").getValue(String.class);
-                    //String sellerprofilepicurl = result.child("sppu").getValue(String.class);
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String category = result.child("category").getValue(String.class);
                     String desc = result.child("description").getValue(String.class);
                     String location = result.child("location").getValue(String.class);
                     Boolean delivery = result.child("delivery").getValue(Boolean.class);
@@ -379,7 +378,7 @@ public class individual_listing extends AppCompatActivity {
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
                     String TimeStamp = result.child("timeStamp").getValue(String.class);
 
-                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, category, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
 
                     TextView titleholder;
                     TextView priceholder;

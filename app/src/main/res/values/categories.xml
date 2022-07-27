@@ -13,5 +13,6 @@
         <item>Sports</item>
         <item>Pets</item>
         <item>Free items</item>
+        <item>Others</item>
     </string-array>
 </resources>

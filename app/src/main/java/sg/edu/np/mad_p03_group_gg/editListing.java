@@ -21,12 +21,14 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -123,7 +125,6 @@ public class editListing extends AppCompatActivity {
 
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
-                    //String thumbnailurl = result.child("tURL").getValue(String.class);
                     long thumbnailurlsize = result.child("tURLs").getChildrenCount();
                     ArrayList<String> tURLs = new ArrayList<>();
                     for (int i = 0; i < thumbnailurlsize; i++) {
@@ -134,6 +135,7 @@ public class editListing extends AppCompatActivity {
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String category = result.child("category").getValue(String.class);
                     String desc = result.child("description").getValue(String.class);
                     String location = result.child("location").getValue(String.class);
                     Boolean delivery = result.child("delivery").getValue(Boolean.class);
@@ -142,7 +144,7 @@ public class editListing extends AppCompatActivity {
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
                     String postedTime = result.child("ts").getValue(String.class);
 
-                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime, postedTime);
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, category, desc, location, delivery, deliverytype, deliveryprice, deliverytime, postedTime);
 
                     recyclerViewStarter();
                     sID = sellerid;
@@ -150,6 +152,7 @@ public class editListing extends AppCompatActivity {
                     EditText titleholder;
                     EditText priceholder;
                     RadioGroup itemconditionholder;
+                    Spinner categorySpinner;
                     EditText descriptionholder;
                     Switch meettoggle;
                     EditText locationholder;
@@ -161,6 +164,7 @@ public class editListing extends AppCompatActivity {
                     titleholder = findViewById(R.id.input_title);
                     priceholder = findViewById(R.id.input_price);
                     itemconditionholder = findViewById(R.id.input_condition);
+                    categorySpinner = findViewById(R.id.category_spinner);
                     descriptionholder = findViewById(R.id.input_description);
                     meettoggle = findViewById(R.id.meet_toggle);
                     locationholder = findViewById(R.id.input_address);
@@ -169,9 +173,14 @@ public class editListing extends AppCompatActivity {
                     deliverypriceholder = findViewById(R.id.input_deliveryprice);
                     deliverytimeholder = findViewById(R.id.input_deliverytime);
 
+                    ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(editListing.this, R.array.newlisting_categories, android.R.layout.simple_spinner_item);
+                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    categorySpinner.setAdapter(arrayAdapter);
+
                     titleholder.setText(listing.getTitle());
                     priceholder.setText(listing.getPrice());
                     descriptionholder.setText(listing.getDescription());
+                    categorySpinner.setSelection(arrayAdapter.getPosition(category));
                     locationholder.setText(listing.getLocation());
                     deliveryoptionholder.setText(listing.getDeliveryType());
                     deliverypriceholder.setText(listing.getDeliveryPrice());
@@ -581,6 +590,7 @@ public class editListing extends AppCompatActivity {
         RadioGroup condition_input = findViewById(R.id.input_condition);
         RadioButton condition_input_new = findViewById(R.id.input_condition_new);
         RadioButton condition_input_used = findViewById(R.id.input_condition_used);
+        Spinner categorySpinner = findViewById(R.id.category_spinner);
         EditText desc_input = findViewById(R.id.input_description);
         EditText address_input = findViewById(R.id.input_address);
         EditText deltype_input = findViewById(R.id.input_deliverytype);
@@ -604,6 +614,7 @@ public class editListing extends AppCompatActivity {
             condition = null;
         }
 
+        String category = categorySpinner.getSelectedItem().toString();
         String desc = desc_input.getText().toString();
         String address = address_input.getText().toString();
         String deltype = deltype_input.getText().toString();
@@ -624,15 +635,25 @@ public class editListing extends AppCompatActivity {
 
         String postedTime = listing.getTimeStamp();
 
+        ArrayList<String> categories = new ArrayList<>();
+        categories.add(listing.getCategory());
+        categories.add(category);
+
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        listing = new individualListingObject(pID, title, imageURLs, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime, postedTime);
-        writeToFirebase(listing);
+        listing = new individualListingObject(pID, title, imageURLs, sID, condition, price, false, category, desc, address, delivery, deltype, delprice, deltime, postedTime);
+        writeToFirebase(listing, categories);
     }
 
-    private void writeToFirebase(individualListingObject listing) {
+    private void writeToFirebase(individualListingObject listing, ArrayList<String> compareCategories) {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
+
+        if (!compareCategories.get(0).equals(compareCategories.get(1))) {
+            DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category");
+            db2.child(compareCategories.get(0)).child(pID).removeValue();
+            db2.child(compareCategories.get(1)).child(pID).setValue("");
+        }
 
         db.child(pID).setValue(listing);
 

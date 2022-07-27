@@ -8,10 +8,8 @@ import java.util.List;
 public class listingObject {
     protected String lID; //listing ID in DB
     protected String title; //listing title
-    protected String tURL; //thumbnail URL
     protected ArrayList tURLs; //listing images URLs
     protected String sID; //seller ID
-    protected String sPPU; //seller profile picture
     protected String iC; //item condition
     protected String price; //item price
     protected Boolean reserved; //is item reserved?
@@ -22,22 +20,6 @@ public class listingObject {
     public listingObject() {
 
     }
-
-    public listingObject(String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String ts) {
-        setlID(lID);
-        setTitle(t);
-        settURL(turl);
-        setSID(sid);
-        setSPPU(sppu);
-        setiC(ic);
-        setPrice(p);
-        setReserved(r);
-        //ISAAC START
-        setTimeStamp(ts);
-
-
-    }
-
 
     public listingObject(String lID, String t, ArrayList<String> tURLs, String sid, String ic, String p, Boolean r, String ts) {
         setlID(lID);
@@ -74,14 +56,6 @@ public class listingObject {
         return title;
     }
 
-    public void settURL(String s) {
-        tURL = s;
-    }
-
-    public String gettURL() {
-        return tURL;
-    }
-
     public void settURLs(ArrayList<String> s) {
         tURLs = s;
     }
@@ -96,14 +70,6 @@ public class listingObject {
 
     public String getSID() {
         return sID;
-    }
-
-    public void setSPPU(String s) {
-        sPPU = s;
-    }
-
-    public String getSPPU() {
-        return sPPU;
     }
 
     public void setiC(String s) {

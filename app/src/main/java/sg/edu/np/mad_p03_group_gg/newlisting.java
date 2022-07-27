@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -22,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -53,6 +55,7 @@ import com.stripe.android.Stripe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.Date;
 
 import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
@@ -412,6 +415,7 @@ public class newlisting extends AppCompatActivity {
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
+        Spinner categorySpinner = findViewById(R.id.category_spinner);
         EditText desc_input = findViewById(R.id.input_description);
         EditText address_input = findViewById(R.id.input_address);
         EditText deltype_input = findViewById(R.id.input_deliverytype);
@@ -429,6 +433,7 @@ public class newlisting extends AppCompatActivity {
         Boolean image_selected = false;
         Boolean title_filled = false;
         Boolean price_filled = false;
+        Boolean category_selected = false;
         Boolean desc_filled = false;
         Boolean itemcondition_selected = false;
         Boolean meetup_filled = false;
@@ -439,6 +444,10 @@ public class newlisting extends AppCompatActivity {
 
         if (imageArray.size() > 0) {
             image_selected = true;
+        }
+
+        if (!categorySpinner.getSelectedItem().toString().equals("Select category")) {
+            category_selected = true;
         }
 
         if (!meeting_toggle.isChecked()) {
@@ -488,10 +497,7 @@ public class newlisting extends AppCompatActivity {
             isPaynowFilled = true;
         }*/
 
-        if (image_selected == true && title_filled == true && price_filled == true &&
-                itemcondition_selected == true && desc_filled == true && meetup_filled == true &&
-                deliverytype_filled == true && deliveryprice_filled == true &&
-                deliverytime_filled == true) {
+        if (image_selected == true && title_filled == true && price_filled == true && itemcondition_selected == true && category_selected == true && desc_filled == true && meetup_filled == true && deliverytype_filled == true && deliveryprice_filled == true && deliverytime_filled == true) {
 
             if (stripeSwitch.isChecked() == true)
             {
@@ -620,6 +626,7 @@ public class newlisting extends AppCompatActivity {
         RadioGroup condition_input = findViewById(R.id.input_condition);
         RadioButton condition_input_new = findViewById(R.id.input_condition_new);
         RadioButton condition_input_used = findViewById(R.id.input_condition_used);
+        Spinner categorySpinner = findViewById(R.id.category_spinner);
         EditText desc_input = findViewById(R.id.input_description);
         EditText address_input = findViewById(R.id.input_address);
         EditText deltype_input = findViewById(R.id.input_deliverytype);
@@ -643,7 +650,7 @@ public class newlisting extends AppCompatActivity {
             condition = null;
         }
 
-
+        String category = categorySpinner.getSelectedItem().toString();
         String desc = desc_input.getText().toString();
         String address = address_input.getText().toString();
         String deltype = deltype_input.getText().toString();
@@ -671,7 +678,7 @@ public class newlisting extends AppCompatActivity {
 
         //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
-        individualListingObject listing = new individualListingObject(pID, title, imageURLs, sID, condition, price, false, desc, address, delivery, deltype, delprice, deltime, TimeStamp);
+        individualListingObject listing = new individualListingObject(pID, title, imageURLs, sID, condition, price, false, category, desc, address, delivery, deltype, delprice, deltime, TimeStamp);
         writeToFirebase(listing);
     }
 
@@ -679,11 +686,13 @@ public class newlisting extends AppCompatActivity {
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
         DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("users").child(sID).child("listings");
-
+        DatabaseReference db3 = FirebaseDatabase.getInstance(dblink).getReference().child("category").child(listing.getCategory());
 
         db.child(pID).setValue(listing);
 
         db2.child(pID).setValue("");
+
+        db3.child(pID).setValue("");
 
         Bundle listingInfo = new Bundle();
         listingInfo.putString("pID", pID);
