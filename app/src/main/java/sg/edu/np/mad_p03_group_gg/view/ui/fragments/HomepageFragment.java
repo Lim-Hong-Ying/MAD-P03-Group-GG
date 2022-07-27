@@ -57,6 +57,7 @@ import sg.edu.np.mad_p03_group_gg.Event;
 import sg.edu.np.mad_p03_group_gg.EventsPage;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
+import sg.edu.np.mad_p03_group_gg.categoryPage;
 import sg.edu.np.mad_p03_group_gg.individual_listing;
 import sg.edu.np.mad_p03_group_gg.listingObject;
 import sg.edu.np.mad_p03_group_gg.listing_adapter;
@@ -184,8 +185,8 @@ public class HomepageFragment extends Fragment {
         listingsCardView.setOnClickListener(v -> {
             // When clicked, will bring to listings page which displays all listings
             //replaceFragment(new listingFragment());
-            Intent listingsPage = new Intent(this.getContext(), listingsPage.class);
-            startActivity(listingsPage);
+            Intent categoryPage = new Intent(this.getContext(), categoryPage.class);
+            startActivity(categoryPage);
         });
 
         chatButtonView.setOnClickListener(v -> {

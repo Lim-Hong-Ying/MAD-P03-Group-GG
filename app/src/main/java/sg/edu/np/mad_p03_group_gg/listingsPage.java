@@ -9,12 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,12 +28,21 @@ import java.util.ArrayList;
 
 public class listingsPage extends AppCompatActivity {
 
+    String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
+    DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
+    DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category");
+    String category = null;
+
     ArrayList<listingObject> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listings_page);
+
+        Bundle categoryInfo = getIntent().getExtras();
+        category = categoryInfo.getString("category");
+        db2 = db2.child(category);
 
         DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
@@ -113,37 +125,81 @@ public class listingsPage extends AppCompatActivity {
     }
 
     private void retrieveFromFirebase() { //Retrieves data from Firebase
-        String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
-        DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
         listing_adapter adapter = recyclerViewStarter();
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot datasnap : snapshot.getChildren()) {
-                    String listingid = datasnap.getKey();
-                    String titles = datasnap.child("title").getValue(String.class);
-                    long thumbnailurlsize = datasnap.child("tURLs").getChildrenCount();
-                    ArrayList<String> tURLs = new ArrayList<>();
-                    for (int i = 0; i < thumbnailurlsize; i++) {
-                        tURLs.add(datasnap.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+
+        if (category.isEmpty()) {
+            db.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot datasnap : snapshot.getChildren()) {
+                        String listingid = datasnap.getKey();
+                        String titles = datasnap.child("title").getValue(String.class);
+                        long thumbnailurlsize = datasnap.child("tURLs").getChildrenCount();
+                        ArrayList<String> tURLs = new ArrayList<>();
+                        for (int i = 0; i < thumbnailurlsize; i++) {
+                            tURLs.add(datasnap.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                        }
+                        String sellerid = datasnap.child("sid").getValue(String.class);
+                        String itemcondition = datasnap.child("iC").getValue(String.class);
+                        String price = datasnap.child("price").getValue(String.class);
+                        Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
+                        String timeStamp = datasnap.child("timeStamp").getValue(String.class);
+
+                        listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, timeStamp);
+                        data.add(listing);
+                        adapter.notifyDataSetChanged();
                     }
-                    String sellerid = datasnap.child("sid").getValue(String.class);
-                    String itemcondition = datasnap.child("iC").getValue(String.class);
-                    String price = datasnap.child("price").getValue(String.class);
-                    Boolean reserved = datasnap.child("reserved").getValue(Boolean.class);
-                    String timeStamp = datasnap.child("timeStamp").getValue(String.class);
-
-                    listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, timeStamp);
-                    data.add(listing);
-                    adapter.notifyDataSetChanged();
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(listingsPage.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(listingsPage.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        else {
+            db2.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.e("snapshot", String.valueOf(snapshot));
+                    if (snapshot.exists()) {
+                        for (DataSnapshot datasnap : snapshot.getChildren()) {
+                            String listingid = datasnap.getKey();
+                            if (!listingid.isEmpty()) {
+                                DatabaseReference individualListing = db.child(listingid);
+                                individualListing.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        DataSnapshot result = task.getResult();
+                                        String titles = String.valueOf(result.child("title").getValue(String.class));
+                                        long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                                        ArrayList<String> tURLs = new ArrayList<>();
+                                        for (int i = 0; i < thumbnailurlsize; i++) {
+                                            tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                                        }
+                                        String sellerid = String.valueOf(result.child("sid").getValue(String.class));
+                                        String itemcondition = String.valueOf(result.child("iC").getValue(String.class));
+                                        String price = String.valueOf(result.child("price").getValue(String.class));
+                                        Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                                        String postedTime = result.child("ts").getValue(String.class);
+
+                                        listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, postedTime);
+                                        data.add(listing);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     private listing_adapter recyclerViewStarter() { //Starts recyclerview
