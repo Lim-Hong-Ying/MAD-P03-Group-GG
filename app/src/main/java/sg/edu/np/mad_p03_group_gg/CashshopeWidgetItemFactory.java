@@ -222,6 +222,7 @@ import java.util.concurrent.CountDownLatch;
             Log.e("Test1","getviewat");
             Log.e("ViewListLength",Integer.toString(llist.size()));
             RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.widgetitem);
+            views.removeAllViews(R.id.gridpics);
 
             Log.e("Test1","provider enter");
             Intent fillIntent = new Intent();

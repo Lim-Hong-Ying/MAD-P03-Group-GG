@@ -43,7 +43,7 @@
                 <Button
                     android:id="@+id/refreshbutton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:padding="10dp"
                     android:text="Refresh" />
@@ -51,12 +51,6 @@
 
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars" />
 
         <FrameLayout
             android:layout_width="wrap_content"
