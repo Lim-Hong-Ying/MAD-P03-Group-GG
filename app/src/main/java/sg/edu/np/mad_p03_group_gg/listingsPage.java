@@ -45,30 +45,37 @@ public class listingsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listings_page);
 
-        //Bundle categoryInfo = getIntent().getExtras();
-        //category = categoryInfo.getString("category");
-        //db2 = db2.child(category);
-
         Spinner categorySpinner = findViewById(R.id.category_spinner);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(arrayAdapter);
-        category = categorySpinner.getSelectedItem().toString();
 
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                category = categorySpinner.getSelectedItem().toString();
-                db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category").child(category);
-                data.clear();
-                retrieveFromFirebase();
-            }
+        Bundle categoryInfo = getIntent().getExtras();
+        if (categoryInfo != null) {
+            String passedCategory = categoryInfo.getString("category");
+            category = passedCategory;
+            db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category").child(category);
+            categorySpinner.setSelection(arrayAdapter.getPosition(category));
+        }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        else {
+            category = categorySpinner.getSelectedItem().toString();
 
-            }
-        });
+            categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    category = categorySpinner.getSelectedItem().toString();
+                    db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category").child(category);
+                    data.clear();
+                    retrieveFromFirebase();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
 
         DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
