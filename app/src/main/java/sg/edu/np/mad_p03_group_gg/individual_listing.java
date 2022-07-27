@@ -593,11 +593,16 @@ public class individual_listing extends AppCompatActivity {
                         individualdb.getReference().child("users").child(uID).child("listings").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                finish();
-                                Toast.makeText(individual_listing.this, "Deleted listing!", Toast.LENGTH_SHORT).show();
-                                Intent returnHome = new Intent(individual_listing.this, MainActivity.class);
-                                returnHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(returnHome);
+                                individualdb.getReference().child("category").child(listing.getCategory()).child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        finish();
+                                        Toast.makeText(individual_listing.this, "Deleted listing!", Toast.LENGTH_SHORT).show();
+                                        Intent returnHome = new Intent(individual_listing.this, MainActivity.class);
+                                        returnHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(returnHome);
+                                    }
+                                });
                             }
                         });
                     }

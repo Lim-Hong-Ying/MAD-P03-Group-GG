@@ -487,54 +487,60 @@ public class editListing extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null && String.valueOf(user.getUid()).equals(sID)) {
             // User is the seller and signed in
-            for (int i = 0; i < imageArray.size(); i++) {
-                try {
-                    StorageReference image = storage.child(pID + "/" + i);
-                    UploadTask uploadTask = image.putFile(imageArray.get(i));
+            if (imageArray.size() != imageURLs.size()) {
+                for (int i = 0; i < imageArray.size(); i++) {
+                    try {
+                        StorageReference image = storage.child(pID + "/" + i);
+                        UploadTask uploadTask = image.putFile(imageArray.get(i));
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setCancelable(false);
-                    builder.setView(R.layout.loading_dialog);
-                    AlertDialog dialog = builder.create();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setCancelable(false);
+                        builder.setView(R.layout.loading_dialog);
+                        AlertDialog dialog = builder.create();
 
-                    uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                            dialog.show();
-                            int progress = (int) ((100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount());
-                            LinearProgressIndicator loading_bar = findViewById(R.id.loading_bar);
-                            //loading_bar.setProgressCompat(progress, true);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
+                        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                dialog.show();
+                                int progress = (int) ((100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount());
+                                LinearProgressIndicator loading_bar = findViewById(R.id.loading_bar);
+                                //loading_bar.setProgressCompat(progress, true);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
 
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            if (taskSnapshot.getMetadata() != null) {
-                                if (taskSnapshot.getMetadata().getReference() != null) {
-                                    Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
-                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            String imageUrl = uri.toString();
-                                            imageURLs.add(imageUrl);
-                                            Log.e("added url to array", imageUrl);
-                                            uploadStatusCheck();
-                                            dialog.dismiss();
-                                        }
-                                    });
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                if (taskSnapshot.getMetadata() != null) {
+                                    if (taskSnapshot.getMetadata().getReference() != null) {
+                                        Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                String imageUrl = uri.toString();
+                                                imageURLs.add(imageUrl);
+                                                Log.e("added url to array", imageUrl);
+                                                uploadStatusCheck();
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                    }
                                 }
                             }
-                        }
-                    });
-                }
+                        });
+                    }
 
-                catch (Exception e) {
-                    uploadStatusCheck();
+                    catch (Exception e) {
+                        uploadStatusCheck();
+                    }
                 }
+            }
+
+            else {
+                createListingObject();
             }
 
             /*ImageView selectimage = findViewById(R.id.choose_image);
