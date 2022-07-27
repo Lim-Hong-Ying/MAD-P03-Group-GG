@@ -7,12 +7,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,7 +40,13 @@ import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
+import sg.edu.np.mad_p03_group_gg.chat.Chat;
+
 public class userProfile extends AppCompatActivity {
+
+    String chatKey = null;
+    private User seller;
+    private User mainUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +67,83 @@ public class userProfile extends AppCompatActivity {
 
         retrieveProfileFromFirebase(uid);
         retrieveFromFirebase(data, uid);
+
+        //############## WILLIAM CHAT SECTION ##################
+
+        // Get direct chat button from xml
+        Button directChat = findViewById(R.id.send_message);
+
+        // Get database reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app");
+        DatabaseReference databaseReference = database.getReference();
+
+        // Get current user id
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = auth.getCurrentUser();
+        String currentUserID = fbUser.getUid();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get chatkey
+                for (DataSnapshot dataSnapshotCurrentChat : snapshot.child("chat").getChildren()){
+                    // Get id number of each user
+                    String getUserOne = dataSnapshotCurrentChat.child("user1").getValue(String.class);
+                    String getUserTwo = dataSnapshotCurrentChat.child("user2").getValue(String.class);
+
+                    // If id numbers are the same as main user and selected user's id number
+                    if((TextUtils.equals(getUserOne,uid) && TextUtils.equals(getUserTwo,currentUserID))
+                            || (TextUtils.equals(getUserOne,currentUserID) && TextUtils.equals(getUserTwo, uid))){
+                        chatKey = dataSnapshotCurrentChat.getKey();
+                    }
+                }
+
+                // Create seller and main user Object
+                for (DataSnapshot dataSnapshotUser : snapshot.child("users").getChildren()){
+                    // If id matches main user ID Create main user object
+                    if (TextUtils.equals(dataSnapshotUser.getKey(),currentUserID)){
+                        mainUser = new User (dataSnapshotUser.child("name").getValue(String.class)
+                                ,dataSnapshotUser.child("email").getValue(String.class),currentUserID);
+                    }
+                    // If id matches main SELLER ID Create seller user object
+                    if (TextUtils.equals(dataSnapshotUser.getKey(),uid)){
+                        seller = new User (dataSnapshotUser.child("name").getValue(String.class)
+                                ,dataSnapshotUser.child("email").getValue(String.class)
+                                ,dataSnapshotUser.child("phonenumber").getValue(String.class)
+                                ,dataSnapshotUser.child("userprofilepic").getValue(String.class)
+                                ,uid);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read from db
+            }
+        });
+
+        // Send main user and seller info to chat
+        directChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(userProfile.this, Chat.class);
+                // Send selected user's data to chat activity
+                intent.putExtra("name",seller.getName());
+                intent.putExtra("profilePic",seller.getUserprofilepic());
+                intent.putExtra("chatKey", chatKey);
+                intent.putExtra("id", uid);
+                // Send main user data to chat activity
+                intent.putExtra("mainUser", (Parcelable) mainUser);
+
+                // Add seller to friend list
+                databaseReference.child("selectedChatUsers").child(mainUser.getId())
+                        .child(uid).setValue("");
+
+                // Start chat activity
+                userProfile.this.startActivity(intent);
+            }
+        });
+        // ############# END WILLIAM SECTION ###############
     }
 
     private void retrieveProfileFromFirebase(String uid) {
@@ -103,23 +191,23 @@ public class userProfile extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                             DataSnapshot result = task.getResult();
-                            String titles = String.valueOf(result.child("title").getValue(String.class));
-                            long thumbnailurlsize = result.child("tURLs").getChildrenCount();
-                            ArrayList<String> tURLs = new ArrayList<>();
-                            for (int i = 0; i < thumbnailurlsize; i++) {
-                                tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
-                            }
-                            //String thumbnailurl = String.valueOf(result.child("tURL").getValue(String.class));
-                            String sellerid = String.valueOf(result.child("sid").getValue(String.class));
-                            String sellerprofilepicurl = String.valueOf(result.child("sppu").getValue(String.class));
-                            String itemcondition = String.valueOf(result.child("iC").getValue(String.class));
-                            String price = String.valueOf(result.child("price").getValue(String.class));
-                            Boolean reserved = result.child("reserved").getValue(Boolean.class);
-                            String postedTime = result.child("ts").getValue(String.class);
+                            if (result.exists()) {
+                                String titles = String.valueOf(result.child("title").getValue(String.class));
+                                long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                                ArrayList<String> tURLs = new ArrayList<>();
+                                for (int i = 0; i < thumbnailurlsize; i++) {
+                                    tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                                }
+                                String sellerid = String.valueOf(result.child("sid").getValue(String.class));
+                                String itemcondition = String.valueOf(result.child("iC").getValue(String.class));
+                                String price = String.valueOf(result.child("price").getValue(String.class));
+                                Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                                String postedTime = result.child("ts").getValue(String.class);
 
-                            listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, postedTime);
-                            data.add(listing);
-                            adapter.notifyDataSetChanged();
+                                listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, postedTime);
+                                data.add(listing);
+                                adapter.notifyDataSetChanged();
+                            }
                         }
                     });
                 }

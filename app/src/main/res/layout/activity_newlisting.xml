@@ -160,53 +160,23 @@
 
             </RadioGroup>
 
-            <Switch
-                android:id="@+id/stripeSwitch"
+            <TextView
+                android:id="@+id/category_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:minHeight="48dp"
-                android:text="Stripe"
+                android:text="Category"
+                android:textColor="#000000"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <Switch
-                android:id="@+id/cardanoSwitch"
+            <Spinner
+                android:id="@+id/category_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:minHeight="48dp"
-                android:text="Cardano"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:text="Paynow"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <EditText
-                android:id="@+id/paynowId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:ems="10"
-                android:hint="Paynow Phone Number"
-                android:inputType="number"
-                android:maxLength="8"
-                android:minHeight="48dp"
-                android:visibility="gone" />
+                android:layout_marginRight="8dp" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -296,6 +266,54 @@
                 android:fontFamily="@font/roboto"
                 android:hint="Estimated time (days)"
                 android:inputType="number" />
+
+            <Switch
+                android:id="@+id/stripeSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:minHeight="48dp"
+                android:text="Stripe"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/cardanoSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:minHeight="48dp"
+                android:text="Cardano"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="Paynow"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/paynowId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:ems="10"
+                android:hint="Paynow Phone Number"
+                android:inputType="number"
+                android:maxLength="8"
+                android:minHeight="48dp"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

@@ -29,7 +29,7 @@
         <entry key="app/src/main/res/layout/activity_individual_listing.xml" value="0.3458333333333333" />
         <entry key="app/src/main/res/layout/activity_listings.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_listings2.xml" value="0.1734375" />
-        <entry key="app/src/main/res/layout/activity_listings_page.xml" value="0.1734375" />
+        <entry key="app/src/main/res/layout/activity_listings_page.xml" value="0.4" />
         <entry key="app/src/main/res/layout/activity_loginpage.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_month_view.xml" value="0.1" />
@@ -37,6 +37,7 @@
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.24048913043478262" />
         <entry key="app/src/main/res/layout/activity_signupactivity.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_splash_page.xml" value="0.13333333333333333" />
+        <entry key="app/src/main/res/layout/activity_user_profile.xml" value="0.17528858486532706" />
         <entry key="app/src/main/res/layout/activity_week_view.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/calendar_cell.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/chat_layout.xml" value="0.19067028985507245" />

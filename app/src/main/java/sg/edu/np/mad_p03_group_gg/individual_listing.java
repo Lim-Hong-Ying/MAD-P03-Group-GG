@@ -360,17 +360,16 @@ public class individual_listing extends AppCompatActivity {
 
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
-                    //String thumbnailurl = result.child("tURL").getValue(String.class);
                     long thumbnailurlsize = result.child("tURLs").getChildrenCount();
                     ArrayList<String> tURLs = new ArrayList<>();
                     for (int i = 0; i < thumbnailurlsize; i++) {
                         tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
                     }
                     String sellerid = result.child("sid").getValue(String.class);
-                    //String sellerprofilepicurl = result.child("sppu").getValue(String.class);
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String category = result.child("category").getValue(String.class);
                     String desc = result.child("description").getValue(String.class);
                     String location = result.child("location").getValue(String.class);
                     Boolean delivery = result.child("delivery").getValue(Boolean.class);
@@ -379,11 +378,16 @@ public class individual_listing extends AppCompatActivity {
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
                     String TimeStamp = result.child("timeStamp").getValue(String.class);
 
-                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
+                    if (category == null) {
+                        category = "Others";
+                    }
+
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, category, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
 
                     TextView titleholder;
                     TextView priceholder;
                     TextView itemconditionholder;
+                    TextView categoryHolder;
                     TextView descriptionholder;
                     TextView locationholder;
                     TextView deliveryoptionholder;
@@ -393,6 +397,7 @@ public class individual_listing extends AppCompatActivity {
                     titleholder = findViewById(R.id.individual_title);
                     priceholder = findViewById(R.id.individual_price);
                     itemconditionholder = findViewById(R.id.individual_itemcondition);
+                    categoryHolder = findViewById(R.id.individual_category);
                     descriptionholder = findViewById(R.id.individual_description);
                     locationholder = findViewById(R.id.individual_salelocation);
                     deliveryoptionholder = findViewById(R.id.individual_deliveryoption);
@@ -403,12 +408,23 @@ public class individual_listing extends AppCompatActivity {
                     individualListingViewPagerAdapter viewPagerAdapter = new individualListingViewPagerAdapter(individual_listing.this, listing.gettURLs());
                     viewPager.setAdapter(viewPagerAdapter);
 
-                    //Picasso.get().load(listing.gettURLs().get(0)).into(holder); //External library to download images
-                    //new ImageDownloader(holder).execute(listing.gettURL());
                     titleholder.setText(listing.getTitle());
                     priceholder.setText("$" + listing.getPrice());
                     itemconditionholder.setText("Condition: " + listing.getiC());
+                    categoryHolder.setText("Category: " + listing.getCategory());
                     descriptionholder.setText(listing.getDescription());
+
+                    String finalCategory = category;
+                    categoryHolder.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Bundle categoryInfo = new Bundle();
+                            categoryInfo.putString("category", finalCategory);
+                            Intent listingsPage = new Intent(individual_listing.this, listingsPage.class);
+                            listingsPage.putExtras(categoryInfo);
+                            individual_listing.this.startActivity(listingsPage);
+                        }
+                    });
 
                     if (!listing.getLocation().isEmpty()) {
                         locationholder.setText("Address: " + listing.getLocation());
