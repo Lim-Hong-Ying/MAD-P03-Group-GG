@@ -104,11 +104,11 @@ Feeling fancy today? Customize your profile!
    - Press the "+" button to add other users to your chat list.
    - Press and hold on a user in your chat list to remove them from your list (you can always add them back).
    - Press the search 🔍 bar to search for any users in your chat list.
-   - Number of unseen messages will be displayed for each chat
+   - Number of unseen messages will be displayed for each chat <br>
    Chat:
    - Type a message and press ➢ button to send
    - Press the "+" button to send a picture from your phone's gallery
-   - Status of the other user will be displayed at the top, below their name
+   - Status of the other user will be displayed at the top, below their name <br>
    Things to note:
    - If you are in any chat page your status would be changed to "online".
    - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.
