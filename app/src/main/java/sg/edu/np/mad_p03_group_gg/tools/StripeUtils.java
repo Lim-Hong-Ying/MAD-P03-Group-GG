@@ -41,6 +41,9 @@ import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 import sg.edu.np.mad_p03_group_gg.view.ui.fragments.User_Profile_Fragment;
 
+/**
+ * Utility class for Stripe related operations to enhance reusability of code.
+ */
 public class StripeUtils {
     private static final String BACKEND_URL = "https://cashshope.japaneast.cloudapp.azure.com/";
     private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -60,8 +63,9 @@ public class StripeUtils {
      */
     public static void onboardUser(StripeDialog stripeDialog, newlisting newlistingActivity,
                              String currentUserId) {
+        // Explicitly specify the task to run on a
+        // UI thread instead of a worker thread
         newlistingActivity.runOnUiThread(() -> {
-            // This is where your UI code goes.
             stripeDialog.startStripeAlertDialog();
         });
 
@@ -101,7 +105,6 @@ public class StripeUtils {
                                         .setValue(stripeAccountId);
 
                                 newlistingActivity.runOnUiThread(() -> {
-                                            // This is where your UI code goes.
                                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                                     CustomTabsIntent customTabsIntent = builder.build();
                                     stripeDialog.dismissDialog();
@@ -180,7 +183,6 @@ public class StripeUtils {
     public static void resumeOnboard(StripeDialog stripeDialog, newlisting newlistingActivity,
                                    String stripeAccountId) {
         newlistingActivity.runOnUiThread(() -> {
-            // This is where your UI code goes.
             stripeDialog.startStripeAlertDialog();
         });
 
@@ -222,7 +224,6 @@ public class StripeUtils {
                                 String url = responseJson.getJSONObject("url").getString("url");
 
                                 newlistingActivity.runOnUiThread(() -> {
-                                    // This is where your UI code goes.
                                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                                     CustomTabsIntent customTabsIntent = builder.build();
                                     stripeDialog.dismissDialog();
@@ -253,21 +254,30 @@ public class StripeUtils {
                         else {
                             String stripeAccountId = task.getResult().child("stripeAccountId")
                                     .getValue(String.class);
+                            // Async Operation: Ensure stripeAccountId has been fully retrieved
                             connectStripeCallback.stripeAccountIdCallback(stripeAccountId);
                         }
                     }
                 });
     }
 
+    /**
+     * Generate a link and redirect onboarded user to Stripe's dashboard page for the user's own
+     * Stripe Express account.
+     *
+     * @param stripeDialog
+     * @param fragmentActivity
+     * @param stripeAccountId
+     */
     public static void createDashboardLink(StripeDialog stripeDialog, FragmentActivity fragmentActivity,
                                            String stripeAccountId)
     {
+        // UI based operations should only be run on the UI thread
         fragmentActivity.runOnUiThread(() -> {
-            // This is where your UI code goes.
             stripeDialog.startStripeAlertDialog();
         });
 
-        // Make request to server's end point to request on account information
+        // Make request to server's end point to request on a link to access the dashboard
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
 
         String json = String.format("{"
@@ -303,8 +313,9 @@ public class StripeUtils {
                             try {
                                 JSONObject responseJson = new JSONObject(body);
                                 String url = responseJson.getString("url");
+
+                                // UI based operations should only be run on the UI thread
                                 fragmentActivity.runOnUiThread(() -> {
-                                    // This is where your UI code goes.
                                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                                     CustomTabsIntent customTabsIntent = builder.build();
                                     stripeDialog.dismissDialog();
@@ -318,6 +329,16 @@ public class StripeUtils {
                 });
     }
 
+    /**
+     * To confirm a Payment Intent, which essentially means that the buyer confirms the payment
+     * on a purchase.
+     *
+     * @param params
+     * @param stripeDialog
+     * @param paymentIntentClientSecret
+     * @param paymentLauncher
+     * @param context
+     */
     public static void confirmPayment(PaymentMethodCreateParams params, StripeDialog stripeDialog,
                                       String paymentIntentClientSecret, PaymentLauncher paymentLauncher,
                                       Context context)

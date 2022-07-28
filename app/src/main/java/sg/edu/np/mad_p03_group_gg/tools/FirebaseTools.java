@@ -30,6 +30,9 @@ import sg.edu.np.mad_p03_group_gg.individualListingObject;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.Callback;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.paymentMethodCallback;
 
+/**
+ * Utility class for Firebase related operations.
+ */
 public  class FirebaseTools {
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");

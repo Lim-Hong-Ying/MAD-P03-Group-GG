@@ -72,6 +72,7 @@ import sg.edu.np.mad_p03_group_gg.loginpage;
 import sg.edu.np.mad_p03_group_gg.changeaccdetails;
 import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
 import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
 import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 
@@ -369,7 +370,9 @@ public class User_Profile_Fragment extends Fragment {
             Toast.makeText(getContext(),"Something went wrong, please check your internet collection",Toast.LENGTH_SHORT).show();
         }
 
+        // ========================= Kai Zhe Stripe Section ================================
         Button stripeDashboardButton = view.findViewById(R.id.stripeDashboardButton);
+        stripeDashboardButton.setClickable(false);
 
         // Get current user id
         auth = FirebaseAuth.getInstance();
@@ -381,12 +384,27 @@ public class User_Profile_Fragment extends Fragment {
             public void stripeAccountIdCallback(String stripeAccountId) {
                 if (stripeAccountId != null)
                 {
-                    stripeDashboardButton.setOnClickListener(new View.OnClickListener() {
+                    // Check if fully onboarded
+                    StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
                         @Override
-                        public void onClick(View view) {
-                            StripeUtils.createDashboardLink(stripeDialog,
-                                    User_Profile_Fragment.this.getActivity(),
-                                    stripeAccountId);
+                        public void isOnboardCallback(Boolean isOnboard) {
+                            if (isOnboard)
+                            {
+                                stripeDashboardButton.setClickable(true);
+
+                                stripeDashboardButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        StripeUtils.createDashboardLink(stripeDialog,
+                                                User_Profile_Fragment.this.getActivity(),
+                                                stripeAccountId);
+                                    }
+                                });
+                            }
+                            else {
+                                stripeDashboardButton.setVisibility(View.GONE);
+                            }
+
                         }
                     });
                 }
@@ -396,6 +414,8 @@ public class User_Profile_Fragment extends Fragment {
                 }
             }
         });
+
+        // ========================= End Stripe Section ================================
 
         return view;
     }
