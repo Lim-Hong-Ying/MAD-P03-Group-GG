@@ -1,7 +1,12 @@
 package sg.edu.np.mad_p03_group_gg.models;
 
-import androidx.annotation.Nullable;
-
+/**
+ * Process and parse the buyer's delivery address during a POST request to the backend.
+ *
+ * This will allow a payment intent to be generated with a customer address on Stripe.
+ * The information collected is processed and stored by Stripe, Cashshope does not
+ * store customer's delivery addrss on our own database.
+ */
 public class DeliveryAddress {
     private String line1;
     private String line2;
