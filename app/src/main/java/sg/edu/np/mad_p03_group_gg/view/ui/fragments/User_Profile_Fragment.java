@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.ExceptionPassthroughInputStream;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -221,7 +222,12 @@ public class User_Profile_Fragment extends Fragment {
 
                 }
                 //Get profilepic url and store it in profilePicurl variable
-                profilePicurl = user.getUserprofilepic();
+                try {
+                    profilePicurl = user.getUserprofilepic();
+                }
+                catch(Exception e){
+                    Toast.makeText(getContext(), "Something went wrong loading the profile picture", Toast.LENGTH_SHORT).show();
+                }
                 //Set text in the user profile page
                 Email.setText(user.getEmail().toString());
                 Phonenumber.setText(user.getPhonenumber().toString());

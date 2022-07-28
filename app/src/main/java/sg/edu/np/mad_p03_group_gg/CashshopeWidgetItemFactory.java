@@ -53,7 +53,7 @@ import java.util.concurrent.CountDownLatch;
         private CountDownLatch finishfindingitem = new CountDownLatch(1);
     private CountDownLatch finishfindingitem1 = new CountDownLatch(1);
     private CountDownLatch FindItems = new CountDownLatch(1);
-
+    private CountDownLatch Finishlaod2 = new CountDownLatch(1);
 
         private Target target;
         CashshopeWidgetItemFactory(Context context, Intent intent){
@@ -255,16 +255,16 @@ import java.util.concurrent.CountDownLatch;
 //                    .asBitmap()
 //                    .load(llist.get(i).tURL)
 //                    .into(awt2);
-            views.setTextViewText(R.id.widgetprice,"$" + llist.get(i).price);
-            try {
-                URL url = new URL(llist.get(i).gettURLs().get(0));
-                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
-                views.setImageViewBitmap(R.id.cashshope_widget_picture,image);
-                //Log.e("Test",Integer.toString(llist.size()));
-            } catch(IOException e) {
-                Log.e("No Image", "No Image found/something went wrong");
-            }
+//            views.setTextViewText(R.id.widgetprice,"$" + llist.get(i).price);
+//            try {
+//                URL url = new URL(llist.get(i).gettURLs().get(0));
+//                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//
+//                views.setImageViewBitmap(R.id.cashshope_widget_picture,image);
+//                //Log.e("Test",Integer.toString(llist.size()));
+//            } catch(IOException e) {
+//                Log.e("No Image", "No Image found/something went wrong");
+//            }
 //            target=new Target() {
 //                @Override
 //                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -287,6 +287,14 @@ import java.util.concurrent.CountDownLatch;
 //                    .load(llist.get(i).tURL)
 //                    .into(views, R.id.cashshope_widget_picture, new int[] {appWidgetId});
 //            });
+            try {
+
+                Bitmap b = Picasso.get().load(llist.get(i).gettURLs().get(0)).resize(100,100).get();
+
+                views.setImageViewBitmap(R.id.cashshope_widget_picture, b);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
 
