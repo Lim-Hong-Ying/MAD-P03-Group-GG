@@ -30,7 +30,6 @@ import sg.edu.np.mad_p03_group_gg.tools.interfaces.paymentMethodCallback;
 public class PaymentMethodActivity extends AppCompatActivity {
     private int selectedPaymentMethodId;
     private FirebaseAuth auth;
-    private String userPaymentMethod;
     private String currentUserId;
     private RadioButton selectedRadioButton;
 
@@ -51,42 +50,10 @@ public class PaymentMethodActivity extends AppCompatActivity {
         Button confirmButton = findViewById(R.id.confirmButton);
 
         RadioButton stripeRadioButton = findViewById(R.id.cardPayment);
-        RadioButton paynowButton = findViewById(R.id.paynowPayment);
-        RadioButton cryptoButton = findViewById(R.id.cryptoPayment);
 
         closeButton.setOnClickListener(view -> finish());
 
-        // ======================= Get PaymentMethod from Firebase =======================
-        // Get current user id
-        auth = FirebaseAuth.getInstance();
-        FirebaseUser fbUser = auth.getCurrentUser();
-        currentUserId = fbUser.getUid();
-
-        FirebaseTools.getCurrentUserPaymentMethod(currentUserId, getApplicationContext(),
-                new paymentMethodCallback() {
-                    @Override
-                    public void userPaymentMethodCallBack(String paymentMethod) {
-                        userPaymentMethod = paymentMethod;
-                    }
-                });
-
-        if (userPaymentMethod == null)
-        {
-            // Set paynow as default if user did not choose payment method
-            paynowButton.setChecked(true);
-        }
-        else if (userPaymentMethod == "Card")
-        {
-            stripeRadioButton.setChecked(true);
-        }
-        else if (userPaymentMethod == "Paynow")
-        {
-            paynowButton.setChecked(true);
-        }
-        else if (userPaymentMethod == "Cryptocurrency")
-        {
-            cryptoButton.setChecked(true);
-        }
+        stripeRadioButton.setChecked(true);
 
         paymentMethodRadios.setOnCheckedChangeListener((group, checkedId) -> {
             selectedPaymentMethodId = paymentMethodRadios.getCheckedItemId();
@@ -118,7 +85,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
                 RadioButton selectedRadioButton = findViewById(selectedPaymentMethodId);
 
-                if (selectedRadioButton.getText().equals("Card"))
+                if (stripeRadioButton.isChecked())
                 {
                     PaymentMethodCreateParams params = cardInputWidget.getPaymentMethodCreateParams();
                     if (params != null) {
@@ -135,11 +102,12 @@ public class PaymentMethodActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT);
                     }
                 }
-                else {
-                    intent.putExtra("paymentMethod", selectedRadioButton.getText());
-                    setResult(RESULT_OK, intent);
-                    finish();
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Please select a payment method.",
+                            Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
     }

@@ -24,10 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.provider.ContactsContract;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -44,8 +41,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -57,15 +52,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -77,9 +68,12 @@ import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
 import sg.edu.np.mad_p03_group_gg.deleteaccount;
 import sg.edu.np.mad_p03_group_gg.listingObject;
-import sg.edu.np.mad_p03_group_gg.listing_viewholder;
 import sg.edu.np.mad_p03_group_gg.loginpage;
 import sg.edu.np.mad_p03_group_gg.changeaccdetails;
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
+import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -103,8 +97,7 @@ public class User_Profile_Fragment extends Fragment {
     private FirebaseUser fbUser;
     private List<listingObject> llist ;
     private int nooflisiting;
-
-
+    private String userId;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -148,17 +141,12 @@ public class User_Profile_Fragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         getParentFragmentManager().beginTransaction().detach(this).attach(this).commit();
-
-
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
+        final StripeDialog stripeDialog = new StripeDialog(this.getActivity());
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
@@ -359,36 +347,92 @@ public class User_Profile_Fragment extends Fragment {
             }
         });
 
+        try {
+            //Allow Edit Account info
+            EditProfilebtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // catch errors or failures
+                    try {
+                        Intent change = new Intent(getActivity(), changeaccdetails.class);
+                        //Put user object into an intent
+                        change.putExtra("User", user);
+                        startActivity(change);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
 
-        //Allow Edit Account info
-        EditProfilebtn.setOnClickListener(new View.OnClickListener(){
+        catch(Exception e){
+            Toast.makeText(getContext(),"Something went wrong, please check your internet collection",Toast.LENGTH_SHORT).show();
+        }
+
+        Button stripeDashboardButton = view.findViewById(R.id.stripeDashboardButton);
+
+        // Get current user id
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = auth.getCurrentUser();
+        userId = fbUser.getUid();
+
+        StripeUtils.getStripeAccountId(userId, new ConnectStripeCallback() {
             @Override
-            public void onClick(View view) {
-                Intent change = new Intent(getActivity(),changeaccdetails.class);
-                Log.e("Username",user.getName());
-                Log.e("Phonenumber",user.getPhonenumber());
-                change.putExtra("User",user);
-                startActivity(change);
+            public void stripeAccountIdCallback(String stripeAccountId) {
+                if (stripeAccountId != null)
+                {
+                    stripeDashboardButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            StripeUtils.createDashboardLink(stripeDialog,
+                                    User_Profile_Fragment.this.getActivity(),
+                                    stripeAccountId);
+                        }
+                    });
+                }
+                else
+                {
+                    stripeDashboardButton.setVisibility(View.GONE);
+                }
             }
-            
         });
-        
-
 
         return view;
-
     }
+
     @Override
     public void onResume() {
         super.onResume();
         // On resume, or when user changes back from calender, updated data is displayed
+        final StripeDialog stripeDialog = new StripeDialog(this.getActivity());
         int noofevents = numberOfevents(user);
         TextView noevents = (TextView)getActivity().findViewById(R.id.num_ofevents);
         TextView nolisting = (TextView) getActivity().findViewById(R.id.listing_numbers);
         nolisting.setText(Integer.toString(nooflisiting));
         noevents.setText(Integer.toString(noofevents));
 
+        Button stripeDashboardButton = getActivity().findViewById(R.id.stripeDashboardButton);
 
+        StripeUtils.getStripeAccountId(userId, new ConnectStripeCallback() {
+            @Override
+            public void stripeAccountIdCallback(String stripeAccountId) {
+                if (stripeAccountId != null)
+                {
+                    stripeDashboardButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            StripeUtils.createDashboardLink(stripeDialog,
+                                    User_Profile_Fragment.this.getActivity(),
+                                    stripeAccountId);
+                        }
+                    });
+                }
+                else
+                {
+                    stripeDashboardButton.setVisibility(View.GONE);
+                }
+            }
+        });
     }
     boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
         CharSequence email = text.getText().toString();

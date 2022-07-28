@@ -8,52 +8,68 @@
     android:layout_height="match_parent"
 
     android:theme="@style/Theme.MADP03GroupGG.AppWidgetContainer">
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/h"
-            android:layout_width="370dp"
-            android:layout_height="61dp"
-
-            android:text="New Arrivals"
-            android:textAlignment="viewStart"
-            android:textSize="20sp" />
+        android:orientation="vertical"
+>
 
         <LinearLayout
+            android:id="@+id/widgettext"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/newlistingnum"
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:text="Today Items in store"
+                android:textSize="24dp"></TextView>
 
+            <TextView
+                android:id="@+id/Wishlist_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp">
 
-                android:text="0 new arrivals"
-                android:textAlignment="center" />
+            </TextView>
 
-            <ImageView
-                android:id="@+id/widgetimg2"
-                android:layout_width="100dp"
-                android:layout_height="150dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                android:src="@drawable/default_image_icon_160"></ImageView>
+                <Button
+                    android:id="@+id/refreshbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:text="Refresh" />
+            </LinearLayout>
 
-            <ImageView
-                android:id="@+id/widgetimg1"
-                android:layout_width="100dp"
-                android:layout_height="150dp"
-
-
-                android:src="@drawable/default_image_icon_160"></ImageView>
 
         </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    </LinearLayout>
+            <ListView
+                android:id="@+id/gridpics"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp">
+
+
+            </ListView>
+        </FrameLayout>
+        </LinearLayout>
+
+
+
+
+
+
 </RelativeLayout>

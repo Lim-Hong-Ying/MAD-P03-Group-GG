@@ -27,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.ArrayList;
+
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.individual_listing;
 import sg.edu.np.mad_p03_group_gg.listingObject;
@@ -116,7 +118,7 @@ public class SearchActivity extends AppCompatActivity {
             listingNameView.setText(model.getTitle());
             listingPriceView.setText("$" + model.getPrice());
             listingItemConditionView.setText(model.getiC());
-            Glide.with(getApplicationContext()).load(model.gettURL()).into(listingImageView);
+            Glide.with(getApplicationContext()).load(model.gettURLs().get(0)).into(listingImageView);
         }
     }
 
@@ -146,17 +148,20 @@ public class SearchActivity extends AppCompatActivity {
                                 // What to retrieve and then how to parse it to an object
                                 String listingid = snapshot.getKey();
                                 String titles = snapshot.child("title").getValue(String.class);
-                                String thumbnailurl = snapshot.child("tURL").getValue(String.class);
+                                long thumbnailurlsize = snapshot.child("tURLs").getChildrenCount();
+                                ArrayList<String> tURLs = new ArrayList<>();
+                                for (int i = 0; i < thumbnailurlsize; i++) {
+                                    tURLs.add(snapshot.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                                }
                                 String sellerid = snapshot.child("sid").getValue(String.class);
                                 String sellerprofilepicurl = snapshot.child("sppu").getValue(String.class);
                                 String itemcondition = snapshot.child("iC").getValue(String.class);
                                 String price = snapshot.child("price").getValue(String.class);
                                 Boolean reserved = snapshot.child("reserved").getValue(Boolean.class);
-                                String TImeStamp = snapshot.child("timeStamp").getValue(String.class);
+                                String timeStamp = snapshot.child("timeStamp").getValue(String.class);
 
-                                listingObject listing = new listingObject(listingid, titles,
-                                        thumbnailurl, sellerid, sellerprofilepicurl,
-                                        itemcondition, price, reserved,TImeStamp);
+                                listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, timeStamp);
+
 
                                 return listing;
                             }

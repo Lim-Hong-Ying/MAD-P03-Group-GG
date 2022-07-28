@@ -53,6 +53,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import sg.edu.np.mad_p03_group_gg.chat.Chat;
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
 import sg.edu.np.mad_p03_group_gg.view.ViewPagerAdapter;
 import sg.edu.np.mad_p03_group_gg.view.ui.MainActivity;
 import sg.edu.np.mad_p03_group_gg.tools.ImageDownloader;
@@ -68,6 +71,7 @@ public class individual_listing extends AppCompatActivity {
 
     private String pID;
     private individualListingObject listing = new individualListingObject();
+
 
     String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
     FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
@@ -107,7 +111,7 @@ public class individual_listing extends AppCompatActivity {
             }
         });
 
-        DatabaseReference connectedRef = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app").getReference(".info/connected");
+        DatabaseReference connectedRef = individualdb.getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -212,16 +216,68 @@ public class individual_listing extends AppCompatActivity {
         // ############# KAI ZHE PAYMENT SECTION ###############
         Button buyButton = findViewById(R.id.buyButton);
 
-        buyButton.setOnClickListener(new View.OnClickListener() {
+        databaseReference.child("individual-listing").child(pID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onClick(View view) {
-                Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
-                checkoutActivityIntent.putExtra("sellerId", sID);
-                checkoutActivityIntent.putExtra("productId", pID);
-                startActivity(checkoutActivityIntent);
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                    String sellerId = task.getResult().child("sid").getValue(String.class);
+
+                    // If no Stripe URL, don't let user checkout
+                    StripeUtils.getStripeAccountId(sellerId, new ConnectStripeCallback() {
+                        @Override
+                        public void stripeAccountIdCallback(String stripeAccountId) {
+
+                            if (stripeAccountId != null) {
+
+                                // If have stripe account id, check if onboarding is completed,
+                                // otherwise don't show buy button
+                                StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                                    @Override
+                                    public void isOnboardCallback(Boolean isOnboard) {
+
+                                        if (isOnboard) {
+                                            individual_listing.this.runOnUiThread(() -> {
+                                                buyButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent checkoutActivityIntent = new Intent(individual_listing.this, CheckoutActivity.class);
+                                                        checkoutActivityIntent.putExtra("sellerId", sellerId);
+                                                        checkoutActivityIntent.putExtra("productId", pID);
+                                                        checkoutActivityIntent.putExtra("stripeAccountId", stripeAccountId);
+                                                        startActivity(checkoutActivityIntent);
+                                                    }
+                                                });
+                                            });
+                                        }
+                                        else
+                                        {
+                                            individual_listing.this.runOnUiThread(() -> {
+                                                buyButton.setVisibility(View.GONE);
+                                            });
+                                        }
+
+                                    }
+                                });
+
+
+                            }
+                            else
+                            {
+                                buyButton.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
             }
         });
-        // ############# END WILLIAM SECTION ###############
+
+
+
+        // ############# END KAI ZHE SECTION ###############
 
     }
 
@@ -291,8 +347,6 @@ public class individual_listing extends AppCompatActivity {
     }
 
     private void createObjectFromFB(String pID, String uID) {
-        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
-        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
         individualdb.getReference().child("individual-listing").child(pID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -306,17 +360,16 @@ public class individual_listing extends AppCompatActivity {
 
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
-                    //String thumbnailurl = result.child("tURL").getValue(String.class);
                     long thumbnailurlsize = result.child("tURLs").getChildrenCount();
                     ArrayList<String> tURLs = new ArrayList<>();
                     for (int i = 0; i < thumbnailurlsize; i++) {
                         tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
                     }
                     String sellerid = result.child("sid").getValue(String.class);
-                    //String sellerprofilepicurl = result.child("sppu").getValue(String.class);
                     String itemcondition = result.child("iC").getValue(String.class);
                     String price = result.child("price").getValue(String.class);
                     Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                    String category = result.child("category").getValue(String.class);
                     String desc = result.child("description").getValue(String.class);
                     String location = result.child("location").getValue(String.class);
                     Boolean delivery = result.child("delivery").getValue(Boolean.class);
@@ -325,11 +378,16 @@ public class individual_listing extends AppCompatActivity {
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
                     String TimeStamp = result.child("timeStamp").getValue(String.class);
 
-                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
+                    if (category == null) {
+                        category = "Others";
+                    }
+
+                    listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, category, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
 
                     TextView titleholder;
                     TextView priceholder;
                     TextView itemconditionholder;
+                    TextView categoryHolder;
                     TextView descriptionholder;
                     TextView locationholder;
                     TextView deliveryoptionholder;
@@ -339,6 +397,7 @@ public class individual_listing extends AppCompatActivity {
                     titleholder = findViewById(R.id.individual_title);
                     priceholder = findViewById(R.id.individual_price);
                     itemconditionholder = findViewById(R.id.individual_itemcondition);
+                    categoryHolder = findViewById(R.id.individual_category);
                     descriptionholder = findViewById(R.id.individual_description);
                     locationholder = findViewById(R.id.individual_salelocation);
                     deliveryoptionholder = findViewById(R.id.individual_deliveryoption);
@@ -348,14 +407,24 @@ public class individual_listing extends AppCompatActivity {
                     ViewPager viewPager = findViewById(R.id.viewPagerMain);
                     individualListingViewPagerAdapter viewPagerAdapter = new individualListingViewPagerAdapter(individual_listing.this, listing.gettURLs());
                     viewPager.setAdapter(viewPagerAdapter);
-                    Log.e("ILURL", String.valueOf(listing.gettURLs()));
 
-                    //Picasso.get().load(listing.gettURLs().get(0)).into(holder); //External library to download images
-                    //new ImageDownloader(holder).execute(listing.gettURL());
                     titleholder.setText(listing.getTitle());
                     priceholder.setText("$" + listing.getPrice());
                     itemconditionholder.setText("Condition: " + listing.getiC());
+                    categoryHolder.setText("Category: " + listing.getCategory());
                     descriptionholder.setText(listing.getDescription());
+
+                    String finalCategory = category;
+                    categoryHolder.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Bundle categoryInfo = new Bundle();
+                            categoryInfo.putString("category", finalCategory);
+                            Intent listingsPage = new Intent(individual_listing.this, listingsPage.class);
+                            listingsPage.putExtras(categoryInfo);
+                            individual_listing.this.startActivity(listingsPage);
+                        }
+                    });
 
                     if (!listing.getLocation().isEmpty()) {
                         locationholder.setText("Address: " + listing.getLocation());
@@ -384,7 +453,10 @@ public class individual_listing extends AppCompatActivity {
                     if (sellerid.equals(uID)) {
                         ToggleButton likebutton = findViewById(R.id.button_like);
                         Button chatbutton = findViewById(R.id.button_chat);
+                        Button buyButton = findViewById(R.id.buyButton);
 
+                        // If own listing, cannot buy, like, or chat
+                        buyButton.setVisibility(View.GONE);
                         likebutton.setVisibility(View.GONE);
                         chatbutton.setVisibility(View.GONE);
                     }
@@ -425,7 +497,6 @@ public class individual_listing extends AppCompatActivity {
                             name_holder.setText(sellername);
                             if (!SPPU.isEmpty()) {
                                 Picasso.get().load(SPPU).into(sellerpfp); //External library to download images
-                                //new ImageDownloader(sellerpfp).execute(SPPU);
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -442,8 +513,6 @@ public class individual_listing extends AppCompatActivity {
     private void initialCheckLiked() { //Checks for like status to set like button on initial start
         ToggleButton like_button = findViewById(R.id.button_like);
 
-        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
-        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked"); //Points to correct child directory
         liked.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -489,44 +558,28 @@ public class individual_listing extends AppCompatActivity {
     }
 
     private void likeFunction() { //Updates database when liking objects
-        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked").child(pID);
         liked.setValue("");
     }
 
     private void unlikeFunction() { //Updates database when unliking objects
-        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db);
         DatabaseReference liked = individualdb.getReference().child("users").child(uID).child("liked");
         liked.child(pID).removeValue();
     }
 
     private void reserveListing() {
-        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
-        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
-
         individualdb.getReference().child("individual-listing").child(pID).child("reserved").setValue(true);
         listing.setReserved(true);
         Toast.makeText(individual_listing.this, "Marked listing as reserved.", Toast.LENGTH_SHORT).show();
     }
 
     private void unreserveListing() {
-        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
-        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
-
         individualdb.getReference().child("individual-listing").child(pID).child("reserved").setValue(false);
         listing.setReserved(false);
         Toast.makeText(individual_listing.this, "Marked listing as available.", Toast.LENGTH_SHORT).show();
     }
 
     private void deleteListing() {
-        //String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
-        //FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
-
-        //String storagelink = "gs://cashoppe-179d4.appspot.com";
-        //StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images").child(pID);
-
         individualdb.getReference().child("individual-listing").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -540,11 +593,16 @@ public class individual_listing extends AppCompatActivity {
                         individualdb.getReference().child("users").child(uID).child("listings").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                finish();
-                                Toast.makeText(individual_listing.this, "Deleted listing!", Toast.LENGTH_SHORT).show();
-                                Intent returnHome = new Intent(individual_listing.this, MainActivity.class);
-                                returnHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(returnHome);
+                                individualdb.getReference().child("category").child(listing.getCategory()).child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        finish();
+                                        Toast.makeText(individual_listing.this, "Deleted listing!", Toast.LENGTH_SHORT).show();
+                                        Intent returnHome = new Intent(individual_listing.this, MainActivity.class);
+                                        returnHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(returnHome);
+                                    }
+                                });
                             }
                         });
                     }

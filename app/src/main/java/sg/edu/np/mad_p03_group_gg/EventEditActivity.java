@@ -3,6 +3,7 @@ package sg.edu.np.mad_p03_group_gg;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,10 +19,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Locale;
 
 import sg.edu.np.mad_p03_group_gg.view.ui.fragments.HomepageFragment;
 
+// NOTE: EventEditActivity no longer in use for stage 2
 public class EventEditActivity extends AppCompatActivity
 {
     private EditText eventNameET, locationNameET;
@@ -149,11 +153,11 @@ public class EventEditActivity extends AppCompatActivity
         // Add new event into Firebase
         if (selectedEvent == null){
             // Initisalise new event
-            Event newEvent = new Event(eventId, eventName, location, CalendarUtils.selectedDate, time);
+            Event newEvent = new Event(eventId, eventName, location, CalendarUtils.selectedDate, time, null);
             // Add to list of events
             Event.eventsList.add(newEvent);
             // Add to firebase
-            addDataToFireBase(userId, eventId, eventName, location, time, CalendarUtils.selectedDate.toString());
+            addDataToFireBase(userId, eventId, eventName, location, time, CalendarUtils.selectedDate.toString(), null);
         }
         // Edit event details and saving it into Firebase
         else{
@@ -163,8 +167,18 @@ public class EventEditActivity extends AppCompatActivity
             selectedEvent.setName(eventName);
             selectedEvent.setLocation(location);
             selectedEvent.setTime(time);
-            addDataToFireBase(userId, selectedEvent.getID(), eventName, location, time, CalendarUtils.selectedDate.toString());
+            addDataToFireBase(userId, selectedEvent.getID(), eventName, location, time, CalendarUtils.selectedDate.toString(), null);
         }
+        /*
+        // Intent to Google Calendar
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setData(CalendarContract.Events.CONTENT_URI);
+        intent.putExtra(CalendarContract.Events.TITLE, eventName);
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);
+        startActivity(intent);
+
+         */
+
         finish();
     }
 
@@ -206,7 +220,7 @@ public class EventEditActivity extends AppCompatActivity
     }
 
     // Adding event details into Firebase
-    public void addDataToFireBase(String userID, int id, String name, String location, String time, String date){
+    public static void addDataToFireBase(String userID, int id, String name, String location, String time, String date, String desc){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("Planner");
         DatabaseReference user = myRef.child(userID);
@@ -219,10 +233,12 @@ public class EventEditActivity extends AppCompatActivity
         userTime.setValue(time);
         DatabaseReference userDate = eventId.child("date");
         userDate.setValue(date);
+        DatabaseReference userDesc = eventId.child("description");
+        userDesc.setValue(desc);
     }
 
     // Deleting event from Firebase
-    public void removeDataFromFireBase(String userId, int eventId){
+    public static void removeDataFromFireBase(String userId, int eventId){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("Planner").child(userId);
         DatabaseReference event = myRef.child(String.valueOf(eventId));

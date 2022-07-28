@@ -29,10 +29,10 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 ## Roles and Contributions
 |Member|Contributions|
 |---|---|
-|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc)|
+|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc), [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions & Privacy Policy Activity, Stripe Onboarding for Seller, Stripe Checkout Activity, Payment Method Activity, StripeUtils Class for API Management, Stripe Backend Server Endpoint, Stripe Express Dashboard for Sellers|
 |Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, Play Store app updates|
 |Ooi Jun Heng Ryan|Meeting Planner page, WeekView and MonthView calendars, Event pages|
-|William Francis Siah|Chat function (Chat List, Chat page, MemoryData etc.), Linking Individual Listing to Chat page|
+|William Francis Siah|Stage 1: <br> Basic Chat Activity, Basic ChatList Activity, ChatInfo, MessageList, MemoryData, Linking Individual Listing to Chat page <br> Stage 2: <br> ChatAddUser Activity, Improved Chat Activity, Improved ChatList Activity, Updated MessageList, RecyclerViewInterface, Chat Guide|
 |Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations|
 
 ## Features
@@ -95,3 +95,45 @@ Feeling fancy today? Customize your profile!
    - Press the "+" button to create a new listing.
    - Press the 👤 button to access your user account profile.
    - Click on any of the listing cards to view detailed information on the listing.
+4. To delete your User Account, please note that this action is **IRREVERSIBLE**.
+   - Press the 👤 button to access your user account profile page.
+   - Press the red "Delete Account" button to delete your account.
+   - All your records and data stored on Cashshope's server will be deleted and it is non-recoverable.
+
+### For Sellers
+In order to allow your buyers to purchase your items via debit or credit card:
+- You must enable the "Stripe" option whenever you create a new listing, as our payments are managed by Stripe.
+- If it is your first time enabling the "Stripe" option, you will be required to go through a mandatory onboarding process with Stripe to ensure that Stripe has what it needs to know, including the items that you are selling, and to verify that you are indeed a valid person, through the verification of official identity documents such as an Identify Card, Driving License, or SingPass.
+- After the onboarding process, you may proceed to list your item for sale, and you will receive payment to your bank account or card that you have connected to Stripe during the onboarding process, when a purchase has been made by a buyer.
+- If you did not fill in the required information, you will be required to resume the onboarding process before you are able to create a listing, or otherwise, your listing will be created but buyers will not be able to checkout through Stripe.
+
+### For Buyers
+In order to pay with a valid debit or credit card:
+- Select a listing that has a "Buy Now" button.
+- Click on the "Buy Now" button and you will be brought to the Checkout page.
+- Validate and key in the required information including card details and delivery method.
+- Click on the Checkout button to complete the purchase.
+- Should the financial instituition in which your card has been registered with (card issuer), requires additional verification such as 3D Secure, you will be prompted by Stripe to perform additional actions.
+
+## Chat Guide
+  #### Chat List
+   - Press the "+" button to add other users to your chat list.
+   - Press and hold on a user in your chat list to remove them from your list (you can always add them back).
+   - Press the search 🔍 bar to search for any users in your chat list.
+   - Number of unseen messages will be displayed for each chat <br>
+  #### Chat
+   - Type a message and press ➢ button to send
+   - Press the "+" button to send a picture from your phone's gallery
+   - Status of the other user will be displayed at the top, below their name <br>
+  #### Things to note
+   - If you are in any chat page your status would be changed to "online".
+   - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.
+
+## Disclaimer
+Before you proceed with our service, do read and agree to our [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), as well as [Privacy Policy](https://westwq.github.io/MADPrivacy/).
+
+Do note that Cashshope is provided as is to you, the user, and the app is only currently available to users in Singapore. We are NOT liable for any claims or issues occured between the seller and the buyer, proceed at your own risk when your purchase or sell goods on Cashshope. We do not store any confidential information such as credit card details or shipping addresses on our servers, other than your user information in which you have provided during the initial sign-up process. Confidential information as mentioned above is managed and processed by our payment service provider, Stripe. </br>
+
+When you use Stripe for buying and selling of goods, including as a payment method, or to receive funds, you agree to Stripe's [Term of Services](https://stripe.com/en-sg/customer-portal/legal).
+
+Finally, should you wish to terminate your service with us, feel free to follow the instructions above to delete your account via the user profile page.

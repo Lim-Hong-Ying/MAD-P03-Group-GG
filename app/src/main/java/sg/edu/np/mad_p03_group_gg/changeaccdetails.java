@@ -22,7 +22,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.concurrent.CountDownLatch;
+
 public class changeaccdetails extends AppCompatActivity {
+    private CountDownLatch finishgetuser = new CountDownLatch(1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,46 +57,59 @@ public class changeaccdetails extends AppCompatActivity {
                 if (isEmail(Email) && isPhone(Phonenumber) && isText(Username) && isEmail(EmailCredentials) && isText(PasswordCredentials) && isPasswordSame(Changepassword,Cnfrmpassword) && isText(Changepassword) && isText(Cnfrmpassword)) {
 
                     AuthCredential credential = EmailAuthProvider.getCredential(EmailCredentials.getText().toString(), PasswordCredentials.getText().toString());
+
                     user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
 
 
-                            //----------------Code for Changing Email Address----------\\
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            user.updateEmail(Email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        String ID = user.getUid();
-                                        Log.e("Text", Email.getText().toString());
-                                        userdata.setName(Username.getText().toString());
-                                        userdata.setEmail(Email.getText().toString());
-                                        userdata.setPhonenumber(Phonenumber.getText().toString());
-                                        mDataref.child("users").child(userdata.getId()).setValue(userdata);
-                                        user.updatePassword(Changepassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(changeaccdetails.this, "Details changed successfully", Toast.LENGTH_LONG).show();
-                                                    finish();
-                                                } else {
-                                                    Toast.makeText(changeaccdetails.this, "Something went wrong, check your email and password.", Toast.LENGTH_LONG).show();
+                                //----------------Code for Changing Email Address----------\\
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();// Since it takes a while to get the current user, we use the
+                                finishgetuser.countDown();// reduce countdown by 1. When countdown is reduced by 1, the below threads will be allowed to continue on which means only adter the above threads are done than will the below threads be run
+                                Log.e("User Email",user.getEmail().toString());
+                                user.updateEmail(Email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            String ID = user.getUid();
+                                            Log.e("Text", Email.getText().toString());
+                                            userdata.setName(Username.getText().toString());
+                                            userdata.setEmail(Email.getText().toString());
+                                            userdata.setPhonenumber(Phonenumber.getText().toString());
+                                            mDataref.child("users").child(userdata.getId()).setValue(userdata);
+                                            user.updatePassword(Changepassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(changeaccdetails.this, "Details changed successfully", Toast.LENGTH_LONG).show();
+                                                        finish();
+                                                    } else {
+                                                        Toast.makeText(changeaccdetails.this, "Something went wrong, check your email and password.", Toast.LENGTH_LONG).show();
+                                                    }
+
                                                 }
 
-                                            }
 
+                                            });
+                                        } else {
+                                            Toast.makeText(changeaccdetails.this, "Something went wrong.", Toast.LENGTH_LONG).show();
 
-                                        });
-                                    }else {
-                                        Toast.makeText(changeaccdetails.this, "Something went wrong.", Toast.LENGTH_LONG).show();
-
+                                        }
                                     }
-                                }
-                            });
+                                });
 
+                            }
+                            else {
+                                Toast.makeText(changeaccdetails.this,"Username or password is wrong",Toast.LENGTH_SHORT).show();
+                            }
                         }
+
+
+
+
                     });
+
 
                 }
                 else{

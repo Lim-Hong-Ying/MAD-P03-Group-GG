@@ -3,6 +3,13 @@
     <style name="Circular">
         <item name="cornerSize">50%</item>
     </style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar"/>
+    <!-- Hide event title until toolbar has collapsed -->
+    <style name="expandedBarTextStyle" parent="AppTheme">
+        <item name="android:textSize">0sp</item>
+        <item name="android:textColor">@android:color/transparent</item>
+
+    </style>
     <style name="Widget.MADP03GroupGG.AppWidget.Container" parent="android:Widget">
         <item name="android:id">@android:id/background</item>
         <item name="android:background">?android:attr/colorBackground</item>

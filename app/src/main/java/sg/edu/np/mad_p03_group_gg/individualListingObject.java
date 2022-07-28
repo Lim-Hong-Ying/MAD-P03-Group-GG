@@ -6,15 +6,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class individualListingObject extends listingObject {
-    /*private String lID; //listing ID in DB
-    private String title; //listing title
-    private String tURL; //thumbnail URL
-    private String sID; //seller ID
-    private String sPPU; //seller profile picture
-    private String iC; //item condition
-    private int price; //item price
-    private Boolean reserved; //is item reserved?*/
     private String description; //item description
+    private String category; //item category
     private String location; //deal location
     private Boolean delivery; //is delivery available?
     private String deliveryType; //if yes, what kind
@@ -25,112 +18,17 @@ public class individualListingObject extends listingObject {
     public individualListingObject() {
 
     }
-    public individualListingObject(String lid, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, String dp, String dtime,String ts) {
-        /*setlID(lID);
-        setTitle(t);
-        settURL(turl);
-        setSID(sid);
-        setSPPU(sppu);
-        setiC(ic);
-        setPrice(p);
-        setReserved(r);*/
-        super(lid, t, turl, sid, sppu, ic, p, r, ts);
-        setDescription(desc);
-        setLocation(l);
-        setDelivery(d);
-        setDeliveryType(dt);
-        setDeliveryPrice(dp);
-        setDeliveryTime(dtime);
 
-
-    }
-
-    public individualListingObject(String lid, String t, ArrayList<String> tURLs, String sid, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, String dp, String dtime, String ts) {
-        /*setlID(lID);
-        setTitle(t);
-        settURL(turl);
-        setSID(sid);
-        setSPPU(sppu);
-        setiC(ic);
-        setPrice(p);
-        setReserved(r);*/
+    public individualListingObject(String lid, String t, ArrayList<String> tURLs, String sid, String ic, String p, Boolean r, String category, String desc, String l, Boolean d, String dt, String dp, String dtime, String ts) {
         super(lid, t, tURLs, sid, ic, p, r, ts);
         setDescription(desc);
+        setCategory(category);
         setLocation(l);
         setDelivery(d);
         setDeliveryType(dt);
         setDeliveryPrice(dp);
         setDeliveryTime(dtime);
     }
-
-    /*public void setlID(String id) {
-        lID = id;
-    }
-
-    public String getlID() {
-        return lID;
-    }
-
-    public void setTitle(String t) {
-        title = t;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void settURL(String s) {
-        tURL = s;
-    }
-
-    public String gettURL() {
-        return tURL;
-    }
-
-    public void setSID(String id) {
-        sID = id;
-    }
-
-    public String getSID() {
-        return sID;
-    }
-
-    public void setSPPU(String s) {
-        sPPU = s;
-    }
-
-    public String getSPPU() {
-        return sPPU;
-    }
-
-    public void setiC(String c) {
-        iC = c;
-    }
-
-    public String getiC() {
-        return iC;
-    }
-
-    public void setPrice(int p) {
-        price = p;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setReserved(Boolean r) {
-        reserved = r;
-    }
-
-    public Boolean getReserved() {
-        return reserved;
-    }
-     */
-    //####ISAAC SECTION START####
-
-
-
 
     public void setDescription(String s) {
         description = s;
@@ -138,6 +36,14 @@ public class individualListingObject extends listingObject {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setCategory(String s) {
+        category = s;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public void setLocation(String s) {

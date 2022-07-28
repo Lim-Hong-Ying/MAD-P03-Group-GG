@@ -166,12 +166,14 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="374dp"
-                    android:layout_height="454dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginStart="30dp"
+
+
+                    android:layout_marginEnd="30dp"
                     android:background="@color/white"
-
-
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -234,19 +236,21 @@
 
                     </LinearLayout>
 
-                    <CheckBox
-                        android:id="@+id/checkBox"
+                    <Button
+                        android:id="@+id/stripeDashboardButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-
-                        android:text="2 Factor Authentication" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/sign_in_button"
+                        android:text="Stripe Dashboard" />
 
                     <Button
                         android:id="@+id/editprofilebutton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/sign_in_button"
                         android:text="Edit Profile" />

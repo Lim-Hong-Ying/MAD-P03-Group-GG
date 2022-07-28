@@ -55,8 +55,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
     private User mainUser;
     private DatabaseReference databaseReference;
     private final RecyclerViewInterface recyclerViewInterface;
-    private List<String> unseenMessageList = new ArrayList<>();
-    private HashMap<String, Boolean> unseenMessageDict = new HashMap<>();
+//    private List<String> unseenMessageList = new ArrayList<>();
+//    private HashMap<String, Boolean> unseenMessageDict = new HashMap<>();
 
     public ChatListAdapter(List<MessageList> messageList, Context context, User mainUser, DatabaseReference databaseReference,RecyclerViewInterface recyclerViewInterface ) {
         this.messageList = messageList;
