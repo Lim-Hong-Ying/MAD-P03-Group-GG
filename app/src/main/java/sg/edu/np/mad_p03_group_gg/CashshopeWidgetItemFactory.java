@@ -63,15 +63,19 @@ import java.util.concurrent.CountDownLatch;
             this.appWidgetId=intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,AppWidgetManager.INVALID_APPWIDGET_ID);
 
         }
-        //Connect to data source here
+        //Since according to widget lifecycle, when widget is called,
+        // on create method will then call on datasetchange method,
+        // getting data woll occur in the on data set changed method
         @Override
         public void onCreate() {
 
 
 
         }
-        //Update widget
+        //Method to update widget
     private void Intizalxzedata() throws InterruptedException{
+
+            // Get database ref
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         Log.e("Test","Intilizepass");
@@ -82,6 +86,7 @@ import java.util.concurrent.CountDownLatch;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot result : snapshot.child("individual-listing").getChildren()) {
+                    //get items from database
 
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     String listingid = result.getKey();
