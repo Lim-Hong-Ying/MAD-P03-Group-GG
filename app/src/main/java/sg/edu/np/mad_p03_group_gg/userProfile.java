@@ -44,7 +44,7 @@ import sg.edu.np.mad_p03_group_gg.chat.Chat;
 
 public class userProfile extends AppCompatActivity {
 
-    String chatKey = null;
+    private String chatKey = "";
     private User seller;
     private User mainUser;
 
