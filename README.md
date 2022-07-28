@@ -33,7 +33,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, Play Store app updates|
 |Ooi Jun Heng Ryan|Meeting Planner page, WeekView and MonthView calendars, Event pages|
 |William Francis Siah|Stage 1: <br> Basic Chat Activity, Basic ChatList Activity, ChatInfo, MessageList, MemoryData, Linking Individual Listing to Chat page <br> Stage 2: <br> ChatAddUser Activity, Improved Chat Activity, Improved ChatList Activity, Updated MessageList, RecyclerViewInterface, Chat Guide|
-|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations|
+|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations| Stage 2 <br> Wishlist counter, App Widget to view today listing, Delete account, Change account details</br>
 
 ### Stage 2
 |Member|Contributions|
@@ -42,7 +42,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Lim Hong Ying||
 |Ooi Jun Heng Ryan||
 |William Francis Siah||
-|Koh Han Jie Isaac||
+|Koh Han Jie Isaac|Wishlist counter, App Widget to view today listing, Delete account, Change account details|
 
 ## Features
 ### Homepage
@@ -136,7 +136,28 @@ In order to pay with a valid debit or credit card:
    - Status of the other user will be displayed at the top, below their name <br>
   #### Things to note
    - If you are in any chat page your status would be changed to "online".
-   - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.
+   - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.  ## Widget guide
+  - Press the refresh button to get todays listings
+  - The widget is scrollable, so to see more items, give the widget a scroll!
+  ### WishList counter
+  - Keep track of the number of wish list items you have!
+  - Click on the wish list counter card to see your wish list!
+  ### Delete account
+  - Click on the delete account button
+  - Before procceding, please press yes if you want to procced with deleting your item
+  - Remember, this action cannot be reversible so think carefully
+  - Enter your credentials again to make sure it is you
+  - Click on the delete button
+  - Your account has been deleted!
+  ### Change Account details
+  - Go to your profile page
+  - Click the change account details button
+  - Enter your changed details
+  - Re-enter your credentials
+  - Click the button
+  - Your account details have been changed!
+  
+  
 
 ## Disclaimer
 Before you proceed with our service, do read and agree to our [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), as well as [Privacy Policy](https://westwq.github.io/MADPrivacy/).
