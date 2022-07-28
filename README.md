@@ -136,7 +136,8 @@ In order to pay with a valid debit or credit card:
    - Status of the other user will be displayed at the top, below their name <br>
   #### Things to note
    - If you are in any chat page your status would be changed to "online".
-   - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.  ## Widget Guide
+   - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.  
+  ## Widget Guide
   - Press the refresh button to get todays listings
   - The widget is scrollable, so to see more items, give the widget a scroll!
   ### WishList counter
