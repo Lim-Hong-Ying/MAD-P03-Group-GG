@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -23,7 +22,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -50,12 +48,10 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stripe.android.PaymentConfiguration;
-import com.stripe.android.Stripe;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 
 import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
@@ -105,10 +101,10 @@ public class newlisting extends AppCompatActivity {
         currentUserId = fbUser.getUid();
 
         // Stripe
-        PaymentConfiguration.init(
-                getApplicationContext(),
-                "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
-        );
+        //PaymentConfiguration.init(
+          //      getApplicationContext(),
+            //    "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
+        //);
 
         // ############# END OF KAI ZHE PAYMENT SECTION ###############
 
