@@ -36,6 +36,8 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations|
 
 ### Stage 2
+|Member|Contributions|
+|---|---|
 |Tan Kai Zhe|Firebase Tools, Graphics/Illustrations, StripeUtils, CheckoutActivity, PaymentMethodActivity, StripeDialog, DeliveryAddress, Stripe Backend Integration, [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions Activity,m Privacy Policy Activity, , Stripe Onboarding for Seller in newlisting, CheckoutActivity, PaymentMethodActivity, StripeUtils, Stripe Backend Server, Stripe Express Dashboard for Sellers in User_Profile_Fragment|
 |Lim Hong Ying||
 |Ooi Jun Heng Ryan||
