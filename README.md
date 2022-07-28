@@ -29,11 +29,18 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 ## Roles and Contributions
 |Member|Contributions|
 |---|---|
-|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc), [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions & Privacy Policy Activity, Stripe Onboarding for Seller, Stripe Checkout Activity, Payment Method Activity, StripeUtils Class for API Management, Stripe Backend Server Endpoint, Stripe Express Dashboard for Sellers|
+|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc)|
 |Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, Play Store app updates|
 |Ooi Jun Heng Ryan|Meeting Planner page, WeekView and MonthView calendars, Event pages|
 |William Francis Siah|Stage 1: <br> Basic Chat Activity, Basic ChatList Activity, ChatInfo, MessageList, MemoryData, Linking Individual Listing to Chat page <br> Stage 2: <br> ChatAddUser Activity, Improved Chat Activity, Improved ChatList Activity, Updated MessageList, RecyclerViewInterface, Chat Guide|
 |Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations|
+
+### Stage 2
+|Tan Kai Zhe|Firebase Tools, Graphics/Illustrations, StripeUtils, CheckoutActivity, PaymentMethodActivity, StripeDialog, DeliveryAddress, Stripe Backend Integration, [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions Activity,m Privacy Policy Activity, , Stripe Onboarding for Seller in newlisting, CheckoutActivity, PaymentMethodActivity, StripeUtils, Stripe Backend Server, Stripe Express Dashboard for Sellers in User_Profile_Fragment|
+|Lim Hong Ying||
+|Ooi Jun Heng Ryan||
+|William Francis Siah||
+|Koh Han Jie Isaac||
 
 ## Features
 ### Homepage
