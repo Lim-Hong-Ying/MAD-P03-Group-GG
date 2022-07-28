@@ -55,6 +55,7 @@ import java.util.concurrent.CountDownLatch;
     private CountDownLatch FindItems = new CountDownLatch(1);
 
 
+
         private Target target;
         CashshopeWidgetItemFactory(Context context, Intent intent){
             this.context= context;
@@ -66,8 +67,6 @@ import java.util.concurrent.CountDownLatch;
         //Connect to data source here
         @Override
         public void onCreate() {
-
-
 
 
         }
@@ -174,10 +173,12 @@ import java.util.concurrent.CountDownLatch;
         @Override
         public void onDataSetChanged() {
             llist.clear();
+
             Log.e("Cleared",Integer.toString(llist.size()));
             try {
 
                 Intizalxzedata();
+
             }
             catch(Exception e){
                 Toast.makeText(context,
@@ -240,15 +241,15 @@ import java.util.concurrent.CountDownLatch;
 //                    .load(llist.get(i).tURL)
 //                    .into(awt2);
             views.setTextViewText(R.id.widgetprice,"$" + llist.get(i).price);
-            try {
-                URL url = new URL(llist.get(i).tURL);
-                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
-                views.setImageViewBitmap(R.id.cashshope_widget_picture,image);
-                //Log.e("Test",Integer.toString(llist.size()));
-            } catch(IOException e) {
-                Log.e("No Image", "No Image found/something went wrong");
-            }
+//            try {
+//                URL url = new URL("https://th.bing.com/th/id/R.13a4301efe05f3132445cd33a88115fc?rik=%2fOc2YGvpKee7sg&riu=http%3a%2f%2fanniekateshomeschoolreviews.com%2fwp-content%2fuploads%2f2015%2f05%2fOnline-picture1.jpg&ehk=AmG7GZ%2bsfNmLPLmFom6xLF1LZP80hL10uqIKrFjUR2Q%3d&risl=&pid=ImgRaw&r=0");
+//                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//
+//                views.setImageViewBitmap(R.id.cashshope_widget_picture,image);
+//                //Log.e("Test",Integer.toString(llist.size()));
+//            } catch(IOException e) {
+//                Log.e("No Image", "No Image found/something went wrong");
+//            }
 //            target=new Target() {
 //                @Override
 //                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {

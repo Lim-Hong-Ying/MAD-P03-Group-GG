@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
+//import com.google.firebase.appcheck.FirebaseAppCheck;
+//import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
+//import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -40,14 +40,14 @@ public class SplashPage extends AppCompatActivity {
         slogan.setAnimation(bottomAniamtion);
         name.setAnimation(Animationtop);
 
-        FirebaseApp.initializeApp(/*context=*/ this);
-        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        firebaseAppCheck.installAppCheckProviderFactory(
-                PlayIntegrityAppCheckProviderFactory.getInstance());
-
-        //FOR DEBUG USAGE: TO ALLOW APP CHECK
-        firebaseAppCheck.installAppCheckProviderFactory(
-                DebugAppCheckProviderFactory.getInstance());
+//        FirebaseApp.initializeApp(/*context=*/ this);
+//        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+//        firebaseAppCheck.installAppCheckProviderFactory(
+//                PlayIntegrityAppCheckProviderFactory.getInstance());
+//
+//        //FOR DEBUG USAGE: TO ALLOW APP CHECK
+//        firebaseAppCheck.installAppCheckProviderFactory(
+//                DebugAppCheckProviderFactory.getInstance());
 
 
         FirebaseTools.downloadFiles("advertisement", getApplicationContext(), this);

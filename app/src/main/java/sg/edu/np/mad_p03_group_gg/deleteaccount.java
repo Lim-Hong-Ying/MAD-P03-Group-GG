@@ -79,6 +79,25 @@ public class deleteaccount extends AppCompatActivity {
                                                         Intent intent = new Intent(deleteaccount.this, loginpage.class);
                                                         //If sign out have problem, create toast message informing user of problem
                                                         try {
+                                                            mDataref.addListenerForSingleValueEvent(new ValueEventListener(){
+
+
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    for(DataSnapshot dataSnapshot1 :snapshot.child("individual-listing").getChildren()){
+                                                                        String foundID2 = dataSnapshot1.getValue(String.class);
+                                                                        if (foundID2.equals(uid)) {
+                                                                            dataSnapshot1.getRef().removeValue();
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                }
+                                                            });
                                                             //Get user instance from database and set user
                                                             dataSnapshot.getRef().removeValue();
                                                             fbUser.delete();

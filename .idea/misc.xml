@@ -3,15 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_category_page.xml" value="0.12375339981867634" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_changeaccdetails.xml" value="0.12375339981867634" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_event_details.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_event_edit.xml" value="0.1314596554850408" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_individual_listing.xml" value="0.1314596554850408" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_listings_page.xml" value="0.1" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_main.xml" value="0.1314596554850408" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_payment_method.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_user_profile.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/calendar_cell.xml" value="0.1314596554850408" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/cashshope_widget.xml" value="0.22" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/cashshope_widgetempty.xml" value="0.1" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_homepage.xml" value="0.1314596554850408" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_listing.xml" value="0.1314596554850408" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_user__profile_.xml" value="0.1" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/image_chooser.xml" value="0.12375339981867634" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/listing_card.xml" value="0.14666666666666667" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_shape_half_circle_half_rectengle.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
