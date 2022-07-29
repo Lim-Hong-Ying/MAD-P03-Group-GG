@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -86,6 +87,9 @@ public class changeaccdetails extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
                                                             Toast.makeText(changeaccdetails.this, "Details changed successfully", Toast.LENGTH_LONG).show();
+                                                            FirebaseAuth.getInstance().signOut();
+                                                            Intent gototlogin = new Intent(changeaccdetails.this,loginpage.class);
+                                                            startActivity(gototlogin);
                                                             finish();
                                                         } else {
                                                             Toast.makeText(changeaccdetails.this, "Something went wrong, check your email and password.", Toast.LENGTH_LONG).show();
