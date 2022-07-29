@@ -390,6 +390,7 @@ public class User_Profile_Fragment extends Fragment {
                         public void isOnboardCallback(Boolean isOnboard) {
                             if (isOnboard)
                             {
+                                // If yes, can create Dashboard Link for user
                                 stripeDashboardButton.setClickable(true);
 
                                 stripeDashboardButton.setOnClickListener(new View.OnClickListener() {

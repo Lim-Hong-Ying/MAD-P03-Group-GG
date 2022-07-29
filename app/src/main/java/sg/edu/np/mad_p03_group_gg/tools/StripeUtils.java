@@ -265,6 +265,9 @@ public class StripeUtils {
      * Generate a link and redirect onboarded user to Stripe's dashboard page for the user's own
      * Stripe Express account.
      *
+     * Do note that a user can only access Stripe Express Dashboard if he has fully completed the
+     * onboarding process. Otherwise, the link will not be generated.
+     *
      * @param stripeDialog
      * @param fragmentActivity
      * @param stripeAccountId
