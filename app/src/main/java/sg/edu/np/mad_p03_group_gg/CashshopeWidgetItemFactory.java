@@ -69,11 +69,12 @@ import java.util.concurrent.CountDownLatch;
 
 
 
-
         }
         //Update widget
     private void Intizalxzedata() throws InterruptedException{
+
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        Log.e("Test","Intilizepass");
         DatabaseReference mDataref = database.getReference();
 
 
@@ -103,10 +104,13 @@ import java.util.concurrent.CountDownLatch;
                     String deliveryprice = result.child("deliveryPrice").getValue(String.class);
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
                     String TimeStamp = result.child("timeStamp").getValue(String.class);
+                    Log.e("Test",FindItems.toString());
                     FindItems.countDown();
+                    Log.e("Test",FindItems.toString());
                     Log.e("Link",mDataref.child("individual-listing").child(listingid).child("tURLs").child("0").toString());
                     try {
                         FindItems.await();
+                        Log.e("Test",FindItems.toString());
                         LocalDate CurrentDate = LocalDate.now();
                         String ts = CurrentDate.toString();
                         Log.e("ComTImeStamp",ts);
@@ -178,6 +182,13 @@ import java.util.concurrent.CountDownLatch;
 
         @Override
         public void onDataSetChanged() {
+            Log.e("Cleared",Integer.toString(llist.size()));
+            donesignal = new CountDownLatch(5);
+            finish = new CountDownLatch(1);
+            finishfindingitem = new CountDownLatch(1);
+            finishfindingitem1 = new CountDownLatch(1);
+            FindItems = new CountDownLatch(1);
+
             llist.clear();
             Log.e("Cleared",Integer.toString(llist.size()));
             try {

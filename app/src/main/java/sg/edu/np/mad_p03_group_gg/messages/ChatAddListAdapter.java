@@ -100,6 +100,7 @@ public class ChatAddListAdapter extends RecyclerView.Adapter<ChatAddListAdapter.
             lastMessage = itemView.findViewById(R.id.lastMessage);
             unseenMessages = itemView.findViewById(R.id.unseenMessages);
             rootLayout = itemView.findViewById(R.id.rootLayout);
+            setIsRecyclable(false);
         }
     }
 
