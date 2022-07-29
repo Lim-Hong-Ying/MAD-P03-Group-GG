@@ -111,6 +111,7 @@ Feeling fancy today? Customize your profile!
    - Press the red "Delete Account" button to delete your account.
    - All your records and data stored on Cashshope's server will be deleted and it is non-recoverable.
 
+## Stripe Guide
 ### For Sellers
 In order to allow your buyers to purchase your items via debit or credit card:
 - You must enable the "Stripe" option whenever you create a new listing, as our payments are managed by Stripe.
