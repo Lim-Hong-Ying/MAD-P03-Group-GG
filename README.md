@@ -41,7 +41,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Tan Kai Zhe|Firebase Tools, StripeUtils, CheckoutActivity, PaymentMethodActivity, StripeDialog, DeliveryAddress, Stripe Backend Integration, [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions Activity,m Privacy Policy Activity, , Stripe Onboarding for Seller in newlisting, CheckoutActivity, PaymentMethodActivity, StripeUtils, Stripe Backend Server, Stripe Express Dashboard for Sellers in User_Profile_Fragment|
 |Lim Hong Ying||
 |Ooi Jun Heng Ryan||
-|William Francis Siah|ChatAddUser Activity, Improved Chat Activity, Improved ChatList Activity, Updated MessageList, RecyclerViewInterface, Chat Guide|
+|William Francis Siah|ChatAddUser Activity, Improved Chat Activity(User Status, Sending Images), Improved ChatList Activity (Manual/Auto add chat, Delete chat, Search Feature, Unseen Messages), Updated MessageList, RecyclerViewInterface, Chat Guide|
 |Koh Han Jie Isaac|Wishlist counter, App Widget to view today listing, Delete account, Change account details|
 
 ## Features
