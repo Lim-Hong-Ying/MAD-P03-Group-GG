@@ -63,8 +63,10 @@ You can now save your favourite listings for future reference.
 ### Chat
 You can also chat with other Cashshopers!
 
-![Chat](resources/chat.png)
-
+<p float="left">
+  <img src="resources/gitHub_ChatList.png" alt="drawing" width="300"/>
+  <img src="resources/gitHub__chat.png" alt="drawing" width="300"/>
+</p>
 
 ### Meeting Planner
 Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to see your schedule!
