@@ -329,6 +329,9 @@ public class CheckoutActivity extends AppCompatActivity {
 
             if (isAddressValid)
             {
+                // Disable button after confirm payment, to prevent duplicated charges
+                Button checkoutButton = findViewById(R.id.checkoutButton);
+                checkoutButton.setEnabled(false);
                 RadioGroup deliveryRadioGroup = findViewById(R.id.deliveryRadioGroup);
                 int selectedRadioButtonId = deliveryRadioGroup.getCheckedRadioButtonId();
                 RadioButton selectedRadioButton = findViewById(selectedRadioButtonId);

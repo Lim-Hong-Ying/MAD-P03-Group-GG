@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Kai/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_checkout.xml" value="0.33" />
+        <entry key="..\:/Users/Kai/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_individual_listing.xml" value="0.33" />
+        <entry key="..\:/Users/Kai/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_newlisting.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/Kai/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_payment_method.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Kai/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_terms_and_conditions.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Kai/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/fragment_user__profile_.xml" value="0.25" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_event_details.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_event_edit.xml" value="0.1314596554850408" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MAD-P03-Group-GG/app/src/main/res/layout/activity_listings_page.xml" value="0.1" />

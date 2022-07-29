@@ -58,18 +58,18 @@ public class StripeUtils {
      * Check the existance of a Stripe account ID using getStripeAccountId()
      *
      * @param stripeDialog
-     * @param newlistingActivity
+     * @param activity
      * @param currentUserId
      */
-    public static void onboardUser(StripeDialog stripeDialog, newlisting newlistingActivity,
+    public static void onboardUser(StripeDialog stripeDialog, Activity activity,
                              String currentUserId) {
         // Explicitly specify the task to run on a
         // UI thread instead of a worker thread
-        newlistingActivity.runOnUiThread(() -> {
+        activity.runOnUiThread(() -> {
             stripeDialog.startStripeAlertDialog();
         });
 
-        WeakReference<Activity> weakActivity = new WeakReference<>(newlistingActivity);
+        WeakReference<Activity> weakActivity = new WeakReference<>(activity);
         Request request = new Request.Builder()
                 .url(BACKEND_URL + "onboard")
                 .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ""))
@@ -104,11 +104,11 @@ public class StripeUtils {
                                         .child(currentUserId).child("stripeAccountId")
                                         .setValue(stripeAccountId);
 
-                                newlistingActivity.runOnUiThread(() -> {
+                                activity.runOnUiThread(() -> {
                                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                                     CustomTabsIntent customTabsIntent = builder.build();
                                     stripeDialog.dismissDialog();
-                                    customTabsIntent.launchUrl(newlistingActivity, Uri.parse(url));
+                                    customTabsIntent.launchUrl(activity, Uri.parse(url));
                                         });
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -177,12 +177,12 @@ public class StripeUtils {
      * compelte the onboarding process.
      *
      * @param stripeDialog
-     * @param newlistingActivity
+     * @param activity
      * @param stripeAccountId
      */
-    public static void resumeOnboard(StripeDialog stripeDialog, newlisting newlistingActivity,
+    public static void resumeOnboard(StripeDialog stripeDialog, Activity activity,
                                    String stripeAccountId) {
-        newlistingActivity.runOnUiThread(() -> {
+        activity.runOnUiThread(() -> {
             stripeDialog.startStripeAlertDialog();
         });
 
@@ -195,7 +195,7 @@ public class StripeUtils {
 
         RequestBody body = RequestBody.create(mediaType, json);
 
-        WeakReference<Activity> weakActivity = new WeakReference<>(newlistingActivity);
+        WeakReference<Activity> weakActivity = new WeakReference<>(activity);
         Request request = new Request.Builder()
                 .url(BACKEND_URL + "reauth")
                 .post(body)
@@ -223,11 +223,11 @@ public class StripeUtils {
                                 JSONObject responseJson = new JSONObject(body);
                                 String url = responseJson.getJSONObject("url").getString("url");
 
-                                newlistingActivity.runOnUiThread(() -> {
+                                activity.runOnUiThread(() -> {
                                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                                     CustomTabsIntent customTabsIntent = builder.build();
                                     stripeDialog.dismissDialog();
-                                    customTabsIntent.launchUrl(newlistingActivity, Uri.parse(url));
+                                    customTabsIntent.launchUrl(activity, Uri.parse(url));
                                 });
                             } catch (JSONException e) {
                                 e.printStackTrace();

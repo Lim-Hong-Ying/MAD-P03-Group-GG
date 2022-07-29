@@ -372,7 +372,7 @@ public class User_Profile_Fragment extends Fragment {
 
         // ========================= Kai Zhe Stripe Section ================================
         Button stripeDashboardButton = view.findViewById(R.id.stripeDashboardButton);
-        stripeDashboardButton.setClickable(false);
+        stripeDashboardButton.setEnabled(false);
 
         // Get current user id
         auth = FirebaseAuth.getInstance();
@@ -390,28 +390,25 @@ public class User_Profile_Fragment extends Fragment {
                         public void isOnboardCallback(Boolean isOnboard) {
                             if (isOnboard)
                             {
-                                // If yes, can create Dashboard Link for user
-                                stripeDashboardButton.setClickable(true);
-
-                                stripeDashboardButton.setOnClickListener(new View.OnClickListener() {
+                                getActivity().runOnUiThread(new Runnable() {
                                     @Override
-                                    public void onClick(View view) {
-                                        StripeUtils.createDashboardLink(stripeDialog,
-                                                User_Profile_Fragment.this.getActivity(),
-                                                stripeAccountId);
+                                    public void run() {
+                                        // If yes, can create Dashboard Link for user
+                                        stripeDashboardButton.setEnabled(true);
+
+                                        stripeDashboardButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                StripeUtils.createDashboardLink(stripeDialog,
+                                                        User_Profile_Fragment.this.getActivity(),
+                                                        stripeAccountId);
+                                            }
+                                        });
                                     }
                                 });
                             }
-                            else {
-                                stripeDashboardButton.setVisibility(View.GONE);
-                            }
-
                         }
                     });
-                }
-                else
-                {
-                    stripeDashboardButton.setVisibility(View.GONE);
                 }
             }
         });
