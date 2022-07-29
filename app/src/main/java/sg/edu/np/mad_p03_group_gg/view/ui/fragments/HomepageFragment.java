@@ -54,6 +54,7 @@ import java.util.Comparator;
 
 import sg.edu.np.mad_p03_group_gg.ChatList;
 import sg.edu.np.mad_p03_group_gg.Event;
+import sg.edu.np.mad_p03_group_gg.EventEditActivity;
 import sg.edu.np.mad_p03_group_gg.EventsPage;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
@@ -271,6 +272,7 @@ public class HomepageFragment extends Fragment {
                         Event.eventsList.add(event);
                     }
                     else {
+                        EventEditActivity.removeDataFromFireBase(userId, eventId);
                         continue;
                     }
 
