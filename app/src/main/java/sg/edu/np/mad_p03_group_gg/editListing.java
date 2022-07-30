@@ -156,7 +156,7 @@ public class editListing extends AppCompatActivity {
                     String deliverytype = result.child("deliveryType").getValue(String.class);
                     String deliveryprice = result.child("deliveryPrice").getValue(String.class);
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
-                    String postedTime = result.child("ts").getValue(String.class);
+                    String postedTime = result.child("timeStamp").getValue(String.class);
 
                     listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, category, desc, location, delivery, deliverytype, deliveryprice, deliverytime, postedTime);
 
@@ -734,6 +734,7 @@ public class editListing extends AppCompatActivity {
         }
 
         String postedTime = listing.getTimeStamp();
+        Log.e("Time", postedTime);
 
         ArrayList<String> categories = new ArrayList<>();
         categories.add(listing.getCategory());

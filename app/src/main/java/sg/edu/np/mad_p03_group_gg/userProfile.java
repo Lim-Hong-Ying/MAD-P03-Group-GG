@@ -48,14 +48,16 @@ public class userProfile extends AppCompatActivity {
     private User seller;
     private User mainUser;
 
+    String uID = null;
+    ArrayList<listingObject> data = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
         Bundle userid = getIntent().getExtras();
-        String uid = userid.getString("uid");
-        ArrayList<listingObject> data = new ArrayList<>();
+        uID = userid.getString("uid");
 
         ImageButton back_button = findViewById(R.id.back_button); //Enables back button function
         back_button.setOnClickListener(new View.OnClickListener() {
@@ -65,8 +67,10 @@ public class userProfile extends AppCompatActivity {
             }
         });
 
-        retrieveProfileFromFirebase(uid);
-        retrieveFromFirebase(data, uid);
+        if (!uID.isEmpty()) {
+            retrieveProfileFromFirebase();
+        }
+
 
         //############## WILLIAM CHAT SECTION ##################
 
@@ -92,8 +96,8 @@ public class userProfile extends AppCompatActivity {
                     String getUserTwo = dataSnapshotCurrentChat.child("user2").getValue(String.class);
 
                     // If id numbers are the same as main user and selected user's id number
-                    if((TextUtils.equals(getUserOne,uid) && TextUtils.equals(getUserTwo,currentUserID))
-                            || (TextUtils.equals(getUserOne,currentUserID) && TextUtils.equals(getUserTwo, uid))){
+                    if((TextUtils.equals(getUserOne,uID) && TextUtils.equals(getUserTwo,currentUserID))
+                            || (TextUtils.equals(getUserOne,currentUserID) && TextUtils.equals(getUserTwo, uID))){
                         chatKey = dataSnapshotCurrentChat.getKey();
                     }
                 }
@@ -106,12 +110,12 @@ public class userProfile extends AppCompatActivity {
                                 ,dataSnapshotUser.child("email").getValue(String.class),currentUserID);
                     }
                     // If id matches main SELLER ID Create seller user object
-                    if (TextUtils.equals(dataSnapshotUser.getKey(),uid)){
+                    if (TextUtils.equals(dataSnapshotUser.getKey(),uID)){
                         seller = new User (dataSnapshotUser.child("name").getValue(String.class)
                                 ,dataSnapshotUser.child("email").getValue(String.class)
                                 ,dataSnapshotUser.child("phonenumber").getValue(String.class)
                                 ,dataSnapshotUser.child("userprofilepic").getValue(String.class)
-                                ,uid);
+                                ,uID);
                     }
                 }
             }
@@ -131,13 +135,13 @@ public class userProfile extends AppCompatActivity {
                 intent.putExtra("name",seller.getName());
                 intent.putExtra("profilePic",seller.getUserprofilepic());
                 intent.putExtra("chatKey", chatKey);
-                intent.putExtra("id", uid);
+                intent.putExtra("id", uID);
                 // Send main user data to chat activity
                 intent.putExtra("mainUser", (Parcelable) mainUser);
 
                 // Add seller to friend list
                 databaseReference.child("selectedChatUsers").child(mainUser.getId())
-                        .child(uid).setValue("");
+                        .child(uID).setValue("");
 
                 // Start chat activity
                 userProfile.this.startActivity(intent);
@@ -146,17 +150,20 @@ public class userProfile extends AppCompatActivity {
         // ############# END WILLIAM SECTION ###############
     }
 
-    private void retrieveProfileFromFirebase(String uid) {
+    private void retrieveProfileFromFirebase() {
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
 
-        individualdb.getReference().child("users").child(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        individualdb.getReference().child("users").child(uID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(userProfile.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
+                if (!task.getResult().exists()) {
+                    Toast.makeText(userProfile.this, "Failed to retrieve information. Maybe the user deleted their account.", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
+
                 else {
+                    retrieveFromFirebase();
                     User user = new User();
                     DataSnapshot result = task.getResult();
 
@@ -176,7 +183,7 @@ public class userProfile extends AppCompatActivity {
         });
     }
 
-    private void retrieveFromFirebase(ArrayList<listingObject> data, String uID) { //Retrieves data from Firebase
+    private void retrieveFromFirebase() { //Retrieves data from Firebase
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("users").child(uID).child("listings");
         DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
