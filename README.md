@@ -111,7 +111,7 @@ Feeling fancy today? Customize your profile!
    - All your records and data stored on Cashshope's server will be deleted and it is non-recoverable.
 
 ## Stripe Guide
-[![StripeLogo](resources/poweredbystripe.png)](http://www.stripe.com/)
+[![StripeLogo](resources/poweredbystripe.png)](http://www.stripe.com/) </br>
 We partner with Stripe, one of the world' leading online payment infrastructure, to provide you a much better shopping experience. Sellers can now easily view and track your customers' purchases. For buyers, you can now buy items with just a few taps using your card of choice! 
 
 ### For Sellers
