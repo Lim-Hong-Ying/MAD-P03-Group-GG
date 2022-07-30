@@ -204,13 +204,14 @@ public class cashshopewidget extends AppWidgetProvider {
             // create intent template for onclicklistner for entry in widget
            Intent clickIntent = new Intent(context,cashshopewidget.class);//Sub class of broadcast, if Action_App_Widge_update call, a update will run
            clickIntent.setAction(ACTION_REFRESH);
-           PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context,0,clickIntent,0);
+           clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,appWidgetIds[i]);
+           PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context,appWidgetIds[i],clickIntent,0);
 
             views.setEmptyView(R.id.gridpics,R.id.cashshope_widgetempty);
             views.setOnClickPendingIntent(R.id.refreshbutton,clickPendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], views);
-           appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.gridpics);
+
 
             Log.e("Test","providerd entered");
 
@@ -229,13 +230,18 @@ public class cashshopewidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(ACTION_REFRESH.equals(intent.getAction())){
-            Log.e("Actionrefresh","providerd entered");
-            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,AppWidgetManager.INVALID_APPWIDGET_ID);
+        if(ACTION_REFRESH.equals(intent.getAction())) {
+            Log.e("Actionrefresh", "providerd entered");
+            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            Log.e("ID", Integer.toString(appWidgetId));
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,R.id.gridpics);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.cashshope_widget);
+
+
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.gridpics);
         }
-        super.onReceive(context, intent);
+
+            super.onReceive(context, intent);
     }
 
     public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {

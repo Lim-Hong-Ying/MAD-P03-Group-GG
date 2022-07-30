@@ -29,11 +29,20 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 ## Roles and Contributions
 |Member|Contributions|
 |---|---|
-|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc), [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions & Privacy Policy Activity, Stripe Onboarding for Seller, Stripe Checkout Activity, Payment Method Activity, StripeUtils Class for API Management, Stripe Backend Server Endpoint, Stripe Express Dashboard for Sellers|
+|Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc)|
 |Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, Play Store app updates|
-|Ooi Jun Heng Ryan|Meeting Planner page, WeekView and MonthView calendars, Event pages|
-|William Francis Siah|Stage 1: <br> Basic Chat Activity, Basic ChatList Activity, ChatInfo, MessageList, MemoryData, Linking Individual Listing to Chat page <br> Stage 2: <br> ChatAddUser Activity, Improved Chat Activity, Improved ChatList Activity, Updated MessageList, RecyclerViewInterface, Chat Guide|
-|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations|
+|Ooi Jun Heng Ryan|Meeting Planner page, Weekly Calendar, Monthly Calendar, Event page, EventEdit Page, Firebase implementation for events|
+|William Francis Siah|Basic Chat Activity, Basic ChatList Activity, ChatInfo, MessageList, MemoryData, Linking Individual Listing to Chat page|
+|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations| Stage 2 <br> Wishlist counter, App Widget to view today listing, Delete account, Change account details</br>
+
+### Stage 2
+|Member|Contributions|
+|---|---|
+|Tan Kai Zhe|Firebase Tools, StripeUtils, CheckoutActivity, PaymentMethodActivity, StripeDialog, DeliveryAddress, Stripe Backend Integration, [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions Activity,m Privacy Policy Activity, , Stripe Onboarding for Seller in newlisting, CheckoutActivity, PaymentMethodActivity, StripeUtils, Stripe Backend Server, Stripe Express Dashboard for Sellers in User_Profile_Fragment|
+|Lim Hong Ying||
+|Ooi Jun Heng Ryan|Integrated Google Calendar to sync with events (Add, Edit, Delete events from Google Calendar), EventPage Activity, EventDetails Activity, Usage of Calendar Permission, Improved event details|
+|William Francis Siah|ChatAddUser Activity, Improved Chat Activity (User Status, Sending Images), Improved ChatList Activity (Manual/Auto add chat, Delete chat, Search Feature, Unseen Messages), Updated MessageList, RecyclerViewInterface|
+|Koh Han Jie Isaac|Wishlist counter in User profile page, App Widget to view today listing Activity, RemoteViewFactory interface for widget, Button to reload widget, Delete account Activity, Change account details Activity|
 
 ## Features
 ### Homepage
@@ -54,8 +63,10 @@ You can now save your favourite listings for future reference.
 ### Chat
 You can also chat with other Cashshopers!
 
-![Chat](resources/chat.png)
-
+<p float="left">
+  <img src="resources/gitHub_ChatList.png" alt="drawing" width="300"/>
+  <img src="resources/gitHub__chat.png" alt="drawing" width="300"/>
+</p>
 
 ### Meeting Planner
 Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to see your schedule!
@@ -100,6 +111,7 @@ Feeling fancy today? Customize your profile!
    - Press the red "Delete Account" button to delete your account.
    - All your records and data stored on Cashshope's server will be deleted and it is non-recoverable.
 
+## Stripe Guide
 ### For Sellers
 In order to allow your buyers to purchase your items via debit or credit card:
 - You must enable the "Stripe" option whenever you create a new listing, as our payments are managed by Stripe.
@@ -127,7 +139,29 @@ In order to pay with a valid debit or credit card:
    - Status of the other user will be displayed at the top, below their name <br>
   #### Things to note
    - If you are in any chat page your status would be changed to "online".
-   - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.
+   - Once exiting any of the chat pages (e.g. Return back to homepage), your status would be changed to "offline" and other users can see your last seen date and time.  
+  ## Widget Guide
+  - Press the refresh button to get todays listings
+  - The widget is scrollable, so to see more items, give the widget a scroll!
+  ### WishList counter
+  - Keep track of the number of wish list items you have!
+  - Click on the wish list counter card to see your wish list!
+  ### Delete account
+  - Click on the delete account button
+  - Before procceding, please press yes if you want to procced with deleting your item
+  - Remember, this action cannot be reversible so think carefully
+  - Enter your credentials again to make sure it is you
+  - Click on the delete button
+  - Your account has been deleted!
+  ### Change Account details
+  - Go to your profile page
+  - Click the change account details button
+  - Enter your changed details
+  - Re-enter your credentials
+  - Click the button
+  - Your account details have been changed!
+  
+  
 
 ## Disclaimer
 Before you proceed with our service, do read and agree to our [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), as well as [Privacy Policy](https://westwq.github.io/MADPrivacy/).
