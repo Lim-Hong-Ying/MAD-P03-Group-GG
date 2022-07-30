@@ -15,6 +15,9 @@ import androidx.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * Credits to the author: https://stackoverflow.com/users/2914696/ivan-ku%c5%a1t
+ * Source of Code: https://stackoverflow.com/questions/10461005/how-to-group-radiobutton-from-different-linearlayouts
+ *
  * This class is a replacement for android RadioGroup - it supports
  * child layouts which standard RadioGroup doesn't.
  */

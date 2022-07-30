@@ -226,6 +226,12 @@ public class individual_listing extends AppCompatActivity {
                     Log.d("firebase", String.valueOf(task.getResult().getValue()));
                     String sellerId = task.getResult().child("sid").getValue(String.class);
 
+                    String price = task.getResult().child("price").getValue(String.class);
+
+                    if (Integer.parseInt(price) <= 0)
+                    {
+                        buyButton.setVisibility(View.GONE);
+                    }
                     // If no Stripe URL, don't let user checkout
                     StripeUtils.getStripeAccountId(sellerId, new ConnectStripeCallback() {
                         @Override

@@ -8,6 +8,10 @@ import androidx.appcompat.app.AlertDialog;
 
 import sg.edu.np.mad_p03_group_gg.R;
 
+/**
+ * Display a dialog with a running circle progress bar to serve as a visual cue for the user
+ * to wait patiently for the async operation to finish.
+ */
 public class StripeDialog {
     private Activity activity;
     private AlertDialog dialog;

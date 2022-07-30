@@ -53,8 +53,15 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class editListing extends AppCompatActivity {
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
+import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 
+public class editListing extends AppCompatActivity {
+    private FirebaseAuth auth;
+    private String currentUserId;
+    final StripeDialog stripeDialog = new StripeDialog(editListing.this);
     ArrayList<Uri> imageArray = new ArrayList<>();
     ArrayList<String> imageURLs = new ArrayList<>();
     imageChooserAdapter adapter = null;
@@ -66,6 +73,13 @@ public class editListing extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        // Get current user id
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = auth.getCurrentUser();
+        currentUserId = fbUser.getUid();
+
         setContentView(R.layout.activity_newlisting);
 
         TextView header = findViewById(R.id.category_header);
@@ -405,6 +419,47 @@ public class editListing extends AppCompatActivity {
                 }
             }
         });
+
+        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
+
+        // Check if user has already onboarded, i.e. has stripeAccountId and
+        // account is not restricted (check payout true or false)
+        stripeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b == true)
+                {
+                    // Retrieve User's stripeAccountId
+                    StripeUtils.getStripeAccountId(currentUserId, new ConnectStripeCallback() {
+                        @Override
+                        public void stripeAccountIdCallback(String stripeAccountId) {
+                            if (stripeAccountId != null)
+                            {
+                                StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                                    @Override
+                                    public void isOnboardCallback(Boolean isOnboard) {
+                                        // If isOnboard is true, means user completed onboarding and able to
+                                        // receive payouts (check Stripe Dashboard)
+                                        if (isOnboard == false)
+                                        {
+                                            StripeUtils.resumeOnboard(stripeDialog, editListing.this,
+                                                    stripeAccountId);
+                                        }
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                // If no stripeAccountId, generate a new one and onboard user
+                                StripeUtils.onboardUser(stripeDialog, editListing.this,
+                                        currentUserId);
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void finalCheck() {
@@ -418,6 +473,7 @@ public class editListing extends AppCompatActivity {
         EditText deltime_input = findViewById(R.id.input_deliverytime);
         Switch meeting_toggle = findViewById(R.id.meet_toggle);
         Switch delivery_toggle = findViewById(R.id.del_toggle);
+        Switch stripeSwitch = findViewById(R.id.stripeSwitch);
 
         Boolean image_selected = true;
         Boolean title_filled = false;
@@ -472,7 +528,45 @@ public class editListing extends AppCompatActivity {
         }
 
         if (image_selected == true && title_filled == true && price_filled == true && itemcondition_selected == true && desc_filled == true && meetup_filled == true && deliverytype_filled == true && deliveryprice_filled == true && deliverytime_filled == true) {
-            writeToDatabaseAndFirebase();
+
+            if (stripeSwitch.isChecked() == true)
+            {
+                // Check again
+                StripeUtils.getStripeAccountId(currentUserId, new ConnectStripeCallback() {
+                    @Override
+                    public void stripeAccountIdCallback(String stripeAccountId) {
+                        StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                            @Override
+                            public void isOnboardCallback(Boolean isOnboard) {
+                                // Check if onboarding is completed, call Accounts api to check info
+                                if (isOnboard)
+                                {
+                                    editListing.this.runOnUiThread(() -> {
+                                        // If onboarding is completed, write to Firebase
+                                        writeToDatabaseAndFirebase();
+                                    });
+
+                                }
+                                else
+                                {
+                                    editListing.this.runOnUiThread(() -> {
+                                        // Ask user to perform onboarding again
+                                        Toast.makeText(editListing.this,
+                                                "Please complete the Stripe onboarding process.",
+                                                Toast.LENGTH_SHORT).show();
+                                        stripeSwitch.setChecked(false);
+                                    });
+
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            else
+            {
+                writeToDatabaseAndFirebase();
+            }
         }
 
         else {

@@ -1,7 +1,7 @@
 package sg.edu.np.mad_p03_group_gg.tools.interfaces;
 
 /**
- * This is a utility class and it contains various methods to help retrive data from Firebase and
+ * This is a utility class and it contains methods to help retrive data from Firebase and
  * improve re-usability.
  */
 
