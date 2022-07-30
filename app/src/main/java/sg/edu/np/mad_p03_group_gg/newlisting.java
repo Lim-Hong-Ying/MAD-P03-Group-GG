@@ -50,7 +50,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stripe.android.PaymentConfiguration;
-import com.stripe.android.Stripe;
+//import com.stripe.android.PaymentConfiguration;
+//import com.stripe.android.Stripe;
 
 import java.io.IOException;
 import java.util.ArrayList;

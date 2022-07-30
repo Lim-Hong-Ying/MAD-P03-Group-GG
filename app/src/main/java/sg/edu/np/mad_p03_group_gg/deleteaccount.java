@@ -54,68 +54,87 @@ public class deleteaccount extends AppCompatActivity {
                 }
 
 
-                    AuthCredential credential = EmailAuthProvider
-                            .getCredential(reemail.getText().toString(), repassword.getText().toString());
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(reemail.getText().toString(), repassword.getText().toString());
 
-                    fbUser.reauthenticate(credential)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                // on reauthentication complete
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
+                fbUser.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            // on reauthentication complete
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                //Get authenticated user from an instance
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            //Get authenticated user from an instance
 
-                                                String uid = fbUser.getUid();
-                                                String email = fbUser.getEmail();
-                                                //Use uid to find the user in database
-                                                for (DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
-                                                    String foundID = dataSnapshot.child("id").getValue(String.class);
-                                                    if (foundID.equalsIgnoreCase(uid)) {
-                                                        //Create intent
-                                                        Intent intent = new Intent(deleteaccount.this, loginpage.class);
-                                                        //If sign out have problem, create toast message informing user of problem
-                                                        try {
-                                                            //Get user instance from database and set user
-                                                            dataSnapshot.getRef().removeValue();
-                                                            fbUser.delete();
-                                                            Event.eventsList.clear();
-                                                            //sign out from user
-                                                            auth.signOut();
-                                                            //Inform user activity finished
-                                                            Toast.makeText(deleteaccount.this, "Account Deletion sucessful!", Toast.LENGTH_SHORT).show();
-                                                            //Got to login page activity
-                                                            startActivity(intent);
-                                                            //Finish activity
-                                                            deleteaccount.this.finish();
-                                                        } catch (Exception e) {
-                                                            //Error message
-                                                            Toast.makeText(deleteaccount.this, "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
-                                                        }
+                                            String uid = fbUser.getUid();
+                                            String email = fbUser.getEmail();
+                                            //Use uid to find the user in database
+                                            for (DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
+                                                String foundID = dataSnapshot.child("id").getValue(String.class);
+                                                if (foundID.equalsIgnoreCase(uid)) {
+                                                    //Create intent
+                                                    Intent intent = new Intent(deleteaccount.this, loginpage.class);
+                                                    //If sign out have problem, create toast message informing user of problem
+                                                    try {
+                                                        mDataref.addListenerForSingleValueEvent(new ValueEventListener(){
 
-                                                        break;
+
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for(DataSnapshot dataSnapshot1 :snapshot.child("individual-listing").getChildren()){
+                                                                    String foundID2 = dataSnapshot1.getValue(String.class);
+                                                                    if (foundID2.equals(uid)) {
+                                                                        dataSnapshot1.getRef().removeValue();
+                                                                    }
+                                                                }
+
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
+                                                        //Get user instance from database and set user
+                                                        dataSnapshot.getRef().removeValue();
+                                                        fbUser.delete();
+                                                        Event.eventsList.clear();
+                                                        //sign out from user
+                                                        auth.signOut();
+                                                        //Inform user activity finished
+                                                        Toast.makeText(deleteaccount.this, "Account Deletion sucessful!", Toast.LENGTH_SHORT).show();
+                                                        //Got to login page activity
+                                                        startActivity(intent);
+                                                        //Finish activity
+                                                        deleteaccount.this.finish();
+                                                    } catch (Exception e) {
+                                                        //Error message
+                                                        Toast.makeText(deleteaccount.this, "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
                                                     }
+
+                                                    break;
                                                 }
-                                                
                                             }
 
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
+                                        }
 
-                                                Log.w("Failed to read value.", error.toException());
-                                            }
-                                        });
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                    } else {
-                                        Toast.makeText(deleteaccount.this, "Wrong Email/Password", Toast.LENGTH_SHORT).show();
+                                            Log.w("Failed to read value.", error.toException());
+                                        }
+                                    });
 
-                                    }
+                                } else {
+                                    Toast.makeText(deleteaccount.this, "Wrong Email/Password", Toast.LENGTH_SHORT).show();
+
                                 }
+                            }
 
-                            });
+                        });
 
             }
         });
