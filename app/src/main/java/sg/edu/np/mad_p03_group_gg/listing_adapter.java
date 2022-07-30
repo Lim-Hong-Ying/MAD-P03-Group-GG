@@ -67,9 +67,8 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
         holder.listing_title.setText(listing.getTitle());
         holder.price.setText("$" + listing.getPrice());
         holder.itemcondition.setText(listing.getiC());
-
-        if (listing.getReserved() == false) {
-            holder.listing_reserved_indicator.setVisibility(View.GONE);
+        if (listing.getReserved()) {
+            holder.listing_reserved_indicator.setVisibility(View.VISIBLE);
         }
 
         //Downloads information from Firebase Database
