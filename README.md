@@ -93,6 +93,35 @@ Feeling fancy today? Customize your profile!
 
 ![User](resources/profile.png)
 
+### Checkout
+See that one thing you fancy? Click the "Buy Now" button (selected listings only) to perform an easy and fuss-free checkout process. </br>
+</br>
+![Buynow](resources/stripe/buynowbtn.png)
+</br>
+After which, you will be brought to this page: </br>
+</br>
+![Checkout](resources/stripe/checkout.png)
+</br>
+Click the "Change" button to key in your payment information, when done, tap on "Confirm". </br>
+</br>
+![PaymentMtd](resources/stripe/paymentmd.png) </br>
+</br>
+Afterwards, select your delivery method of choice, and you are required to key in your delivery details such as receiving address and recipient's name.
+</br>
+![Delivery](resources/stripe/deliveryadd.png) </br>
+
+When done, you're good to go! Just simply tap on the "Checkout" button, and let Stripe handle the rest for you. Please do note that you may be required to go through an additional stage of identity verification as required by your card issuer:
+</br>
+</br>
+![Loading](resources/stripe/loadingdialog.png)
+![PaymentCompleted](resources/stripe/paymentcomplete.png) </br>
+
+See below for screenshots on the additional 3DS or Two-factor Authentication process:
+</br>
+</br>
+![3DS](resources/stripe/3ds.png) 
+![3DSpage](resources/stripe/3dspage.png) </br>
+
 ## User Guide
 1. Sign up a new account or log in with the credentails (email address and password) of an existing user account to access Cashshope.
 2. Grant Cashshope with the permissions that it needs to function properly. This includes access to the device's storage and internet.
