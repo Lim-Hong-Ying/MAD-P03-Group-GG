@@ -24,34 +24,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-
-import okhttp3.Call;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.individualListingObject;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.Callback;
-import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
-import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
-import sg.edu.np.mad_p03_group_gg.tools.interfaces.ThumbnailCallback;
 import sg.edu.np.mad_p03_group_gg.tools.interfaces.paymentMethodCallback;
 
+/**
+ * Utility class for Firebase related operations.
+ */
 public  class FirebaseTools {
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private static DatabaseReference databaseReference = database.getReference();
 
-    // Retrieve UserID from Authenticated User Session and get Payment Method of the User
+/*    // Retrieve UserID from Authenticated User Session and get Payment Method of the User
     public static void getCurrentUserPaymentMethod(String userId, Context context,
                                                    paymentMethodCallback callback) {
         databaseReference.child("users").child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -78,9 +65,9 @@ public  class FirebaseTools {
                 }
             }
         });
-    }
+    }*/
 
-    public static void writePaymentInfo(String sellerId, @Nullable String connectStripeId,
+/*    public static void writePaymentInfo(String sellerId, @Nullable String connectStripeId,
                                         @Nullable String paynowPhone, @Nullable String cardanoWalletAddress) {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -127,7 +114,7 @@ public  class FirebaseTools {
             }
         };
         databaseReference.addValueEventListener(postListener);
-    }
+    }*/
 
     /**
      * Download ALL files in a certain directory (specified with the parameter, folder) from
@@ -255,7 +242,7 @@ public  class FirebaseTools {
      * @param uID
      * @param message
      */
-    public static void sendConfirmationMessage(String sID, String uID, String message) {
+/*    public static void sendConfirmationMessage(String sID, String uID, String message) {
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -322,6 +309,6 @@ public  class FirebaseTools {
                 // Failed to read from db
             }
         });
-    }
+    }*/
 
 }

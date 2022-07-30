@@ -69,7 +69,6 @@ public class CheckoutActivity extends AppCompatActivity {
     private String stripeAccountId;
     private Boolean isAddressValid = false;
     private String json;
-    private Boolean isCallback = false;
     private int totalPrice = 0;
     private final StripeDialog stripeDialog = new StripeDialog(CheckoutActivity.this);
 
@@ -118,8 +117,8 @@ public class CheckoutActivity extends AppCompatActivity {
                 stripeAccountId
         );
 
-        // if payment method == stripe
         // Start checkout session (create paymentIntent to get clientSecret)
+        // PaymentIntent is provided the seller's Stripe Account ID to enable direct payments
         paymentLauncher = PaymentLauncher.Companion.create(
                 this,
                 PaymentConfiguration.getInstance(this).getPublishableKey(),
@@ -128,6 +127,7 @@ public class CheckoutActivity extends AppCompatActivity {
         );
 
 
+        // Retrive listing details from Firebase given the productId
         databaseReference.child("users").child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -137,6 +137,8 @@ public class CheckoutActivity extends AppCompatActivity {
                 else {
                     FirebaseTools.createListingObjectFromFirebase(productId,
                             CheckoutActivity.this, listingObject -> {
+                                // Interface is used to ensure data is retrieved fully before
+                                // using it to set data variables due to it being asynchronous
                                 listingTitleView.setText(listingObject.getTitle());
                                 listingPriceView.setText("$" + listingObject.getPrice());
 
@@ -165,6 +167,7 @@ public class CheckoutActivity extends AppCompatActivity {
                                 checkoutButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+                                        // Provide customer detail to Stripe to send receipt
                                         startCheckout(totalPrice, customerEmail, stripeAccountId);
                                     }
                                 });
@@ -173,7 +176,7 @@ public class CheckoutActivity extends AppCompatActivity {
             }
         });
 
-        // Get result from PaymentMethod Activity
+        // Get result from PaymentMethod Activity (card info)
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -195,14 +198,14 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
                 Intent paymentMethodIntent = new Intent(CheckoutActivity.this,
                         PaymentMethodActivity.class);
                 activityResultLauncher.launch(paymentMethodIntent);
             }
         });
 
-
+        // Set visibility of addressLayout (delivery address .etc) according to the selection
+        // of radio buttons. (If meetup is selected, don't let user enter delivery address)
         deliveryRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -312,7 +315,7 @@ public class CheckoutActivity extends AppCompatActivity {
      *
      * 1) Gets email address of current authenticated user
      * 2) Send POST request to backend to create payment intent
-     * 3) Get client secret from payment intent
+     * 3) Get client secret from payment intent (NOT the whole payment intent) to confirm payment.
      *
      * @param totalPrice
      * @param customerEmail
@@ -320,17 +323,20 @@ public class CheckoutActivity extends AppCompatActivity {
      */
     private void startCheckout(int totalPrice, String customerEmail, String stripeAccountId){
 
+        // Validate if Delivery Address entered is valid
         if (paymentMethod != null) {
             isAddressValid = validateDeliveryAddress();
 
-
             if (isAddressValid)
             {
-
+                // Disable button after confirm payment, to prevent duplicated charges
+                Button checkoutButton = findViewById(R.id.checkoutButton);
+                checkoutButton.setEnabled(false);
                 RadioGroup deliveryRadioGroup = findViewById(R.id.deliveryRadioGroup);
                 int selectedRadioButtonId = deliveryRadioGroup.getCheckedRadioButtonId();
                 RadioButton selectedRadioButton = findViewById(selectedRadioButtonId);
 
+                // If meetup is selected the payment intent will not contain a shipping address
                 if (selectedRadioButton.getText().toString().equals("Meetup"))
                 {
                     // Stripe uses smallest currency unit, therefore need to multiply by 100
@@ -355,6 +361,9 @@ public class CheckoutActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    // Customer's delivery address is sent to Stripe, allowing Seller to directly
+                    // manage the orders from the dashboard.
+
                     EditText addresLine1 = findViewById(R.id.editAddressLine1);
                     EditText addressLine2 = findViewById(R.id.editAddressLine2);
                     EditText postalCode = findViewById(R.id.editPostalCode);
@@ -388,7 +397,7 @@ public class CheckoutActivity extends AppCompatActivity {
                             deliveryAddress.getShippingName());
 
                 }
-                createPaymentIntent();
+                createPaymentIntent(); //
             }
             else
             {
@@ -517,8 +526,13 @@ public class CheckoutActivity extends AppCompatActivity {
                         String body = response.body().string();
                         try {
                             JSONObject responseJson = new JSONObject(body);
+                            // Client secret is confidential and of one time use only, to confirm
+                            // the payment by customers
                             paymentIntentClientSecret = responseJson.getString("client_secret");
 
+                            // As this function is not in the main thread (which creates the UI
+                            // elements), need to explicitly specify UI tasks such as dialogues
+                            // to run on the main (UI) thread.
                             CheckoutActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
