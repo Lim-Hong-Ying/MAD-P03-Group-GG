@@ -221,7 +221,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:maxLines="1"
-                        android:onClick="editEvent"
                         android:paddingRight="10sp"
                         android:text="8:00 AM"
                         android:textColor="@color/theme_blue"
