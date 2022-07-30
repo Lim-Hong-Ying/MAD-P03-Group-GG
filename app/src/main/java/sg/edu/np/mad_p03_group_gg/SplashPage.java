@@ -45,7 +45,7 @@ public class SplashPage extends AppCompatActivity {
         firebaseAppCheck.installAppCheckProviderFactory(PlayIntegrityAppCheckProviderFactory.getInstance());
 
         //FOR DEBUG USAGE: TO ALLOW APP CHECK, REMOVE BEFORE PACKAGE
-        //firebaseAppCheck.installAppCheckProviderFactory(DebugAppCheckProviderFactory.getInstance());
+        firebaseAppCheck.installAppCheckProviderFactory(DebugAppCheckProviderFactory.getInstance());
 
         FirebaseTools.downloadFiles("advertisement", getApplicationContext(), this);
 

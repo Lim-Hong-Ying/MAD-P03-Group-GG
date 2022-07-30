@@ -12,6 +12,7 @@ android {
         targetSdk 32
         versionCode 10
         versionName 'v2.1.4'
+        //!!!IMPORTANT!!! COMMENT OUT DEBUG APP CHECK LINE ON SPLASHPAGE.JAVA BEFORE PACKAGING!!
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.debug
