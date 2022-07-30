@@ -205,7 +205,7 @@ public class cashshopewidget extends AppWidgetProvider {
            Intent clickIntent = new Intent(context,cashshopewidget.class);//Sub class of broadcast, if Action_App_Widge_update call, a update will run
            clickIntent.setAction(ACTION_REFRESH);
            clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,appWidgetIds[i]);
-           PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context,appWidgetIds[i],clickIntent,0);
+           PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context,appWidgetIds[i],clickIntent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             views.setEmptyView(R.id.gridpics,R.id.cashshope_widgetempty);
             views.setOnClickPendingIntent(R.id.refreshbutton,clickPendingIntent);

@@ -237,6 +237,8 @@ public class signupactivity extends AppCompatActivity {
 
         User u = new User(userName,email,ph,img);
         //Create user and create auth user instance
+        Log.e("Regiester","test");
+        Log.e("Email",u.getEmail().toString());
 
         auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -248,6 +250,7 @@ public class signupactivity extends AppCompatActivity {
                         DatabaseReference myRef = database.getReference();
                         String ID = auth.getUid();
                         u.setId(ID);
+                        Log.e("test","test");
                         myRef.child("users").child(u.getId()).setValue(u);
                         Intent Homepage = new Intent(signupactivity.this,
                                 MainActivity.class);

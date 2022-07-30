@@ -61,6 +61,7 @@ import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.Event;
@@ -99,7 +100,8 @@ public class User_Profile_Fragment extends Fragment {
     private List<listingObject> llist ;
     private int nooflisiting;
     private String userId;
-
+    private CountDownLatch finish = new CountDownLatch(1);
+    private CountDownLatch finish1 = new CountDownLatch(1);
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -186,11 +188,18 @@ public class User_Profile_Fragment extends Fragment {
                 //Use uid to find the user in database
                 for (DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
 
-                    String foundID = dataSnapshot.child("id").getValue(String.class);
+                    user = dataSnapshot.getValue(User.class);
+                    String foundID = user.getId();
+                    finish1.countDown();
+                    try {
+                        finish1.await();
+
+
                     if (foundID.equalsIgnoreCase(uid)) {
                         //Get user instance from database and set user
 
                         user = dataSnapshot.getValue(User.class);
+                        finish.countDown();
                         user.setId(uid);
                         DatabaseReference db = mDataref.child("users").child(user.getId()).child("liked");
                         Log.e("Noofitem1", db.toString());
@@ -219,6 +228,9 @@ public class User_Profile_Fragment extends Fragment {
 
                         break;
                     }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                 }
                 //Get profilepic url and store it in profilePicurl variable
@@ -229,9 +241,16 @@ public class User_Profile_Fragment extends Fragment {
                     Toast.makeText(getContext(), "Something went wrong loading the profile picture", Toast.LENGTH_SHORT).show();
                 }
                 //Set text in the user profile page
-                Email.setText(user.getEmail().toString());
-                Phonenumber.setText(user.getPhonenumber().toString());
-                Username.setText(user.getName().toString());
+                try {
+                    finish.await();
+                    Email.setText(user.getEmail().toString());
+                    Phonenumber.setText(user.getPhonenumber().toString());
+                    Username.setText(user.getName().toString());
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 Log.e("test","test");
             }
             @Override
@@ -378,9 +397,14 @@ public class User_Profile_Fragment extends Fragment {
         Button stripeDashboardButton = view.findViewById(R.id.stripeDashboardButton);
 
         // Get current user id
-        auth = FirebaseAuth.getInstance();
-        FirebaseUser fbUser = auth.getCurrentUser();
-        userId = fbUser.getUid();
+        try {
+            auth = FirebaseAuth.getInstance();
+            FirebaseUser fbUser = auth.getCurrentUser();
+            userId = fbUser.getUid();
+        }
+        catch(Exception e){
+            Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+        }
 
         StripeUtils.getStripeAccountId(userId, new ConnectStripeCallback() {
             @Override
