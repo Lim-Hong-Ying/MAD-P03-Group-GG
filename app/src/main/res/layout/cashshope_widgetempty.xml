@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cashshope_widgetempty"
+    android:id="@+id/cashshope_widgetempty1"
     style="@style/Widget.MADP03GroupGG.AppWidget.Container"
     android:layout_width="match_parent"
 
@@ -20,17 +20,11 @@
             >
 
             <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="No Items " />
-
-            <TextView
-                android:id="@+id/Wishlist_counter"
+                android:id="@+id/cashshope_widgetempty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="20dp"
+
                 >
 
             </TextView>
@@ -49,9 +43,12 @@
            android:layout_height="wrap_content"
 ></TextView>    </LinearLayout>
 
-
-
-
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="No Items " />
 
 
 </RelativeLayout>

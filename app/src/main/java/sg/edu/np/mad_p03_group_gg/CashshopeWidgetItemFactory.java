@@ -53,7 +53,7 @@ import java.util.concurrent.CountDownLatch;
         private CountDownLatch finishfindingitem = new CountDownLatch(1);
     private CountDownLatch finishfindingitem1 = new CountDownLatch(1);
     private CountDownLatch FindItems = new CountDownLatch(1);
-
+    private CountDownLatch Finishlaod2 = new CountDownLatch(1);
 
         private Target target;
         CashshopeWidgetItemFactory(Context context, Intent intent){
@@ -63,15 +63,19 @@ import java.util.concurrent.CountDownLatch;
             this.appWidgetId=intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,AppWidgetManager.INVALID_APPWIDGET_ID);
 
         }
-        //Connect to data source here
+        //Since according to widget lifecycle, when widget is called,
+        // on create method will then call on datasetchange method,
+        // getting data woll occur in the on data set changed method
         @Override
         public void onCreate() {
 
 
 
         }
-        //Update widget
+        //Method to update widget
     private void Intizalxzedata() throws InterruptedException{
+
+            // Get database ref
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         Log.e("Test","Intilizepass");
@@ -82,12 +86,14 @@ import java.util.concurrent.CountDownLatch;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot result : snapshot.child("individual-listing").getChildren()) {
+                    //get items from database
 
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     String listingid = result.getKey();
                     String title = result.child("title").getValue(String.class);
                     long thumbnailurlsize = result.child("tURLs").getChildrenCount();
                     ArrayList<String> tURLs = new ArrayList<>();
+                    // Set item pictures into a list/array
                     for (int i = 0; i < thumbnailurlsize; i++) {
                         tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
                     }
@@ -105,11 +111,13 @@ import java.util.concurrent.CountDownLatch;
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
                     String TimeStamp = result.child("timeStamp").getValue(String.class);
                     Log.e("Test",FindItems.toString());
-                    FindItems.countDown();
+                    FindItems.countDown();//Wait for above operations to finish, reduce countdown by 1
                     Log.e("Test",FindItems.toString());
                     Log.e("Link",mDataref.child("individual-listing").child(listingid).child("tURLs").child("0").toString());
                     try {
+
                         FindItems.await();
+                        //When countdown finditem =0 . the below code is executed, make it synchronise
                         Log.e("Test",FindItems.toString());
                         LocalDate CurrentDate = LocalDate.now();
                         String ts = CurrentDate.toString();
@@ -147,15 +155,17 @@ import java.util.concurrent.CountDownLatch;
 
                 }
 
-                finish.countDown();//count down to 0 when runned
-                try{
+                //count down to 0 when runned
+                try {
+                    finish.countDown();
                     finish.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try{
+
                     Log.e("PassAwait","Pass");
                     Log.e("Passawaitlistlentgh",Integer.toString(llist.size()));
-
-
-
-
                     //finishfindingitem1.countDown();
                 Log.e("ff1",finishfindingitem1.toString());
                 }
@@ -183,11 +193,13 @@ import java.util.concurrent.CountDownLatch;
         @Override
         public void onDataSetChanged() {
             Log.e("Cleared",Integer.toString(llist.size()));
+            //re-intialize countdown for synchronise operations
             donesignal = new CountDownLatch(5);
             finish = new CountDownLatch(1);
             finishfindingitem = new CountDownLatch(1);
             finishfindingitem1 = new CountDownLatch(1);
             FindItems = new CountDownLatch(1);
+            //Clear list items if the widget is refresehed
 
             llist.clear();
             Log.e("Cleared",Integer.toString(llist.size()));
@@ -205,11 +217,12 @@ import java.util.concurrent.CountDownLatch;
 
         @Override
         public void onDestroy() {
-            //close datasource
+            //close datasource when widget is destroyed or deleted
             llist.clear();
 
 
         }
+        //Used to get the number of objects needed for the collection view(Similar to recycler view)
 
         @Override
         public int getCount() {
@@ -229,6 +242,7 @@ import java.util.concurrent.CountDownLatch;
 
             }
 
+
         }
         // COmbine object to views
 
@@ -237,56 +251,28 @@ import java.util.concurrent.CountDownLatch;
 
             Log.e("Test1","getviewat");
             Log.e("ViewListLength",Integer.toString(llist.size()));
+            //Get remoteview
             RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.widgetitem);
+            //Remove any preexisting views
             views.removeAllViews(R.id.gridpics);
 
             Log.e("Test1","provider enter");
-            Intent fillIntent = new Intent();
-            fillIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-//            views.setOnClickFillInIntent(R.id.cashshope_widget_picture,fillIntent);
+
+
+            //Set the title of the item
             views.setTextViewText(R.id.widgetitemtitle,llist.get(i).title);
-
-
-//            AppWidgetTarget awt2 = new AppWidgetTarget(context, R.id.cashshope_widget_picture, views, appWidgetId) {
-//
-//            };
-//
-//            Glide.with(context)
-//                    .asBitmap()
-//                    .load(llist.get(i).tURL)
-//                    .into(awt2);
+            //Set price of collection item
             views.setTextViewText(R.id.widgetprice,"$" + llist.get(i).price);
-            try {
-                URL url = new URL(llist.get(i).gettURLs().get(0));
-                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
-                views.setImageViewBitmap(R.id.cashshope_widget_picture,image);
-                //Log.e("Test",Integer.toString(llist.size()));
-            } catch(IOException e) {
-                Log.e("No Image", "No Image found/something went wrong");
+            try {
+                //Set the image for the collection item, caches it using picasso
+
+                Bitmap b = Picasso.get().load(llist.get(i).gettURLs().get(0)).resize(100,100).get();
+
+                views.setImageViewBitmap(R.id.cashshope_widget_picture, b);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-//            target=new Target() {
-//                @Override
-//                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//
-//                }
-//
-//                @Override
-//                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-//
-//                }
-//
-//                @Override
-//                public void onPrepareLoad(Drawable placeHolderDrawable) {
-//
-//                }
-//            }
-//            Handler uiHandler = new Handler(Looper.getMainLooper());
-//            uiHandler.post(() -> {
-//            Picasso.get()
-//                    .load(llist.get(i).tURL)
-//                    .into(views, R.id.cashshope_widget_picture, new int[] {appWidgetId});
-//            });
 
 
 
