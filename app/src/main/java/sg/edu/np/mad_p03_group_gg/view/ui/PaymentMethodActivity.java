@@ -29,8 +29,6 @@ import sg.edu.np.mad_p03_group_gg.tools.interfaces.paymentMethodCallback;
  */
 public class PaymentMethodActivity extends AppCompatActivity {
     private int selectedPaymentMethodId;
-    private FirebaseAuth auth;
-    private String currentUserId;
     private RadioButton selectedRadioButton;
 
 
@@ -41,6 +39,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
         CardInputWidget cardInputWidget = findViewById(R.id.cardInputWidget);
 
+        // Allow auto-fill of card details
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             cardInputWidget.setAutofillHints(View.AUTOFILL_HINT_CREDIT_CARD_NUMBER);
         }
@@ -73,7 +72,9 @@ public class PaymentMethodActivity extends AppCompatActivity {
         });
 
         /**
-         * Send intent back to CheckoutActivity
+         * Send intent back to CheckoutActivity containing:
+         * - Payment Method (for future support of more payment methods such as Paynow)
+         * - Card Information which is parsed as a PaymentMethodCreateParams object
          */
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

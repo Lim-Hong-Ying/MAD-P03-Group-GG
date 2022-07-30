@@ -424,7 +424,6 @@ public class newlisting extends AppCompatActivity {
         Switch delivery_toggle = findViewById(R.id.del_toggle);
 
         Switch stripeSwitch = findViewById(R.id.stripeSwitch);
-        Switch cardanoSwitch = findViewById(R.id.cardanoSwitch);
 
         Boolean image_selected = false;
         Boolean title_filled = false;
