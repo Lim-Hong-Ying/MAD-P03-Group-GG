@@ -42,7 +42,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Lim Hong Ying||
 |Ooi Jun Heng Ryan|Integrated Google Calendar to sync with events (Add, Edit, Delete events from Google Calendar), EventPage Activity, EventDetails Activity, Usage of Calendar Permission, Improved event details|
 |William Francis Siah|ChatAddUser Activity, Improved Chat Activity (User Status, Sending Images), Improved ChatList Activity (Manual/Auto add chat, Delete chat, Search Feature, Unseen Messages), Updated MessageList, RecyclerViewInterface|
-|Koh Han Jie Isaac|Wishlist counter, App Widget to view today listing, Delete account, Change account details|
+|Koh Han Jie Isaac|Wishlist counter in User profile page, App Widget to view today listing Activity, RemoteViewFactory interface for widget, Button to reload widget, Delete account Activity, Change account details Activity|
 
 ## Features
 ### Homepage
