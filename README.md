@@ -92,13 +92,21 @@ the environment by promoting reusability.
 Feeling fancy today? Customize your profile! 
 
 ![User](resources/profile.png)
-Go to the customize profile page to change your profile details
+<br/>
+<br/>
+Go to the customize profile page to change your profile details with our newly added change edit profile feature! Start by clicking the edit profile button!
+<br/>>
+<br/>
+<img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/item1.png" width="300">
+<br/>
+<br/>
+Enter your details here
 <br/>
 <br/>
 <img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Edit%20acc.png" width="300">
 <br/>
 <br/>
-Remeber to reauthenticate in order to change your account information!
+Remeber to reauthenticate in order to change your account information and click the change details button!
 <br/>
 <br/>
 <img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Edit%20acc2.png" width="300">
@@ -106,7 +114,13 @@ Remeber to reauthenticate in order to change your account information!
 <br/>
 
 ### Delete Account
-Dont want to keep your cashshope account anymore? You can now delete your account!But remember, this process is non reversible!
+Dont want to keep your cashshope account anymore? You can now delete your account!But remember, this process is non reversible! Start off by clicking the delete button in your profile page.
+<br/>
+<br/>
+<img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/deletebtn.png" width="300">
+<br/>
+<br/>
+You will be prompted if you want to delete your account, click yes if you want to
 <br/>
 <br/>
 <img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Delete%20alert%20box.png" width="300">
