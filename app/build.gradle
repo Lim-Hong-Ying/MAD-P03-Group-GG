@@ -10,8 +10,8 @@ android {
         applicationId "sg.edu.np.mad_p03_group_gg"
         minSdk 21
         targetSdk 32
-        versionCode 10
-        versionName 'v2.1.4'
+        versionCode 11
+        versionName 'v2.1.5'
         //!!!IMPORTANT!!! COMMENT OUT DEBUG APP CHECK LINE ON SPLASHPAGE.JAVA BEFORE PACKAGING!!
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
