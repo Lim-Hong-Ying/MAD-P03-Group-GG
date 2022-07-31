@@ -24,21 +24,30 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.concurrent.CountDownLatch;
 
 public class deleteaccount extends AppCompatActivity {
     private DatabaseReference mDataref;
     private FirebaseUser fbUser;
+    private CountDownLatch final1 = new CountDownLatch(1);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deleteaccount);
+        //connect to db
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         mDataref = database.getReference();
+        //get views
         EditText reemail = (EditText) findViewById(R.id.ccredentialemail);
         EditText repassword = (EditText) findViewById(R.id.repassword);
         Button cnrmuser = (Button) findViewById(R.id.changedtls);
         FirebaseAuth auth = FirebaseAuth.getInstance();
+
         fbUser = auth.getCurrentUser();
         cnrmuser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,11 +61,12 @@ public class deleteaccount extends AppCompatActivity {
                     repassword.setError("Password is required!");
                     return;
                 }
+                // get credentials
 
 
                 AuthCredential credential = EmailAuthProvider
                         .getCredential(reemail.getText().toString(), repassword.getText().toString());
-
+                // reauthenticate user, deleting of account required reauthentication
                 fbUser.reauthenticate(credential)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -71,26 +81,55 @@ public class deleteaccount extends AppCompatActivity {
 
                                             String uid = fbUser.getUid();
                                             String email = fbUser.getEmail();
+                                            Log.e("test4","test4");
                                             //Use uid to find the user in database
                                             for (DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
                                                 String foundID = dataSnapshot.child("id").getValue(String.class);
+                                                Log.e("foundID",foundID.toString());
                                                 if (foundID.equalsIgnoreCase(uid)) {
                                                     //Create intent
+                                                    Log.e("Passdatachange","snapshot2");
                                                     Intent intent = new Intent(deleteaccount.this, loginpage.class);
                                                     //If sign out have problem, create toast message informing user of problem
                                                     try {
-                                                        mDataref.addListenerForSingleValueEvent(new ValueEventListener(){
-
+                                                        Log.e("Passdatachange","snapshot1");
+                                                        mDataref.child("individual-listing").addListenerForSingleValueEvent(new ValueEventListener(){
 
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                for(DataSnapshot dataSnapshot1 :snapshot.child("individual-listing").getChildren()){
+                                                                Log.e("Passdatachange","snapshot");
+                                                                Log.e("ref", mDataref.toString());
+
+                                                                for(DataSnapshot dataSnapshot1 :snapshot.getChildren()){
+                                                                    Log.e("Snapshot",dataSnapshot1.toString());
                                                                     individualListingObject foundID2 = dataSnapshot1.getValue(individualListingObject.class);
+
                                                                     if (foundID2.sID.equals(uid)) {
+                                                                        Log.e("Categpry",foundID2.getCategory());
+
+                                                                        Log.e("snapshot",dataSnapshot1.getRef().toString());
+
+                                                                        mDataref.child("category").child(foundID2.getCategory()).child(foundID2.lID).getRef().removeValue();
                                                                         dataSnapshot1.getRef().removeValue();
                                                                         Log.e("pass","pass");
                                                                     }
                                                                 }
+                                                                //Get user instance from database and set user
+                                                                Log.e("Usersnapshot",dataSnapshot.getRef().toString());
+
+
+                                                                dataSnapshot.getRef().removeValue();
+                                                                fbUser.delete();
+                                                                Event.eventsList.clear();
+                                                                //sign out from user
+                                                                auth.signOut();
+                                                                //Inform user activity finished
+                                                                Toast.makeText(deleteaccount.this, "Account Deletion sucessful!", Toast.LENGTH_SHORT).show();
+                                                                //Got to login page activity
+                                                                startActivity(intent);
+                                                                //Finish activity
+                                                                deleteaccount.this.finish();
+
 
                                                             }
 
@@ -99,18 +138,9 @@ public class deleteaccount extends AppCompatActivity {
 
                                                             }
                                                         });
-                                                        //Get user instance from database and set user
-                                                        dataSnapshot.getRef().removeValue();
-                                                        fbUser.delete();
-                                                        Event.eventsList.clear();
-                                                        //sign out from user
-                                                        auth.signOut();
-                                                        //Inform user activity finished
-                                                        Toast.makeText(deleteaccount.this, "Account Deletion sucessful!", Toast.LENGTH_SHORT).show();
-                                                        //Got to login page activity
-                                                        startActivity(intent);
-                                                        //Finish activity
-                                                        deleteaccount.this.finish();
+
+
+
                                                     } catch (Exception e) {
                                                         //Error message
                                                         Toast.makeText(deleteaccount.this, "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
@@ -130,6 +160,7 @@ public class deleteaccount extends AppCompatActivity {
                                     });
 
                                 } else {
+                                    // Tell user if wrong email or password
                                     Toast.makeText(deleteaccount.this, "Wrong Email/Password", Toast.LENGTH_SHORT).show();
 
                                 }

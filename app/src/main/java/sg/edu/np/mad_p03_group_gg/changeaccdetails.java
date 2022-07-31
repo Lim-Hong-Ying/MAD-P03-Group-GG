@@ -35,6 +35,7 @@ public class changeaccdetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            //Connect to DB
             FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
             DatabaseReference mDataref = database.getReference();
             setContentView(R.layout.activity_changeaccdetails);
@@ -80,6 +81,7 @@ public class changeaccdetails extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 String ID = user.getUid();
                                                 Log.e("ndatref",mDataref.toString());
+                                                //manually change items
                                                 mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
