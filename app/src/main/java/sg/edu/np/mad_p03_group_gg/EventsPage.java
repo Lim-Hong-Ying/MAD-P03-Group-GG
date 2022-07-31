@@ -27,8 +27,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -157,12 +159,18 @@ public class EventsPage extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    LocalDate dt;
                     int eventId = Integer.parseInt(snapshot.getKey());
                     name = snapshot.child("name").getValue(String.class);
                     location = snapshot.child("location").getValue(String.class);
                     time = snapshot.child("time").getValue(String.class);
                     date = snapshot.child("date").getValue(String.class);
-                    LocalDate dt = LocalDate.parse(date, dtf);
+                    try{
+                        dt = LocalDate.parse(date, dtf);
+                    }catch (DateTimeParseException e){
+                        DateTimeFormatter dtfv = DateTimeFormatter.ofPattern("yyyy-MM-d");
+                        dt = LocalDate.parse(date, dtfv);
+                    }
                     desc = snapshot.child("description").getValue(String.class);
                     // Only display current events
                     if (dt.isAfter(LocalDate.now()) || dt.isEqual(LocalDate.now())){

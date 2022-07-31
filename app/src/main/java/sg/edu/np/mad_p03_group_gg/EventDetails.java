@@ -160,7 +160,13 @@ public class EventDetails extends AppCompatActivity {
                         // Convert date string to LocalDate to store inside Event object
                         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                         String d = eventDate.getText().toString();
-                        LocalDate date = LocalDate.parse(d,dtf);
+                        LocalDate date;
+                        try{
+                            date = LocalDate.parse(d, dtf);
+                        }catch (DateTimeParseException e){
+                            DateTimeFormatter dtfv = DateTimeFormatter.ofPattern("yyyy-MM-d");
+                            date = LocalDate.parse(d, dtfv);
+                        }
                         // Check that selected date has not past
                         if (date.isBefore(LocalDate.now())){
                             eventDate.setError("Select a valid date");
@@ -210,7 +216,13 @@ public class EventDetails extends AppCompatActivity {
                         // Format date string to LocalDate to store inside Event object
                         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                         String d = eventDate.getText().toString();
-                        LocalDate date = LocalDate.parse(d,dtf);
+                        LocalDate date;
+                        try{
+                            date = LocalDate.parse(d, dtf);
+                        }catch (DateTimeParseException e){
+                            DateTimeFormatter dtfv = DateTimeFormatter.ofPattern("yyyy-MM-d");
+                            date = LocalDate.parse(d, dtfv);
+                        }
                         // Check that selected date has not past
                         if (date.isBefore(LocalDate.now())){
                             eventDate.setError("Select a valid date");
