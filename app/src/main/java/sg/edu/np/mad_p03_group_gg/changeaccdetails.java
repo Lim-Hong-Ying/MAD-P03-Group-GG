@@ -20,8 +20,11 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -76,11 +79,34 @@ public class changeaccdetails extends AppCompatActivity {
                                             // If task is suceessful, change user details by changing into user object
                                             if (task.isSuccessful()) {
                                                 String ID = user.getUid();
-                                                Log.e("Text", Email.getText().toString());
-                                                userdata.setName(Username.getText().toString());
-                                                userdata.setEmail(Email.getText().toString());
-                                                userdata.setPhonenumber(Phonenumber.getText().toString());
-                                                mDataref.child("users").child(userdata.getId()).setValue(userdata);
+                                                Log.e("ndatref",mDataref.toString());
+                                                mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        for (DataSnapshot dataSnapshot : snapshot.child(("users")).getChildren()) {
+                                                        Log.e("ID",dataSnapshot.getValue().toString());
+                                                        User U = dataSnapshot.getValue(User.class);
+                                                        Log.e("UID",ID);
+                                                            if(U.getId().equals(ID)){
+
+                                                            DatabaseReference ndataref = mDataref.child("users").child(ID);
+                                                            Log.e("ndatref",ndataref.toString());
+
+                                                            ndataref.child("email").setValue(Email.getText().toString());
+                                                            ndataref.child("name").setValue(Username.getText().toString());
+                                                            ndataref.child("phonenumber").setValue(Phonenumber.getText().toString());
+                                                        }
+
+                                                        }
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+
                                                 //Change user password
                                                 user.updatePassword(Changepassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
