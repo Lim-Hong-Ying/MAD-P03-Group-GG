@@ -30,7 +30,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Member|Contributions|
 |---|---|
 |Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc)|
-|Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, Play Store app updates|
+|Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, user profile, categories, Play Store app updates|
 |Ooi Jun Heng Ryan|Meeting Planner page, Weekly Calendar, Monthly Calendar, Event page, EventEdit Page, Firebase implementation for events|
 |William Francis Siah|Basic Chat Activity, Basic ChatList Activity, ChatInfo, MessageList, MemoryData, Linking Individual Listing to Chat page|
 |Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations| Stage 2 <br> Wishlist counter, App Widget to view today listing, Delete account, Change account details</br>
