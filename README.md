@@ -204,7 +204,7 @@ See below for screenshots on the additional 3DS or Two-factor Authentication pro
 
 ## Stripe Guide
 [![StripeLogo](resources/poweredbystripe.png)](http://www.stripe.com/) </br>
-We partner with Stripe, one of the world' leading online payment infrastructure, to provide you a much better shopping experience. Sellers can now easily view and track your customers' purchases. For buyers, you can now buy items with just a few taps using your card of choice! 
+We partner with Stripe, one of the world's leading online payment infrastructure, to provide you a much better shopping experience. Sellers can now easily view and track your customers' purchases. For buyers, you can now buy items with just a few taps using your card of choice! 
 
 ### For Sellers
 In order to allow your buyers to purchase your items via debit or credit card:
