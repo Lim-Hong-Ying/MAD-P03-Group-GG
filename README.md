@@ -242,14 +242,14 @@ In order to pay with a valid debit or credit card:
   - Before procceding, please press yes if you want to procced with deleting your item
   - Remember, this action cannot be reversible so think carefully
   - Enter your credentials again to make sure it is you
-  - Click on the delete button
+  - Click on the continue button to confirm yout action
   - Your account has been deleted!
   ### Change Account details
   - Go to your profile page
   - Click the change account details button
   - Enter your changed details
   - Re-enter your credentials
-  - Click the button
+  - Click the button 
   - Your account details have been changed!
   
   
