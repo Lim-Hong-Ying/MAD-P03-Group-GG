@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -42,12 +43,13 @@ import sg.edu.np.mad_p03_group_gg.view.ui.fragments.HomepageFragment;
 
 public class EventDetails extends AppCompatActivity {
     private Event selectedEvent;
-    private ImageView closeBtn, selectDate, selectTime;
+    private ImageView closeBtn;
     private int hour, min;
     private boolean editable, newEvent;
     private TextView eventName, eventLocation, eventDate, eventTime, eventDesc;
     private MaterialButton greenBtn;
     private String userId = HomepageFragment.userId, sMonth, mth, currentName;
+    private LinearLayout dateLinear, timeLinear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class EventDetails extends AppCompatActivity {
         else{
             // Set default date displayed to be current date
             // Format month number to show two digits
+
             DecimalFormat formatter = new DecimalFormat("00");
             String monthString = formatter.format(month + 1);
             String sDate = year + "-" + monthString + "-" + day;
@@ -88,13 +91,14 @@ public class EventDetails extends AppCompatActivity {
         }
         // If user is viewing an event, button will be invisible
         if (!editable && !newEvent){
+            setNoFocusable();
             greenBtn.setVisibility(View.INVISIBLE);
         }
 
         // If user is editing or creating an event
         if (editable || newEvent){
             // Display selected date using calendar
-            selectDate.setOnClickListener(new View.OnClickListener() {
+            dateLinear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     DatePickerDialog dialog = new DatePickerDialog(EventDetails.this, new DatePickerDialog.OnDateSetListener() {
@@ -116,7 +120,7 @@ public class EventDetails extends AppCompatActivity {
                 }
             });
             // Display selected time
-            selectTime.setOnClickListener(new View.OnClickListener() {
+            timeLinear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -133,9 +137,7 @@ public class EventDetails extends AppCompatActivity {
                     timePickerDialog.show();
                 }
             });
-            // Allow inputs to be focusable (editable)
-            setFocusable();
-            //
+
             if (editable){
                 greenBtn.setText("Save Changes");
                 // When button is clicked, save changes to event
@@ -309,18 +311,18 @@ public class EventDetails extends AppCompatActivity {
         eventLocation = findViewById(R.id.eventLocation);
         eventDate = findViewById(R.id.eventDate);
         eventTime = findViewById(R.id.eventTime);
-        selectTime = findViewById(R.id.selectTime);
-        selectDate= findViewById(R.id.selectDate);
+        dateLinear = findViewById(R.id.dateLinear);
+        timeLinear = findViewById(R.id.timeLinear);
         eventDesc = findViewById(R.id.eventDesc);
     }
 
-    // Make inputs focusable (editable)
-    private void setFocusable(){
-        eventName.setFocusableInTouchMode(true);
-        eventLocation.setFocusableInTouchMode(true);
-        selectDate.setFocusableInTouchMode(true);
-        selectTime.setFocusableInTouchMode(true);
-        eventDesc.setFocusableInTouchMode(true);
+    // Make inputs not focusable when viewing an event
+    private void setNoFocusable(){
+        eventName.setFocusableInTouchMode(false);
+        eventLocation.setFocusableInTouchMode(false);
+        dateLinear.setFocusableInTouchMode(false);
+        timeLinear.setFocusableInTouchMode(false);
+        eventDesc.setFocusableInTouchMode(false);
     }
 
     // Setting time button to 12 hour format

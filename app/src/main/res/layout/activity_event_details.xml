@@ -90,7 +90,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
                         android:background="#FFFFFF"
-                        android:focusable="false"
                         android:hint="Event Name"
                         android:minHeight="48dp"
                         android:textColor="@android:color/black"
@@ -102,7 +101,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="#FFFFFF"
-                        android:focusable="false"
                         android:hint="Location"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="24sp"></EditText>
@@ -115,7 +113,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="143dp"
+                            android:layout_width="151dp"
                             android:layout_height="74dp"
                             android:orientation="vertical">
 
@@ -127,7 +125,8 @@
                                 android:textSize="20sp"></TextView>
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:id="@+id/dateLinear"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:gravity="center"
@@ -135,9 +134,8 @@
 
                                 <ImageView
                                     android:id="@+id/selectDate"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:focusable="false"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
                                     android:src="@drawable/ic_baseline_calendar_today_24"></ImageView>
 
                                 <TextView
@@ -166,6 +164,7 @@
                                 android:textSize="20sp"></TextView>
 
                             <LinearLayout
+                                android:id="@+id/timeLinear"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
@@ -180,10 +179,9 @@
 
                                     <ImageView
                                         android:id="@+id/selectTime"
-                                        android:layout_width="30dp"
-                                        android:layout_height="30dp"
+                                        android:layout_width="45dp"
+                                        android:layout_height="40dp"
                                         android:contentDescription="ClockIcon"
-                                        android:focusable="false"
                                         android:src="@drawable/ic_baseline_access_time_24"></ImageView>
 
                                     <TextView
@@ -219,7 +217,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:background="#FFFFFF"
-                        android:focusable="false"
                         android:hint="Event Descriptions"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="20sp"></EditText>
