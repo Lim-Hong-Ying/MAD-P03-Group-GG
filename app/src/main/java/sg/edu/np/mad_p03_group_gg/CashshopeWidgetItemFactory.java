@@ -46,8 +46,7 @@ import java.util.concurrent.CountDownLatch;
         private Context context;
         private int appWidgetId;
         private ArrayList<listingObject> llist = new ArrayList<listingObject>();
-        //private String[] exampleData = {"one", "two", "three", "four",
-        //    "five", "six", "seven", "eight", "nine", "ten"};
+
         private CountDownLatch donesignal = new CountDownLatch(5);
         private CountDownLatch finish = new CountDownLatch(1);
         private CountDownLatch finishfindingitem = new CountDownLatch(1);
@@ -65,7 +64,7 @@ import java.util.concurrent.CountDownLatch;
         }
         //Since according to widget lifecycle, when widget is called,
         // on create method will then call on datasetchange method,
-        // getting data woll occur in the on data set changed method
+        // getting data will occur in the on data set changed method
         @Override
         public void onCreate() {
 
@@ -117,7 +116,7 @@ import java.util.concurrent.CountDownLatch;
                     try {
 
                         FindItems.await();
-                        //When countdown finditem =0 . the below code is executed, make it synchronise
+                        //When countdown finditem =0 . the below code is executed, make it synchronise and prevent the views from loading beforehand
                         Log.e("Test",FindItems.toString());
                         LocalDate CurrentDate = LocalDate.now();
                         String ts = CurrentDate.toString();
@@ -249,14 +248,13 @@ import java.util.concurrent.CountDownLatch;
         @Override
         public RemoteViews getViewAt(int i) {
 
-            Log.e("Test1","getviewat");
+
             Log.e("ViewListLength",Integer.toString(llist.size()));
             //Get remoteview
             RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.widgetitem);
             //Remove any preexisting views
             views.removeAllViews(R.id.gridpics);
 
-            Log.e("Test1","provider enter");
 
 
             //Set the title of the item

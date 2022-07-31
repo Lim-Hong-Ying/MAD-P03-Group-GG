@@ -100,11 +100,11 @@ public class newlisting extends AppCompatActivity {
         FirebaseUser fbUser = auth.getCurrentUser();
         currentUserId = fbUser.getUid();
 
-        // Stripe
-        //PaymentConfiguration.init(
-          //      getApplicationContext(),
-            //    "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
-        //);
+         //Stripe
+        PaymentConfiguration.init(
+                getApplicationContext(),
+                "pk_test_51LKF7ZFaaAQicG0TEdtmijoaa2muufF73f7Hyhid3hXglesPpgV86ykgKWxJ74zwkrzbWa7HvrAvZExbVD5wDV1X0017hZyVPa"
+        );
 
         // ############# END OF KAI ZHE PAYMENT SECTION ###############
 

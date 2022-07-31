@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 public class cashshopeWidgetService extends RemoteViewsService {
     @Override
-    //Remoteviewfactory class are like adapters in recycler view
+    // binds the widget item factory with cashshope widget, allows for scrollable list
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         Log.e("test", "test1");
         return new CashshopeWidgetItemFactory(getApplicationContext(), intent);// returns the cashshopeitemviewfactory class
