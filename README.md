@@ -68,6 +68,18 @@ You can also chat with other Cashshopers!
   <img src="resources/gitHub__chat.png" alt="drawing" width="300"/>
 </p>
 
+Add other users to your chat list! <br><br>
+<img src="resources/add_chat.png" alt="drawing" width="300"/>
+<br><br>
+Remove a user from your chat list by clicking and holding! <br><br>
+<img src="resources/after_remove_user.png" alt="drawing" width="300"/>
+<br><br>
+Search for users in your chat list! <br><br>
+<img src="resources/chat_search.png" alt="drawing" width="300"/>
+<br><br>
+Unseen messages are displayed! <br><br>
+<img src="resources/unseen_messages.png" alt="drawing" width="300"/>
+
 ### Meeting Planner
 Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to see your schedule!
 
