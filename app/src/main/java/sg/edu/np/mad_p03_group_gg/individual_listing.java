@@ -289,11 +289,11 @@ public class individual_listing extends AppCompatActivity {
 
     }
 
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
+    public void showPopup(View v) { //Function to show menu for sellers
+        PopupMenu popup = new PopupMenu(this, v); //Initialises popup menu
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.individual_listing_seller, popup.getMenu());
-        if (listing.getReserved() == false) {
+        inflater.inflate(R.menu.individual_listing_seller, popup.getMenu()); //Inflates popup menu
+        if (listing.getReserved() == false) { //Sets visibility of different reservation option based on listing state
             MenuItem unreserve = popup.getMenu().findItem(R.id.unreserve);
             unreserve.setVisible(false);
         }
@@ -351,10 +351,10 @@ public class individual_listing extends AppCompatActivity {
                 }
             }
         });
-        popup.show();
+        popup.show(); //Shows popup
     }
 
-    private void createObjectFromFB(String pID, String uID) {
+    private void createObjectFromFB(String pID, String uID) { //Creates listing object from Firebase data
         individualdb.getReference().child("individual-listing").child(pID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -362,8 +362,6 @@ public class individual_listing extends AppCompatActivity {
                     Toast.makeText(individual_listing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
                 }
                 else { //Builds individualListingObject from data retrieved
-                    Log.d("firebase", String.valueOf(task.getResult()));
-                    //individualListingObject listing = new individualListingObject();
                     DataSnapshot result = task.getResult();
 
                     String listingid = result.getKey();
@@ -577,33 +575,33 @@ public class individual_listing extends AppCompatActivity {
         liked.child(pID).removeValue();
     }
 
-    private void reserveListing() {
+    private void reserveListing() { //Function to reserve listing
         individualdb.getReference().child("individual-listing").child(pID).child("reserved").setValue(true);
         listing.setReserved(true);
         Toast.makeText(individual_listing.this, "Marked listing as reserved.", Toast.LENGTH_SHORT).show();
     }
 
-    private void unreserveListing() {
+    private void unreserveListing() { //Function to unreserve listing
         individualdb.getReference().child("individual-listing").child(pID).child("reserved").setValue(false);
         listing.setReserved(false);
         Toast.makeText(individual_listing.this, "Marked listing as available.", Toast.LENGTH_SHORT).show();
     }
 
-    private void deleteListing() {
-        individualdb.getReference().child("individual-listing").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+    private void deleteListing() { //Function to delete listing
+        individualdb.getReference().child("individual-listing").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() { //Deletes listing from individual listing child
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 storage.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
                         for (StorageReference item : listResult.getItems()) {
-                            item.delete();
+                            item.delete(); //Deletes images from FB storage
                         }
 
-                        individualdb.getReference().child("users").child(uID).child("listings").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        individualdb.getReference().child("users").child(uID).child("listings").child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() { //Removes listing key from individual user's listing child
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                individualdb.getReference().child("category").child(listing.getCategory()).child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                individualdb.getReference().child("category").child(listing.getCategory()).child(pID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() { //Removes listing key from category child
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         finish();
