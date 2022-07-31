@@ -96,10 +96,12 @@ public class wishListFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
-
-                } else {
+                if (!connected) {
                     Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+
                 }
             }
 

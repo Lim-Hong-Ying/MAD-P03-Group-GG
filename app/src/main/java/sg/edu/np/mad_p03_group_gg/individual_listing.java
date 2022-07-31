@@ -116,13 +116,15 @@ public class individual_listing extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
+                if (!connected && listing == null) {
+                    Toast.makeText(individual_listing.this, "No internet connection.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                else {
                     initialCheckLiked();
                     createObjectFromFB(pID, uID);
                     checkLiked();
-                } else {
-                    Toast.makeText(individual_listing.this, "No internet connection.", Toast.LENGTH_SHORT).show();
-                    finish();
                 }
             }
 
