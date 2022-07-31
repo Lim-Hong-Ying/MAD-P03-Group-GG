@@ -149,6 +149,7 @@ public class changeaccdetails extends AppCompatActivity {
 
 
                     } else {
+                        //check if the text fields are entered correctly
                         if (isText(Username) == false) {
                             Username.setError("Invalid username");
                         }
@@ -201,6 +202,7 @@ public class changeaccdetails extends AppCompatActivity {
         CharSequence phone = Phone.getText().toString();
         return(!TextUtils.isEmpty(phone)&& Patterns.PHONE.matcher(phone).matches());
     }
+    //Checkis if passwords are the same, if same, return true, if diff returns false
     boolean isPasswordSame(EditText p1, EditText p2){
         CharSequence P1 = p1.getText().toString();
         CharSequence P2 = p2.getText().toString();

@@ -47,6 +47,7 @@ public class deleteaccount extends AppCompatActivity {
         EditText repassword = (EditText) findViewById(R.id.repassword);
         Button cnrmuser = (Button) findViewById(R.id.changedtls);
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        //get current user
 
         fbUser = auth.getCurrentUser();
         cnrmuser.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +100,8 @@ public class deleteaccount extends AppCompatActivity {
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                 Log.e("Passdatachange","snapshot");
                                                                 Log.e("ref", mDataref.toString());
+                                                                //Get the individual listing object and compare it to previous other items to check if the sid is same
+                                                                //if sid is same, lisitng is deleted along with the related keys in the category.
 
                                                                 for(DataSnapshot dataSnapshot1 :snapshot.getChildren()){
                                                                     Log.e("Snapshot",dataSnapshot1.toString());

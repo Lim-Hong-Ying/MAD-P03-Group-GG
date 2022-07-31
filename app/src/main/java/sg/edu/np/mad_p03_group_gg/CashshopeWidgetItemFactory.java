@@ -231,7 +231,7 @@ import java.util.concurrent.CountDownLatch;
             List<listingObject> llist1 = llist;
             Log.e("Coutndown", Long.toString(donesignal.getCount()));
             try {
-//why the database items has been loaded, call getcount
+//when the database items has been loaded, call getcount
                 finish.await();
                 Log.e("TodayCount",Integer.toString(llist1.size()));
                 return llist1.size();
@@ -277,6 +277,7 @@ import java.util.concurrent.CountDownLatch;
 
             return views;
         }
+        // Use default loading view when item loading from the db
 
         @Override
         public RemoteViews getLoadingView() {
