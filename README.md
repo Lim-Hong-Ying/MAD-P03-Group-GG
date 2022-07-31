@@ -30,10 +30,10 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Member|Contributions|
 |---|---|
 |Tan Kai Zhe|Homepage, Main Activity, Search Activity, Firebase Tools, Graphics/Illustrations, PlayStore Management & App Publication (Description, Release Notes, User Guide .etc)|
-|Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, Play Store app updates|
+|Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, user profile, categories, Play Store app updates|
 |Ooi Jun Heng Ryan|Meeting Planner page, Weekly Calendar, Monthly Calendar, Event page, EventEdit Page, Firebase implementation for events|
 |William Francis Siah|Basic Chat Activity, Basic ChatList Activity, ChatInfo, MessageList, MemoryData, Linking Individual Listing to Chat page|
-|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations| Stage 2 <br> Wishlist counter, App Widget to view today listing, Delete account, Change account details</br>
+|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations| 
 
 ### Stage 2
 |Member|Contributions|
@@ -42,7 +42,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Lim Hong Ying||
 |Ooi Jun Heng Ryan|Integrated Google Calendar to sync with events (Add, Edit, Delete events from Google Calendar), EventPage Activity, EventDetails Activity, Usage of Calendar Permission, Improved event details|
 |William Francis Siah|ChatAddUser Activity, Improved Chat Activity (User Status, Sending Images), Improved ChatList Activity (Manual/Auto add chat, Delete chat, Search Feature, Unseen Messages), Updated MessageList, RecyclerViewInterface|
-|Koh Han Jie Isaac|Wishlist counter in User profile page, App Widget to view today listing Activity, RemoteViewFactory interface for widget, Button to reload widget, Delete account Activity, Change account details Activity|
+|Koh Han Jie Isaac|Wishlist counter in User profile page, App Widget to view today listing Activity, RemoteViewFactory interface for widget, Button to reload widget, Delete account Activity, Change account details Activity, persistent login|
 
 ## Features
 ### Homepage
@@ -88,17 +88,22 @@ Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply c
 ### Listing
 View all the listings on Cashshope!
 
-![Listing](resources/listing.png)
+<img src="https://user-images.githubusercontent.com/103445741/182037398-35a9008b-fe22-42bc-98c0-83922252fcc6.png" width="300">
+
 
 Tap on the item that you like to see even more details!
 
-![ListingDetails](resources/listing-details.png)
+
+<img src="https://user-images.githubusercontent.com/103445741/182037409-95c2da6e-6fd0-4549-8c98-d6b98cff418e.png" width="300">
+
 
 ### Create Listing
 Don't need something anymore? Put it up for sale! Not only are you getting back some cash in return, you are also doing something good for
 the environment by promoting reusability.
 
-![NewListing](resources/newlisting.png)
+
+<img src="https://user-images.githubusercontent.com/103445741/182037406-3811f4da-38ea-4768-bfe6-d22e03891505.png" width="300">
+
 
 ### User Profile
 Feeling fancy today? Customize your profile! 
@@ -242,14 +247,14 @@ In order to pay with a valid debit or credit card:
   - Before procceding, please press yes if you want to procced with deleting your item
   - Remember, this action cannot be reversible so think carefully
   - Enter your credentials again to make sure it is you
-  - Click on the delete button
+  - Click on the continue button to confirm yout action
   - Your account has been deleted!
   ### Change Account details
   - Go to your profile page
   - Click the change account details button
   - Enter your changed details
   - Re-enter your credentials
-  - Click the button
+  - Click the button 
   - Your account details have been changed!
   
   

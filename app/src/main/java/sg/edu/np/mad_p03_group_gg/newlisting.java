@@ -147,7 +147,7 @@ public class newlisting extends AppCompatActivity {
         });
     }
 
-    private void activeChecker() {
+    private void activeChecker() { //Checks inputs actively
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -234,9 +234,9 @@ public class newlisting extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.newlisting_categories, android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(arrayAdapter);
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.newlisting_categories, android.R.layout.simple_spinner_item); //Initialises spinner
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); //Selects layout file for spinner
+        categorySpinner.setAdapter(arrayAdapter); //Sets adapter for spinner
 
         meeting_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -408,7 +408,7 @@ public class newlisting extends AppCompatActivity {
         // ############# END KAI ZHE PAYMENT SECTION ###############
     }
 
-    private void finalCheck() {
+    private void finalCheck() { //Does final check on required fields
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -544,7 +544,7 @@ public class newlisting extends AppCompatActivity {
 
     }
 
-    private void writeToDatabaseAndFirebase() {
+    private void writeToDatabaseAndFirebase() { //Writes to Firebase
         String storagelink = "gs://cashoppe-179d4.appspot.com";
         StorageReference storage = FirebaseStorage.getInstance(storagelink).getReference().child("listing-images");
 
@@ -572,9 +572,7 @@ public class newlisting extends AppCompatActivity {
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                         dialog.show();
-                        int progress = (int) ((100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount());
                         LinearProgressIndicator loading_bar = findViewById(R.id.loading_bar);
-                        //loading_bar.setProgressCompat(progress, true);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -592,7 +590,6 @@ public class newlisting extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         String imageUrl = uri.toString();
                                         imageURLs.add(imageUrl);
-                                        Log.e("added url to array", imageUrl);
                                         uploadStatusCheck();
                                         dialog.dismiss();
                                     }
@@ -610,13 +607,13 @@ public class newlisting extends AppCompatActivity {
         }
     }
 
-    private void uploadStatusCheck() {
+    private void uploadStatusCheck() { //Checks if images selected are successfully uploaded, and URLs retrieved
         if (imageURLs.size() == imageArray.size()) {
             createListingObject();
         }
     }
 
-    private void createListingObject() {
+    private void createListingObject() { //Creates listing object
         EditText title_input = findViewById(R.id.input_title);
         EditText price_input = findViewById(R.id.input_price);
         RadioGroup condition_input = findViewById(R.id.input_condition);
@@ -669,16 +666,12 @@ public class newlisting extends AppCompatActivity {
             delprice = "";
             deltime = "";
         }
-        Log.e("Time",TimeStamp);
-
-
-        //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
         individualListingObject listing = new individualListingObject(pID, title, imageURLs, sID, condition, price, false, category, desc, address, delivery, deltype, delprice, deltime, TimeStamp);
         writeToFirebase(listing);
     }
 
-    private void writeToFirebase(individualListingObject listing) {
+    private void writeToFirebase(individualListingObject listing) { //Writes to Firebase
         String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
         DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
         DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("users").child(sID).child("listings");
@@ -706,7 +699,6 @@ public class newlisting extends AppCompatActivity {
         chooser.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         chooser.setAction(Intent.ACTION_GET_CONTENT);
         launchPicker.launch(Intent.createChooser(chooser, "Select images"));
-        Log.e("Number of images", String.valueOf(imageArray.size()));
         adapter.notifyDataSetChanged();
     }
 
@@ -773,6 +765,4 @@ public class newlisting extends AppCompatActivity {
             }
         }
     });
-
-
 }

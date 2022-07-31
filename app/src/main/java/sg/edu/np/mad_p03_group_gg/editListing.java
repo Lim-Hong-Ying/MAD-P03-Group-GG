@@ -96,7 +96,12 @@ public class editListing extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
+                if (!connected && imageArray.size() == 0) {
+                    Toast.makeText(editListing.this, "No internet connection.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                else {
                     activeChecker();
 
                     ImageButton back_button = findViewById(R.id.back_button);
@@ -108,11 +113,6 @@ public class editListing extends AppCompatActivity {
                     });
 
                     createObjectFromFB();
-                }
-
-                else {
-                    Toast.makeText(editListing.this, "No internet connection.", Toast.LENGTH_SHORT).show();
-                    finish();
                 }
             }
 
@@ -133,8 +133,6 @@ public class editListing extends AppCompatActivity {
                     Toast.makeText(editListing.this, "Failed to retrieve information.", Toast.LENGTH_SHORT).show();
                 }
                 else { //Builds individualListingObject from data retrieved
-                    Log.d("firebase", String.valueOf(task.getResult()));
-
                     DataSnapshot result = task.getResult();
 
                     String listingid = result.getKey();
@@ -596,9 +594,7 @@ public class editListing extends AppCompatActivity {
                             @Override
                             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                                 dialog.show();
-                                int progress = (int) ((100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount());
                                 LinearProgressIndicator loading_bar = findViewById(R.id.loading_bar);
-                                //loading_bar.setProgressCompat(progress, true);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -616,7 +612,6 @@ public class editListing extends AppCompatActivity {
                                             public void onSuccess(Uri uri) {
                                                 String imageUrl = uri.toString();
                                                 imageURLs.add(imageUrl);
-                                                Log.e("added url to array", imageUrl);
                                                 uploadStatusCheck();
                                                 dialog.dismiss();
                                             }
@@ -678,7 +673,6 @@ public class editListing extends AppCompatActivity {
     }
 
     private void uploadStatusCheck() {
-        Log.e(String.valueOf(imageArray.size()), String.valueOf(imageURLs.size()));
         if (imageURLs.size() == imageArray.size()) {
             createListingObject();
         }
@@ -734,13 +728,10 @@ public class editListing extends AppCompatActivity {
         }
 
         String postedTime = listing.getTimeStamp();
-        Log.e("Time", postedTime);
 
         ArrayList<String> categories = new ArrayList<>();
         categories.add(listing.getCategory());
         categories.add(category);
-
-        //String lID, String t, String turl, String sid, String sppu, String ic, String p, Boolean r, String desc, String l, Boolean d, String dt, int dp, int dtime
 
         listing = new individualListingObject(pID, title, imageURLs, sID, condition, price, false, category, desc, address, delivery, deltype, delprice, deltime, postedTime);
         writeToFirebase(listing, categories);

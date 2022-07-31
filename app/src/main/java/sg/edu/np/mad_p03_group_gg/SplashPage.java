@@ -50,7 +50,7 @@ public class SplashPage extends AppCompatActivity {
         firebaseAppCheck.installAppCheckProviderFactory(DebugAppCheckProviderFactory.getInstance());
 
         FirebaseTools.downloadFiles("advertisement", getApplicationContext(), this);
-
+//Stage 2 Isaac, The following code checks if user already autehtnicated, if authenticated, move straight to home page
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

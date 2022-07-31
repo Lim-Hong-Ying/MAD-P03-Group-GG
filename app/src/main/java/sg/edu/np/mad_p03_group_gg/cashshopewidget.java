@@ -52,7 +52,7 @@ import sg.edu.np.mad_p03_group_gg.view.ui.fragments.User_Profile_Fragment;
  * Implementation of App Widget functionality.
  */
 public class cashshopewidget extends AppWidgetProvider {
-    public static final String ACTION_REFRESH = "actionRefresh";
+    public static final String ACTION_REFRESH = "actionRefresh";//Create an action
 
 
     @Override
@@ -74,6 +74,11 @@ public class cashshopewidget extends AppWidgetProvider {
            clickIntent.setAction(ACTION_REFRESH);
            clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,appWidgetIds[i]);
             // create pending intenet(For onclick button)
+            // appwidgetid is unique, hence, in order to ensure
+            // that the request code for broadcast to be unique,
+            // the appwidgetid will be used as request code.
+            // PendinIntent.FLAG_IMMUTABLE indicates that
+            //pending intent is immutable
            PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context,appWidgetIds[i],clickIntent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             views.setEmptyView(R.id.gridpics,R.id.cashshope_widgetempty);
@@ -105,7 +110,7 @@ public class cashshopewidget extends AppWidgetProvider {
         //If it is, referesh items
         if(ACTION_REFRESH.equals(intent.getAction())) {
             Log.e("Actionrefresh", "providerd entered");
-            //get app widget ID
+            //get app widget ID to find the exact widget
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
             Log.e("ID", Integer.toString(appWidgetId));
             //Get app widget manger for the app widget ID

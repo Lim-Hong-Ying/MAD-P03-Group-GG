@@ -32,41 +32,41 @@ import java.util.ArrayList;
 public class listingsPage extends AppCompatActivity {
 
     String dblink = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app";
-    DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing");
-    DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category");
-    String category = null;
+    DatabaseReference db = FirebaseDatabase.getInstance(dblink).getReference().child("individual-listing"); //Points to individual listing child of DB
+    DatabaseReference db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category"); //Points to category child of DB
+    String category = null; //Temporary holder for category filtering
 
-    listing_adapter adapter = null;
+    listing_adapter adapter = null; //Adapter used by recyclerView to display listings
 
-    ArrayList<listingObject> data = new ArrayList<>();
+    ArrayList<listingObject> data = new ArrayList<>(); //Arraylist used to store listings, cleared upon category change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listings_page);
 
-        Spinner categorySpinner = findViewById(R.id.category_spinner);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(arrayAdapter);
+        Spinner categorySpinner = findViewById(R.id.category_spinner); //Selects category spinner
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item); //Initialises adapter for spinner
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); //Chooses layout file for spinner
+        categorySpinner.setAdapter(arrayAdapter); //Attaches spinner to adapter
 
-        Bundle categoryInfo = getIntent().getExtras();
-        if (categoryInfo != null) {
+        Bundle categoryInfo = getIntent().getExtras(); //For retrieving category from individual listing page
+        if (categoryInfo != null) { //Checks if this activity is started from individual listing page, if yes, get key and overwrite regular behaviour
             String passedCategory = categoryInfo.getString("category");
-            category = passedCategory;
-            db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category").child(category);
-            categorySpinner.setSelection(arrayAdapter.getPosition(category));
+            category = passedCategory; //Replaces default all listings with selected category from individual listing page
+            db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category").child(category); //Re-points category in DB
+            categorySpinner.setSelection(arrayAdapter.getPosition(category)); //Sets spinner selection to selected category
         }
 
         else {
-            category = categorySpinner.getSelectedItem().toString();
+            category = categorySpinner.getSelectedItem().toString(); //Checks selected item in spinner
 
             categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     category = categorySpinner.getSelectedItem().toString();
                     db2 = FirebaseDatabase.getInstance(dblink).getReference().child("category").child(category);
-                    data.clear();
+                    data.clear(); //Clears data ArrayList
                     retrieveFromFirebase();
                 }
 
@@ -106,7 +106,7 @@ public class listingsPage extends AppCompatActivity {
         viewChanger(); //Does check for view mode
     }
 
-    private void initialCheckSharedPreferences() {
+    private void initialCheckSharedPreferences() { //Checks shared preferences for preferred view mode
         SharedPreferences sharedPreferences = listingsPage.this.getSharedPreferences("Cashopee", MODE_PRIVATE);
 
         String mode = sharedPreferences.getString("view", "");
@@ -157,7 +157,6 @@ public class listingsPage extends AppCompatActivity {
 
     private void retrieveFromFirebase() { //Retrieves data from Firebase
         recyclerViewStarter();
-        Log.e("category", category);
         if (category.equals("All listings")) {
             db.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
