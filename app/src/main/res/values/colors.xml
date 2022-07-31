@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-<!--  Color scheme  -->
+    <!--  Color scheme  -->
     <color name="theme_light_blue">#B9E8FF</color>
     <color name="theme_blue">#135995</color>
     <color name="theme_peach">#F6CC9A</color>
@@ -20,4 +20,8 @@
     <color name="bright_blue">#0096FF</color>
     <color name="dark_grey">#676767</color>
     <color name="darker_grey">#424242</color>
+    <color name="light_blue_50">#FFE1F5FE</color>
+    <color name="light_blue_200">#FF81D4FA</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
 </resources>

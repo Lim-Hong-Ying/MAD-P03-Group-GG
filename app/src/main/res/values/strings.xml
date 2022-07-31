@@ -2,6 +2,13 @@
     <string name="app_name">Cashshope</string>
     <string name="back"><![CDATA[<]]></string>
     <string name="forward"><![CDATA[>]]></string>
+    <string name="event_title">Planned Events</string>
+    <string name="eventToolbar_heading">Plan events for your meetups.</string>
+    <string name="dashboard_sub_title">10 Events planned by you</string>
+    <string name="search_bar_hint">search for an event...</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="appwidget_text">Latest Listings</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">View the today listings here!</string>
 </resources>

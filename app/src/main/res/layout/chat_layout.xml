@@ -71,5 +71,64 @@
                 android:layout_gravity="end"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/outgoingLayoutImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="50dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/outgoingImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/msg_outgoing"
+                android:padding="15dp" />
+
+            <TextView
+                android:id="@+id/outgoingTimeImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="dd-MM-yyyy 00:00 PM"
+                android:textSize="10sp"
+                android:layout_gravity="end"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/incomingLayoutImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="50dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/incomingImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/msg_incoming"
+                android:padding="15dp" />
+
+            <TextView
+                android:id="@+id/incomingTimeImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="dd-MM-yyyy 00:00 PM"
+                android:textSize="10sp" />
+        </LinearLayout>
+
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

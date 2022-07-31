@@ -2,6 +2,7 @@ package sg.edu.np.mad_p03_group_gg.view.ui.fragments;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,10 +16,13 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.ExceptionPassthroughInputStream;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,24 +53,30 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.edu.np.mad_p03_group_gg.Event;
 import sg.edu.np.mad_p03_group_gg.R;
 import sg.edu.np.mad_p03_group_gg.User;
 import sg.edu.np.mad_p03_group_gg.WeekViewActivity;
+import sg.edu.np.mad_p03_group_gg.deleteaccount;
+import sg.edu.np.mad_p03_group_gg.listingObject;
 import sg.edu.np.mad_p03_group_gg.loginpage;
+import sg.edu.np.mad_p03_group_gg.changeaccdetails;
+import sg.edu.np.mad_p03_group_gg.tools.StripeUtils;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.ConnectStripeCallback;
+import sg.edu.np.mad_p03_group_gg.tools.interfaces.OnboardStatusCallback;
+import sg.edu.np.mad_p03_group_gg.view.ui.CheckoutActivity;
+import sg.edu.np.mad_p03_group_gg.view.ui.StripeDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,8 +97,12 @@ public class User_Profile_Fragment extends Fragment {
     private FirebaseStorage base = FirebaseStorage.getInstance();
     private String Filepath;
     private String profilePicurl = null;
-
-
+    private FirebaseUser fbUser;
+    private List<listingObject> llist ;
+    private int nooflisiting;
+    private String userId;
+    private CountDownLatch finish = new CountDownLatch(1);
+    private CountDownLatch finish1 = new CountDownLatch(1);
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -130,33 +145,35 @@ public class User_Profile_Fragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         getParentFragmentManager().beginTransaction().detach(this).attach(this).commit();
-
-
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
+        final StripeDialog stripeDialog = new StripeDialog(this.getActivity());
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user__profile_, container, false);
 
+
          //Get Views
-        TextView Email = (EditText) view.findViewById(R.id.user_profile_email);
+        TextView Email = (TextView) view.findViewById(R.id.user_profile_email);
         TextView Username = (TextView) view.findViewById(R.id.user_profile_name);
-        TextView Phonenumber = (EditText) view.findViewById(R.id.User_Profile_phonenumber);
+        TextView Phonenumber = (TextView) view.findViewById(R.id.User_Profile_phonenumber);
         ImageView uprofilepic = (ImageView) view.findViewById(R.id.uprofilepic);
+
         Button log_out = (Button) view.findViewById(R.id.log_out);
+        Button delete =  (Button)view.findViewById(R.id.Delete_Account);
+        Button EditProfilebtn = (Button)view.findViewById(R.id.editprofilebutton);
+
         //Get References
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
         mDataref = database.getReference();
         storage = FirebaseStorage.getInstance().getReference("user-images");
         //Retrive and display profile picture
         retrieveUserAndDisplayImage(view);
+
+
         // Get user data from database by in the form of a class.
         mDataref.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -164,7 +181,7 @@ public class User_Profile_Fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //Get authenticated user from an instance
                 auth = FirebaseAuth.getInstance();
-                FirebaseUser fbUser = auth.getCurrentUser();
+                fbUser = auth.getCurrentUser();
                 //Get parameters
                 String uid = fbUser.getUid();
                 String email = fbUser.getEmail();
@@ -172,23 +189,69 @@ public class User_Profile_Fragment extends Fragment {
                 //Use uid to find the user in database
                 for (DataSnapshot dataSnapshot : snapshot.child("users").getChildren()) {
 
-                    String foundID = dataSnapshot.child("id").getValue(String.class);
+                    user = dataSnapshot.getValue(User.class);
+                    String foundID = user.getId();
+                    finish1.countDown();
+                    try {
+                        finish1.await();
+
+
                     if (foundID.equalsIgnoreCase(uid)) {
                         //Get user instance from database and set user
 
                         user = dataSnapshot.getValue(User.class);
+                        finish.countDown();
                         user.setId(uid);
+                        DatabaseReference db = mDataref.child("users").child(user.getId()).child("liked");
+                        Log.e("Noofitem1", db.toString());
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    nooflisiting+=1;
+
+                                    Log.e("nofolistingnum",Integer.toString(nooflisiting));
+                                    Log.e("Noofitem", db.toString());
+
+                                }
+                                TextView nolisting = (TextView) view.findViewById(R.id.listing_numbers);
+                                nolisting.setText(Integer.toString(nooflisiting));
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
 
                         break;
+                    }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
                 }
                 //Get profilepic url and store it in profilePicurl variable
-                profilePicurl = user.getUserprofilepic();
+                try {
+                    profilePicurl = user.getUserprofilepic();
+                }
+                catch(Exception e){
+                    Toast.makeText(getContext(), "Something went wrong loading the profile picture", Toast.LENGTH_SHORT).show();
+                }
                 //Set text in the user profile page
-                Email.setText(user.getEmail().toString());
-                Phonenumber.setText(user.getPhonenumber().toString());
-                Username.setText(user.getName().toString());
+                try {
+                    finish.await();
+                    Email.setText(user.getEmail().toString());
+                    Phonenumber.setText(user.getPhonenumber().toString());
+                    Username.setText(user.getName().toString());
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 Log.e("test","test");
             }
             @Override
@@ -225,6 +288,47 @@ public class User_Profile_Fragment extends Fragment {
                     //Error message
                     Toast.makeText(getContext(),"Something went wrong. Please check your internet connection",Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        // Get views
+        CardView eventcard = (CardView)view.findViewById(R.id.event_card);
+        CardView listingcard = (CardView) view.findViewById(R.id.listing_card);
+        TextView nolisting = (TextView) view.findViewById(R.id.listing_numbers);
+
+
+        TextView noevents = (TextView)view.findViewById(R.id.num_ofevents);
+        int noofevents = numberOfevents(user);
+        Log.e("nofolistingnum",Integer.toString(nooflisiting));
+
+
+
+
+        //Set number of events
+
+        noevents.setText(Integer.toString(noofevents));
+
+        eventcard.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent toCalender = new Intent(getActivity(), WeekViewActivity.class);
+                startActivity(toCalender);
+            }
+        });
+        listingcard.setOnClickListener(new View.OnClickListener(){
+
+
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new wishListFragment());
+            }
+        });
+        //Set onclick listner for delete btn
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog("This action is ireversible. Would you want to continue?","Deletion Confirmation",deleteaccount.class);
+
             }
         });
 
@@ -269,32 +373,149 @@ public class User_Profile_Fragment extends Fragment {
             }
         });
 
-        // Get views
-        CardView eventcard = (CardView)view.findViewById(R.id.event_card);
-        TextView noevents = (TextView)view.findViewById(R.id.num_ofevents);
-        int noofevents = numberOfevents(user);
-        //Set number of events
-        noevents.setText(Integer.toString(noofevents));
-        eventcard.setOnClickListener(new View.OnClickListener(){
+        try {
+            //Allow Edit Account info
+            EditProfilebtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // catch errors or failures
+                    try {
+                        Intent change = new Intent(getActivity(), changeaccdetails.class);
+                        //Put user object into an intent
+                        change.putExtra("User", user);
+                        startActivity(change);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Something went wrong. Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
 
+        catch(Exception e){
+            Toast.makeText(getContext(),"Something went wrong, please check your internet collection",Toast.LENGTH_SHORT).show();
+        }
+
+        // ========================= Kai Zhe Stripe Section ================================
+        Button stripeDashboardButton = view.findViewById(R.id.stripeDashboardButton);
+        stripeDashboardButton.setEnabled(false);
+
+        // Get current user id
+        try {
+            auth = FirebaseAuth.getInstance();
+            FirebaseUser fbUser = auth.getCurrentUser();
+            userId = fbUser.getUid();
+        }
+        catch(Exception e){
+            Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+        }
+
+        StripeUtils.getStripeAccountId(userId, new ConnectStripeCallback() {
             @Override
-            public void onClick(View view) {
-                Intent toCalender = new Intent(getActivity(), WeekViewActivity.class);
-                startActivity(toCalender);
+            public void stripeAccountIdCallback(String stripeAccountId) {
+                if (stripeAccountId != null)
+                {
+                    // Check if fully onboarded
+                    StripeUtils.onboardStatus(stripeAccountId, new OnboardStatusCallback() {
+                        @Override
+                        public void isOnboardCallback(Boolean isOnboard) {
+                            if (isOnboard)
+                            {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // If yes, can create Dashboard Link for user
+                                        stripeDashboardButton.setEnabled(true);
+
+                                        stripeDashboardButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                StripeUtils.createDashboardLink(stripeDialog,
+                                                        User_Profile_Fragment.this.getActivity(),
+                                                        stripeAccountId);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
             }
         });
-        return view;
 
+        // ========================= End Stripe Section ================================
+
+        return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();
         // On resume, or when user changes back from calender, updated data is displayed
+        final StripeDialog stripeDialog = new StripeDialog(this.getActivity());
         int noofevents = numberOfevents(user);
         TextView noevents = (TextView)getActivity().findViewById(R.id.num_ofevents);
+        TextView nolisting = (TextView) getActivity().findViewById(R.id.listing_numbers);
+        nolisting.setText(Integer.toString(nooflisiting));
         noevents.setText(Integer.toString(noofevents));
 
+        Button stripeDashboardButton = getActivity().findViewById(R.id.stripeDashboardButton);
 
+        StripeUtils.getStripeAccountId(userId, new ConnectStripeCallback() {
+            @Override
+            public void stripeAccountIdCallback(String stripeAccountId) {
+                if (stripeAccountId != null)
+                {
+                    stripeDashboardButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            StripeUtils.createDashboardLink(stripeDialog,
+                                    User_Profile_Fragment.this.getActivity(),
+                                    stripeAccountId);
+                        }
+                    });
+                }
+                else
+                {
+                    stripeDashboardButton.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+    boolean isEmail(EditText text) {  // checks if email input field is correct also checks if input field is empty using patterns libary
+        CharSequence email = text.getText().toString();
+        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+    boolean isPhone(EditText Phone){
+        CharSequence phone = Phone.getText().toString();
+        return(!TextUtils.isEmpty(phone)&& Patterns.PHONE.matcher(phone).matches());
+    }
+
+
+
+
+
+
+    private void alertDialog(String msg, String Title, Class target) {
+        AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
+        dialog.setMessage(msg);
+        dialog.setTitle(Title);
+        dialog.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        Intent gotodelete = new Intent(getActivity(),target);
+                        startActivity(gotodelete);
+                    }
+                });
+        dialog.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog alertDialog=dialog.create();
+        alertDialog.show();
     }
 
 
@@ -327,6 +548,12 @@ public class User_Profile_Fragment extends Fragment {
                 }
             }
         });
+    }
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit(); // To apply changes
     }
 //Get file extension of file
     private String getfileextension(Uri uri) {
@@ -388,7 +615,7 @@ public class User_Profile_Fragment extends Fragment {
             }
 
 
-            // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+
         });
     }
      //Get the number of events
@@ -396,7 +623,7 @@ public class User_Profile_Fragment extends Fragment {
 
 
 
-
+        // Get events list
         Event[] evenet =Event.eventsList.toArray(new Event[0]);//Get list of events
         int numofevent =0;
         //For every event in list
