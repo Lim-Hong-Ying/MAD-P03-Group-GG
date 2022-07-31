@@ -114,7 +114,12 @@ public class newlisting extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
 
-                if (connected) {
+                if (!connected && imageArray.size() != 0) {
+                    Toast.makeText(newlisting.this, "No internet connection.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                else {
                     activeChecker();
 
                     ImageButton back_button = findViewById(R.id.back_button);
@@ -132,10 +137,6 @@ public class newlisting extends AppCompatActivity {
                             finalCheck();
                         }
                     });
-
-                } else {
-                    Toast.makeText(newlisting.this, "No internet connection.", Toast.LENGTH_SHORT).show();
-                    finish();
                 }
             }
 
