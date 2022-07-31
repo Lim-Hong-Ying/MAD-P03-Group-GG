@@ -88,19 +88,21 @@ Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply c
 ### Listing
 View all the listings on Cashshope!
 
-![Screenshot_20220801_005847](https://user-images.githubusercontent.com/103445741/182037398-35a9008b-fe22-42bc-98c0-83922252fcc6.png)
+<img src="https://user-images.githubusercontent.com/103445741/182037398-35a9008b-fe22-42bc-98c0-83922252fcc6.png" width="300">
 
 
 Tap on the item that you like to see even more details!
 
-![Screenshot_20220801_005935](https://user-images.githubusercontent.com/103445741/182037409-95c2da6e-6fd0-4549-8c98-d6b98cff418e.png)
+
+<img src="https://user-images.githubusercontent.com/103445741/182037409-95c2da6e-6fd0-4549-8c98-d6b98cff418e.png" width="300">
 
 
 ### Create Listing
 Don't need something anymore? Put it up for sale! Not only are you getting back some cash in return, you are also doing something good for
 the environment by promoting reusability.
 
-![Screenshot_20220801_005950](https://user-images.githubusercontent.com/103445741/182037406-3811f4da-38ea-4768-bfe6-d22e03891505.png)
+
+<img src="https://user-images.githubusercontent.com/103445741/182037406-3811f4da-38ea-4768-bfe6-d22e03891505.png" width="300">
 
 
 ### User Profile
