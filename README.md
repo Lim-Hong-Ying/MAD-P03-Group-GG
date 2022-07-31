@@ -93,7 +93,7 @@ Feeling fancy today? Customize your profile!
 
 ![User](resources/profile.png)
 Go to the customize profile page to change your profile details
-![User](resources/Edit acc.png)
+(resources/Edit acc.png)
 ### Delete Account
 Dont want to keep your cashshope account anymore? You can now delete your account!But remember, this process is non reversible!
 ![Delete Account](resources/Delete alert box.png)
