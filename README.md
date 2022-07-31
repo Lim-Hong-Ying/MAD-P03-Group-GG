@@ -94,18 +94,25 @@ Feeling fancy today? Customize your profile!
 ![User](resources/profile.png)
 Go to the customize profile page to change your profile details
 <br/>
-<img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Edit%20acc.png" width="100" height="100">
+<img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Edit%20acc.png" width="200" height="100">
+<br/>
 Remeber to reauthenticate in order to change your account information!
-<img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Edit%20acc2.png" width="100" height="100">
+<br/>
+<img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Edit%20acc2.png" width="200" height="100">
 
 ### Delete Account
 Dont want to keep your cashshope account anymore? You can now delete your account!But remember, this process is non reversible!
+<br/>
 <img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Confirm%20user.png" width="100" height="100">
 <br/>
 Please reauthenticate yourself as this is a very sensitive action
+<br/>
 <img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Edit%20acc2.png" width="100" height="100">
+<br/>
 ### App Widget
+<br/>
 Too lazy to open the app, fret not, you can now browse listings from the comfort of your homescreen!(This widget only works when you are signed in due to database rules, so remember to sign in !)
+<br/>
 <img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/Edit%20acc2.png" width="100" height="100">
 
 ### Checkout
