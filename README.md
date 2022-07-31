@@ -92,6 +92,13 @@ the environment by promoting reusability.
 Feeling fancy today? Customize your profile! 
 
 ![User](resources/profile.png)
+Go to the customize profile page to change your profile details
+![User](resources/Edit acc.png)
+### Delete Account
+Dont want to keep your cashshope account anymore? You can now delete your account!But remember, this process is non reversible!
+![Delete Account](resources/Delete alert box.png)
+![Delete Account](resources/Confirm user.png)
+
 
 ### Checkout
 See that one thing you fancy? Click the "Buy Now" button (selected listings only) to perform an easy and fuss-free checkout process. </br>
