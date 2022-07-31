@@ -86,7 +86,7 @@ public class userProfile extends AppCompatActivity {
         FirebaseUser fbUser = auth.getCurrentUser();
         String currentUserID = fbUser.getUid();
 
-        if (currentUserID.equals(uID)) {
+        if (currentUserID.equals(uID)) { //Hides chat button if current user is viewing their own profile
             directChat.setVisibility(View.INVISIBLE);
         }
 
@@ -154,7 +154,7 @@ public class userProfile extends AppCompatActivity {
         // ############# END WILLIAM SECTION ###############
     }
 
-    private void retrieveProfileFromFirebase() {
+    private void retrieveProfileFromFirebase() { //Retrieves and build user from Firebase
         String db = "https://cashoppe-179d4-default-rtdb.asia-southeast1.firebasedatabase.app/"; //Points to Firebase Database
         FirebaseDatabase individualdb = FirebaseDatabase.getInstance(db); //Retrieves information
 

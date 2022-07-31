@@ -59,7 +59,6 @@ public class listing_adapter extends RecyclerView.Adapter<listing_viewholder> {
     @Override
     public void onBindViewHolder(@NonNull listing_viewholder holder, int position) {
         listingObject listing = data.get(position);
-        Log.e("listing value", String.valueOf(listing));
         if (listing.gettURLs().size() != 0) {
             Picasso.get().load(listing.gettURLs().get(0)).into(holder.listing_image); //External library to download images
         }
