@@ -108,6 +108,7 @@ public class deleteaccount extends AppCompatActivity {
                                                                         Log.e("Categpry",foundID2.getCategory());
 
                                                                         Log.e("snapshot",dataSnapshot1.getRef().toString());
+                                                                        //Delete categories
 
                                                                         mDataref.child("category").child(foundID2.getCategory()).child(foundID2.lID).getRef().removeValue();
                                                                         dataSnapshot1.getRef().removeValue();
@@ -117,7 +118,7 @@ public class deleteaccount extends AppCompatActivity {
                                                                 //Get user instance from database and set user
                                                                 Log.e("Usersnapshot",dataSnapshot.getRef().toString());
 
-
+                                                                //delete user values
                                                                 dataSnapshot.getRef().removeValue();
                                                                 fbUser.delete();
                                                                 Event.eventsList.clear();
@@ -174,6 +175,7 @@ public class deleteaccount extends AppCompatActivity {
 
 
     }
+    //Methods to check if input fields are empty
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString().trim();
         return TextUtils.isEmpty(str);

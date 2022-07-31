@@ -52,7 +52,7 @@ import sg.edu.np.mad_p03_group_gg.view.ui.fragments.User_Profile_Fragment;
  * Implementation of App Widget functionality.
  */
 public class cashshopewidget extends AppWidgetProvider {
-    public static final String ACTION_REFRESH = "actionRefresh";
+    public static final String ACTION_REFRESH = "actionRefresh";//Create an action
 
 
     @Override

@@ -231,7 +231,7 @@ import java.util.concurrent.CountDownLatch;
             List<listingObject> llist1 = llist;
             Log.e("Coutndown", Long.toString(donesignal.getCount()));
             try {
-
+//why the database items has been loaded, call getcount
                 finish.await();
                 Log.e("TodayCount",Integer.toString(llist1.size()));
                 return llist1.size();
@@ -263,7 +263,8 @@ import java.util.concurrent.CountDownLatch;
             views.setTextViewText(R.id.widgetprice,"$" + llist.get(i).price);
 
             try {
-                //Set the image for the collection item, caches it using picasso
+                //Set the image for the collection item, caches it using picasso to prevent high use of bandwidth
+                //furthermore, image is resize to 100 by 100 by picasso
 
                 Bitmap b = Picasso.get().load(llist.get(i).gettURLs().get(0)).resize(100,100).get();
 

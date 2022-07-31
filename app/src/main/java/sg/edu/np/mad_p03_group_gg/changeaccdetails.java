@@ -68,6 +68,7 @@ public class changeaccdetails extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    //Only when user reauthenticate, are they allowed to change account info, impt to protect against malicous actor
 
 
                                     //----------------Code for Changing Email Address----------\\
@@ -93,6 +94,7 @@ public class changeaccdetails extends AppCompatActivity {
 
                                                             DatabaseReference ndataref = mDataref.child("users").child(ID);
                                                             Log.e("ndatref",ndataref.toString());
+                                                            //Manually set values
 
                                                             ndataref.child("email").setValue(Email.getText().toString());
                                                             ndataref.child("name").setValue(Username.getText().toString());
@@ -109,14 +111,16 @@ public class changeaccdetails extends AppCompatActivity {
                                                     }
                                                 });
 
+
                                                 //Change user password
                                                 user.updatePassword(Changepassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
                                                             Toast.makeText(changeaccdetails.this, "Details changed successfully", Toast.LENGTH_LONG).show();
-                                                            FirebaseAuth.getInstance().signOut();
+                                                            FirebaseAuth.getInstance().signOut();//Sign user out
                                                             Intent gototlogin = new Intent(changeaccdetails.this,loginpage.class);
+                                                            //Bring user to login activity
                                                             startActivity(gototlogin);
                                                             finish();
                                                         } else {
@@ -130,9 +134,10 @@ public class changeaccdetails extends AppCompatActivity {
                                             } else {
                                                 Toast.makeText(changeaccdetails.this, "Something went wrong.", Toast.LENGTH_LONG).show();
 
-                                            }
+                                            }//Catch of anything went wrong
                                         }
                                     });
+                                    //Create toast message
 
                                 } else {
                                     Toast.makeText(changeaccdetails.this, "Username or password is wrong", Toast.LENGTH_SHORT).show();
