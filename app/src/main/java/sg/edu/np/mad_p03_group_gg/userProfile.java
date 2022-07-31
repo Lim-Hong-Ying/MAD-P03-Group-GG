@@ -86,6 +86,10 @@ public class userProfile extends AppCompatActivity {
         FirebaseUser fbUser = auth.getCurrentUser();
         String currentUserID = fbUser.getUid();
 
+        if (currentUserID.equals(uID)) {
+            directChat.setVisibility(View.INVISIBLE);
+        }
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
