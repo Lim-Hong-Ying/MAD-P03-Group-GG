@@ -384,10 +384,6 @@ public class individual_listing extends AppCompatActivity {
                     String deliverytime = result.child("deliveryTime").getValue(String.class);
                     String TimeStamp = result.child("timeStamp").getValue(String.class);
 
-                    if (category == null) {
-                        category = "Others";
-                    }
-
                     listing = new individualListingObject(listingid, title, tURLs, sellerid, itemcondition, price, reserved, category, desc, location, delivery, deliverytype, deliveryprice, deliverytime, TimeStamp);
 
                     TextView titleholder;
@@ -419,6 +415,10 @@ public class individual_listing extends AppCompatActivity {
                     itemconditionholder.setText("Condition: " + listing.getiC());
                     categoryHolder.setText("Category: " + listing.getCategory());
                     descriptionholder.setText(listing.getDescription());
+
+                    if (category == null) {
+                        categoryHolder.setVisibility(View.GONE);
+                    }
 
                     String finalCategory = category;
                     categoryHolder.setOnClickListener(new View.OnClickListener() {
@@ -472,8 +472,10 @@ public class individual_listing extends AppCompatActivity {
                         contextMenu.setVisibility(View.GONE);
                         if (reserved) {
                             Button chatbutton = findViewById(R.id.button_chat);
+                            Button buybutton = findViewById(R.id.buyButton);
                             chatbutton.setText("Item reserved");
                             chatbutton.setEnabled(false);
+                            buybutton.setVisibility(View.GONE);
                         }
                     }
 

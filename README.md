@@ -89,10 +89,45 @@ the environment by promoting reusability.
 ![NewListing](resources/newlisting.png)
 
 ### User Profile
-Feeling fancy today? Customize your profile!
+Feeling fancy today? Customize your profile! 
 
 ![User](resources/profile.png)
+Go to the customize profile page to change your profile details
+![User](resources/Edit acc.png)
+### Delete Account
+Dont want to keep your cashshope account anymore? You can now delete your account!But remember, this process is non reversible!
+![Delete Account](resources/Delete alert box.png)
+![Delete Account](resources/Confirm user.png)
 
+
+### Checkout
+See that one thing you fancy? Click the "Buy Now" button (selected listings only) to perform an easy and fuss-free checkout process. </br>
+</br>
+![Buynow](resources/stripe/buynowbtn.png)
+</br>
+After which, you will be brought to this page: </br>
+</br>
+![Checkout](resources/stripe/checkout.png)
+</br>
+Click the "Change" button to key in your payment information, when done, tap on "Confirm". </br>
+</br>
+![PaymentMtd](resources/stripe/paymentmd.png) </br>
+</br>
+Afterwards, select your delivery method of choice, and you are required to key in your delivery details such as receiving address and recipient's name.
+</br>
+![Delivery](resources/stripe/deliveryadd.png) </br>
+
+When done, you're good to go! Just simply tap on the "Checkout" button, and let Stripe handle the rest for you. Please do note that you may be required to go through an additional stage of identity verification as required by your card issuer:
+</br>
+</br>
+![Loading](resources/stripe/loadingdialog.png)
+![PaymentCompleted](resources/stripe/paymentcomplete.png) </br>
+
+See below for screenshots on the additional 3DS or Two-factor Authentication process:
+</br>
+</br>
+![3DS](resources/stripe/3ds.png) 
+![3DSpage](resources/stripe/3dspage.png) </br>
 
 ## User Guide
 1. Sign up a new account or log in with the credentails (email address and password) of an existing user account to access Cashshope.
@@ -112,6 +147,9 @@ Feeling fancy today? Customize your profile!
    - All your records and data stored on Cashshope's server will be deleted and it is non-recoverable.
 
 ## Stripe Guide
+[![StripeLogo](resources/poweredbystripe.png)](http://www.stripe.com/) </br>
+We partner with Stripe, one of the world' leading online payment infrastructure, to provide you a much better shopping experience. Sellers can now easily view and track your customers' purchases. For buyers, you can now buy items with just a few taps using your card of choice! 
+
 ### For Sellers
 In order to allow your buyers to purchase your items via debit or credit card:
 - You must enable the "Stripe" option whenever you create a new listing, as our payments are managed by Stripe.

@@ -203,21 +203,27 @@ public class listingsPage extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                         DataSnapshot result = task.getResult();
-                                        String titles = String.valueOf(result.child("title").getValue(String.class));
-                                        long thumbnailurlsize = result.child("tURLs").getChildrenCount();
-                                        ArrayList<String> tURLs = new ArrayList<>();
-                                        for (int i = 0; i < thumbnailurlsize; i++) {
-                                            tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
-                                        }
-                                        String sellerid = String.valueOf(result.child("sid").getValue(String.class));
-                                        String itemcondition = String.valueOf(result.child("iC").getValue(String.class));
-                                        String price = String.valueOf(result.child("price").getValue(String.class));
-                                        Boolean reserved = result.child("reserved").getValue(Boolean.class);
-                                        String postedTime = result.child("ts").getValue(String.class);
+                                        if (!result.getValue().equals(null)) {
+                                            String titles = String.valueOf(result.child("title").getValue(String.class));
+                                            long thumbnailurlsize = result.child("tURLs").getChildrenCount();
+                                            ArrayList<String> tURLs = new ArrayList<>();
+                                            for (int i = 0; i < thumbnailurlsize; i++) {
+                                                tURLs.add(result.child("tURLs").child(String.valueOf(i)).getValue(String.class));
+                                            }
+                                            String sellerid = String.valueOf(result.child("sid").getValue(String.class));
+                                            String itemcondition = String.valueOf(result.child("iC").getValue(String.class));
+                                            String price = String.valueOf(result.child("price").getValue(String.class));
+                                            Boolean reserved = result.child("reserved").getValue(Boolean.class);
+                                            String postedTime = result.child("ts").getValue(String.class);
 
-                                        listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, postedTime);
-                                        data.add(listing);
-                                        adapter.notifyDataSetChanged();
+                                            listingObject listing = new listingObject(listingid, titles, tURLs, sellerid, itemcondition, price, reserved, postedTime);
+                                            data.add(listing);
+                                            adapter.notifyDataSetChanged();
+                                        }
+
+                                        else {
+                                            Toast.makeText(listingsPage.this, "No listings here!", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 });
                             }
