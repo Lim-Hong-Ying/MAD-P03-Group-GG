@@ -135,8 +135,8 @@
 
                                 <ImageView
                                     android:id="@+id/selectDate"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
                                     android:focusable="false"
                                     android:src="@drawable/ic_baseline_calendar_today_24"></ImageView>
 
@@ -180,8 +180,8 @@
 
                                     <ImageView
                                         android:id="@+id/selectTime"
-                                        android:layout_width="30dp"
-                                        android:layout_height="30dp"
+                                        android:layout_width="45dp"
+                                        android:layout_height="40dp"
                                         android:contentDescription="ClockIcon"
                                         android:focusable="false"
                                         android:src="@drawable/ic_baseline_access_time_24"></ImageView>
