@@ -33,7 +33,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Lim Hong Ying|Listings page, Individual listing page, Wishlist page, Firebase implementation for listings, individual listings, and wishlist, Play Store app updates|
 |Ooi Jun Heng Ryan|Meeting Planner page, Weekly Calendar, Monthly Calendar, Event page, EventEdit Page, Firebase implementation for events|
 |William Francis Siah|Basic Chat Activity, Basic ChatList Activity, ChatInfo, MessageList, MemoryData, Linking Individual Listing to Chat page|
-|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations| Stage 2 <br> Wishlist counter, App Widget to view today listing, Delete account, Change account details</br>
+|Koh Han Jie Isaac|Splashpage, Login page, Signup page, User Profile and Setting Permissions, Graphics/Illustrations| 
 
 ### Stage 2
 |Member|Contributions|
@@ -42,7 +42,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Lim Hong Ying||
 |Ooi Jun Heng Ryan|Integrated Google Calendar to sync with events (Add, Edit, Delete events from Google Calendar), EventPage Activity, EventDetails Activity, Usage of Calendar Permission, Improved event details|
 |William Francis Siah|ChatAddUser Activity, Improved Chat Activity (User Status, Sending Images), Improved ChatList Activity (Manual/Auto add chat, Delete chat, Search Feature, Unseen Messages), Updated MessageList, RecyclerViewInterface|
-|Koh Han Jie Isaac|Wishlist counter in User profile page, App Widget to view today listing Activity, RemoteViewFactory interface for widget, Button to reload widget, Delete account Activity, Change account details Activity|
+|Koh Han Jie Isaac|Wishlist counter in User profile page, App Widget to view today listing Activity, RemoteViewFactory interface for widget, Button to reload widget, Delete account Activity, Change account details Activity, persistent login|
 
 ## Features
 ### Homepage
