@@ -81,7 +81,7 @@ Unseen messages are displayed! <br><br>
 <img src="resources/unseen_messages.png" alt="drawing" width="300"/>
 
 ### Meeting Planner
-Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to view your schedule!
+Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to view your schedule!<br><br>
 <img src="resources/EventPage.png" width="300">
 <br><br>
 View details of your created event! <br><br>
