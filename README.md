@@ -89,7 +89,7 @@ Schedule new events with other users!<br><br>
 <br><br>
 View details of your created event! <br><br>
 <img src="resources/EventDetailsViewing.png" width="300"/><br><br>
-Sync your events in Cashshope with Google Calendar!
+Sync your events in Cashshope with Google Calendar! <br><br>
 <img src="resources/GoogleCalendar.png" width="300">
 <br><br>
 
