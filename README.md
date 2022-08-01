@@ -38,7 +38,7 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 ### Stage 2
 |Member|Contributions|
 |---|---|
-|Tan Kai Zhe|Firebase Tools, StripeUtils, CheckoutActivity, PaymentMethodActivity, StripeDialog, DeliveryAddress, Stripe Backend Integration, [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions Activity,m Privacy Policy Activity, , Stripe Onboarding for Seller in newlisting, CheckoutActivity, PaymentMethodActivity, StripeUtils, Stripe Backend Server, Stripe Express Dashboard for Sellers in User_Profile_Fragment|
+|Tan Kai Zhe|Firebase Tools, StripeUtils, CheckoutActivity, PaymentMethodActivity, StripeDialog, DeliveryAddress, Stripe Backend Integration, [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions Activity, Privacy Policy Activity, Stripe Onboarding for Seller in newlisting, CheckoutActivity, PaymentMethodActivity, StripeUtils, Stripe Backend Server, Stripe Express Dashboard for Sellers in User_Profile_Fragment|
 |Lim Hong Ying||  Listing categories, user profiles activity, listing reservations, multi-image listings, editings of listings, deletions of listings, updated storage structure, updated Firebase RealTime Database structure to accomodate to changes, Play Store updates|
 |Ooi Jun Heng Ryan|Integrated Google Calendar to sync with events (Add, Edit, Delete events from Google Calendar), EventPage Activity, EventDetails Activity, Usage of Calendar Permission, Improved event details|
 |William Francis Siah|ChatAddUser Activity, Improved Chat Activity (User Status, Sending Images), Improved ChatList Activity (Manual/Auto add chat, Delete chat, Search Feature, Unseen Messages), Updated MessageList, RecyclerViewInterface|
@@ -204,7 +204,7 @@ See below for screenshots on the additional 3DS or Two-factor Authentication pro
 
 ## Stripe Guide
 [![StripeLogo](resources/poweredbystripe.png)](http://www.stripe.com/) </br>
-We partner with Stripe, one of the world' leading online payment infrastructure, to provide you a much better shopping experience. Sellers can now easily view and track your customers' purchases. For buyers, you can now buy items with just a few taps using your card of choice! 
+We partner with Stripe, one of the world's leading online payment infrastructure, to provide you a much better shopping experience. Sellers can now easily view and track your customers' purchases. For buyers, you can now buy items with just a few taps using your card of choice! 
 
 ### For Sellers
 In order to allow your buyers to purchase your items via debit or credit card:
