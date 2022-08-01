@@ -84,8 +84,14 @@ Unseen messages are displayed! <br><br>
 Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to view your schedule!<br><br>
 <img src="resources/EventPage.png" width="300">
 <br><br>
+Schedule new events with other users!<br><br>
+<img src="resources/EventDetailsCreation.png" width="300">
+<br><br>
 View details of your created event! <br><br>
-<img src="resources/EventDetailsViewing.png" width="300"/>
+<img src="resources/EventDetailsViewing.png" width="300"/><br><br>
+Sync your events in Cashshope with Google Calendar!
+<img src="resources/GoogleCalendar.png" width="300">
+<br><br>
 
 ### Listing
 View all the listings on Cashshope!
@@ -259,7 +265,16 @@ In order to pay with a valid debit or credit card:
   - Click the button 
   - Your account details have been changed!
   
-  
+## Meeting Planner Guide
+  ### Event Guide
+   - Click on the "+" icon to create a new event
+   - Click on the 🗓 icon to view our app's calendar
+   - Acts as a secondary calendar if permissions for calendar was denied
+   - Click on the three dots at each event to edit or delete it!
+  ### Integration of Google Calendar 
+   - Allow permissions for calendar
+   - Events will automatically be synced with own calendar!
+   - If permissions were denied, the events will be saved in our app but not to your own calendar!
 
 ## Disclaimer
 Before you proceed with our service, do read and agree to our [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), as well as [Privacy Policy](https://westwq.github.io/MADPrivacy/).
