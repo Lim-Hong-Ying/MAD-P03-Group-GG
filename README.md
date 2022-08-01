@@ -81,9 +81,11 @@ Unseen messages are displayed! <br><br>
 <img src="resources/unseen_messages.png" alt="drawing" width="300"/>
 
 ### Meeting Planner
-Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to see your schedule!
-
-<img src="https://github.com/Lim-Hong-Ying/MAD-P03-Group-GG/blob/staging/resources/EventPage.png" width="300">
+Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to view your schedule!
+<img src="resources/EventPage.png" width="300">
+<br><br>
+View details of your created event! <br><br>
+<img src="resources/EventDetailsViewing.png" width="300"/>
 
 ### Listing
 View all the listings on Cashshope!
