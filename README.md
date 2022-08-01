@@ -83,7 +83,7 @@ Unseen messages are displayed! <br><br>
 ### Meeting Planner
 Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to see your schedule!
 
-![MeetingPlanner](resources/meeting.png)
+![MeetingPlanner](resources/EventPage.png)
 
 ### Listing
 View all the listings on Cashshope!
