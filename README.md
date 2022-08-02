@@ -39,8 +39,8 @@ With Cashshope at your side, you may shop in peace as Cashshope is your very own
 |Member|Contributions|
 |---|---|
 |Tan Kai Zhe|Firebase Tools, StripeUtils, CheckoutActivity, PaymentMethodActivity, StripeDialog, DeliveryAddress, Stripe Backend Integration, [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), Terms and Conditions Activity, Privacy Policy Activity, Stripe Onboarding for Seller in newlisting, CheckoutActivity, PaymentMethodActivity, StripeUtils, Stripe Backend Server, Stripe Express Dashboard for Sellers in User_Profile_Fragment|
-|Lim Hong Ying| Listing categories, user profiles activity, listing reservations, multi-image listings, editings of listings, deletions of listings, updated storage structure, updated Firebase RealTime Database structure to accomodate to changes, Play Store updates|
-|Ooi Jun Heng Ryan|Integrated Google Calendar to sync with events (Add, Edit, Delete events from Google Calendar), EventPage Activity, EventDetails Activity, Usage of Calendar Permission, Improved event details|
+|Lim Hong Ying|  Listing categories, user profiles activity, listing reservations, multi-image listings, editings of listings, deletions of listings, updated storage structure, updated Firebase RealTime Database structure to accomodate to changes, Play Store updates|
+|Ooi Jun Heng Ryan|Integrated Google Calendar to sync with the app's events (Creating, Editing, Deleting events from Google Calendar), EventPage Activity, EventDetails Activity, Usage of Calendar Permission, Improved the details of events|
 |William Francis Siah|ChatAddUser Activity, Improved Chat Activity (User Status, Sending Images), Improved ChatList Activity (Manual/Auto add chat, Delete chat, Search Feature, Unseen Messages), Updated MessageList, RecyclerViewInterface|
 |Koh Han Jie Isaac|Wishlist counter in User profile page, App Widget to view today listing Activity, RemoteViewFactory interface for widget, Button to reload widget, Delete account Activity, Change account details Activity, persistent login|
 
@@ -81,9 +81,17 @@ Unseen messages are displayed! <br><br>
 <img src="resources/unseen_messages.png" alt="drawing" width="300"/>
 
 ### Meeting Planner
-Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to see your schedule!
-
-![MeetingPlanner](resources/meeting.png)
+Afraid of missing out on meetups with one of the Cashshopers? Fret not! Simply check your very own meeting planner to view your schedule!<br><br>
+<img src="resources/EventPage.png" width="300">
+<br><br>
+Schedule new events with other users!<br><br>
+<img src="resources/EventDetailsCreation.png" width="300">
+<br><br>
+View details of your created event! <br><br>
+<img src="resources/EventDetailsViewing.png" width="300"/><br><br>
+Sync your events in Cashshope with Google Calendar! <br><br>
+<img src="resources/GoogleCalendar.png" width="300">
+<br><br>
 
 ### Listing
 View all the listings on Cashshope!
@@ -257,7 +265,16 @@ In order to pay with a valid debit or credit card:
   - Click the button 
   - Your account details have been changed!
   
-  
+## Meeting Planner Guide
+  ### Event Guide
+   - Click on the "+" icon to create a new event
+   - Click on the 🗓 icon to view our app's calendar
+   - Acts as a secondary calendar if permissions for calendar was denied
+   - Click on the three dots at each event to edit or delete it!
+  ### Integration of Google Calendar 
+   - Allow permissions for calendar
+   - Events will automatically be synced with own calendar!
+   - If permissions were denied, the events will be saved in our app but not to your own calendar!
 
 ## Disclaimer
 Before you proceed with our service, do read and agree to our [Terms and Conditions](https://cashshope.japaneast.cloudapp.azure.com/tnc), as well as [Privacy Policy](https://westwq.github.io/MADPrivacy/).
