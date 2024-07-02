@@ -10,7 +10,7 @@ android {
         applicationId "sg.edu.np.mad_p03_group_gg"
         minSdk 23
         targetSdk 34
-        versionCode 12
+        versionCode 13
         versionName 'v2.1.5-1'
         //!!!IMPORTANT!!! COMMENT OUT DEBUG APP CHECK LINE ON SPLASHPAGE.JAVA BEFORE PACKAGING!!
 
